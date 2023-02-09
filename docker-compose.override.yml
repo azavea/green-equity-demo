@@ -3,7 +3,7 @@
 services:
   app:
     ports:
-      - 4567:4567
+      - 8765:8765
   django:
     ports:
-      - 8080:8080
+      - 8008:8008

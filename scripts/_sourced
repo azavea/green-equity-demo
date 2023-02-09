@@ -5,7 +5,7 @@
 
 set -e
 
-export PROJECTNAME=project-name
+export PROJECTNAME=green-equity-demo
 export ENVIRONMENT=dev
 
 if [[ -n "${DEBUG}" ]]; then

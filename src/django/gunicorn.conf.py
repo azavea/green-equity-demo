@@ -13,4 +13,4 @@ if ENVIRONMENT == "Development":
 else:
     preload = True
 
-wsgi_app = "project-name.wsgi"
+wsgi_app = "actual-project-name.wsgi"

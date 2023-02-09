@@ -9,7 +9,7 @@ services:
       - REACT_APP_GIT_COMMIT=${REACT_APP_GIT_COMMIT:-latest}
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=100
-      - PORT=4567
+      - PORT=8765
       - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
       - ./src/app:/usr/local/src
@@ -24,7 +24,15 @@ services:
       - POSTGRES_PASSWORD=$PROJECTNAME
       - POSTGRES_DB=$PROJECTNAME
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "$PROJECTNAME", '-h', 'database']
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "$PROJECTNAME",
+          '-h',
+          'database'
+        ]
       interval: 1s
       timeout: 30s
       retries: 30
@@ -46,7 +54,7 @@ services:
       context: ./src/django
       dockerfile: Dockerfile
       labels:
-        com.project.name: "project-name"
+        com.project.name: "green-equity-demo"
     volumes:
       - ./src/django:/usr/local/src
       - $HOME/.aws:/root/.aws:ro

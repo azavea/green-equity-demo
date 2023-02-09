@@ -1,15 +1,15 @@
 {
-  "name": "project-name",
+  "name": "green-equity-demo",
   "version": "0.1.0",
   "private": true,
   "packageManager": "yarn@1.22.19",
   "repository": {
     "type": "git",
-    "url": "https://github.com/azavea/project-name.git"
+    "url": "https://github.com/azavea/green-equity-demo.git"
   },
   "author": "Azavea",
   "bugs": {
-    "url": "https://github.com/azavea/project-name/issues"
+    "url": "https://github.com/azavea/green-equity-demo/issues"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.6",

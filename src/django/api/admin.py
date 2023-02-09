@@ -5,8 +5,8 @@ from .models import User
 
 
 class AdminSite(admin.AdminSite):
-    site_header = "Project Name administration"
-    site_title = "Project Name site admin"
+    site_header = "Actual Project Name administration"
+    site_title = "Actual Project Name site admin"
     logout_template = "admin/logged_out.html"
 
 
