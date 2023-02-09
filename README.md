@@ -41,7 +41,6 @@ Rebuild Docker images and run application.
 | Service                   | Port                            |
 | ------------------------- | ------------------------------- |
 | Webpack Dev Server        | [`8765`](http://localhost:8765) |
-| Gunicorn for Django app   | [`8008`](http://localhost:8008) |
 
 ### Testing
 
@@ -58,7 +57,6 @@ Rebuild Docker images and run application.
 | `clean`        | Free disk space by cleaning up dangling Docker images         |
 | `console`      | Run interactive shell inside application container            |
 | `lint`         | Lint source code                                              |
-| `manage`       | Run Django management commands                                |
 | `server`       | Run Docker Compose services                                   |
 | `test`         | Run unit tests                                                |
 | `update`       | Build Docker images                                           |

@@ -4,6 +4,3 @@ services:
   app:
     ports:
       - 8765:8765
-  django:
-    ports:
-      - 8008:8008

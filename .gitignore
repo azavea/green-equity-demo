@@ -12,10 +12,6 @@ __pycache__/
 *.tfstate.backup
 *.tfvars
 
-# Django
-/src/django/static/
-/src/django/version.json
-
 # JS
 node_modules/
 npm-debug.log

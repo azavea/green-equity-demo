@@ -1,25 +1,9 @@
 #!/bin/bash
 
 USAGE_ARG_LIST="[OPTION]"
-USAGE="Login to a running Docker container's shell.
-
-Options:
-    app       App container
-    database  Database container
-    django    Django container"
+USAGE="Login to a running Docker container's shell."
 
 source ./scripts/_sourced
 check_for_help_flag "$@"
 
-case $1 in
-app | django) NORMAL_CONTAINER=1 ;;
-database) DATABASE_CONTAINER=1 ;;
-esac
-
-if [ -n "$NORMAL_CONTAINER" ]; then
-    docker compose exec "${1}" /bin/bash
-fi
-
-if [ -n "$DATABASE_CONTAINER" ]; then
-    docker compose exec database psql -U actual-project-name
-fi
+docker compose exec app /bin/bash
