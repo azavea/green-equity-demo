@@ -1,0 +1,16 @@
+#!/bin/bash
+
+USAGE="Update environment variables file."
+DIR="$(dirname "${0}")/../"
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+pushd "${DIR}"
+
+if [[ ! -f ".env" ]]; then
+    cp .env.sample .env
+    echo "Updated environment variables file from .env.sample"
+fi
+
+popd

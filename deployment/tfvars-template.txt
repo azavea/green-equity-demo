@@ -1,0 +1,3 @@
+project     = "$PROJECTNAME"
+environment = "$ENVIRONMENT"
+aws_region  = "$AWS_REGION"

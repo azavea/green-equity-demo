@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Terraform
+.terraform
+.terraform.lock.hcl
+.terraform/
+*.tfplan
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Django
+/src/django/static/
+/src/django/version.json
+
+# JS
+node_modules/
+npm-debug.log
+bundle.js
+vendor.bundle.js
+bundle.js.map
+dist/
+yarn-error.log
+
+# Bundled JS
+src/app/build
+
+# macOS
+.DS_Store
+
+# Config
+.env
+.envrc
+
+# Mega linter
+megalinter-reports/

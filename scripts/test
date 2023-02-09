@@ -1,0 +1,49 @@
+#!/bin/bash
+
+USAGE_ARG_LIST="[OPTION]"
+USAGE="Run tests (Defaults to all, lint, app and Django).
+
+Options:
+    app  Just run frontend tests
+    django Just run Django tests"
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+function lint() {
+    ./scripts/lint
+}
+
+function test_django() {
+    GIT_COMMIT="${GIT_COMMIT}" ./scripts/manage test --noinput
+
+    echo "Checking for missing migrations..."
+    GIT_COMMIT="${GIT_COMMIT}" ./scripts/manage makemigrations --check --dry-run
+}
+
+function test_app() {
+    ./scripts/yarn test --watchAll=false
+}
+
+function test_app_watch() {
+    ./scripts/yarn test
+}
+
+if [[ "${1:-}" == "app" ]]; then
+    test_app_watch
+elif [[ "${1:-}" == "django" ]]; then
+    test_django
+elif [[ -n "${CI}" ]]; then
+    if [ "$(whoami)" == "runner" ]; then
+        echo "We are on GitHub, so don't run lint manually"
+    else
+        echo "Running locally because we don't think we are on GitHub"
+        lint
+    fi
+    test_app
+    test_django
+else
+    lint
+    test_app
+    test_django
+fi

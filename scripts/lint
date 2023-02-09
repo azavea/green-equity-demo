@@ -1,0 +1,25 @@
+#!/bin/bash
+
+USAGE="Lint the project's code with optional format
+
+Options:
+format - run formatting too.
+staged - lint staged files only (with formatting)."
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+MEGALINTER_FILES_TO_LINT=
+if [[ "${1:-}" == "format" ]]; then
+    echo "Formatting"
+    APPLY_FIXES=all
+elif [[ "${1:-}" == "staged" ]]; then
+    echo "Formatting staged files only"
+    APPLY_FIXES=all
+    MEGALINTER_FILES_TO_LINT=$(git diff --name-only --cached | tr "\n" ",")
+else
+    echo "Just linting"
+    APPLY_FIXES=none
+fi
+
+docker run --rm -e APPLY_FIXES=$APPLY_FIXES -e MEGALINTER_FILES_TO_LINT="$MEGALINTER_FILES_TO_LINT" -v "$PWD":/tmp/lint oxsecurity/megalinter-cupcake:v6

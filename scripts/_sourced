@@ -1,0 +1,47 @@
+# This is sourced by all the other scripts to give them all common
+# variables and functionality
+# The goal is to have this file be the only one that needs changing when
+# starting a new project.
+
+set -e
+
+export PROJECTNAME=project-name
+export ENVIRONMENT=dev
+
+if [[ -n "${DEBUG}" ]]; then
+    set -x
+fi
+
+check_for_help_flag() {
+    if [[ "$*" == *"help"* ]]; then
+        echo -e "Usage: $(basename "$0") $USAGE_ARG_LIST \n"
+        echo -e "$USAGE"
+        exit
+    fi
+}
+
+if [[ -n "${GIT_COMMIT}" ]]; then
+    export GIT_COMMIT="${GIT_COMMIT:0:16}"
+else
+    export GIT_COMMIT="$(git rev-parse --short=16 HEAD)"
+fi
+
+set_environment() {
+    AWS_NAME=$(aws iam list-account-aliases --query "AccountAliases[0]")
+
+    echo
+    echo "$AWS_NAME you are working on $AWS_NAME"
+    echo
+
+    if [[ "$1" == "stg" ]]; then
+        export ENVIRONMENT=stg
+        export AWS_REGION=us-west-2
+        export FULLNAME=$PROJECTNAME-$ENVIRONMENT
+    elif [[ "$1" == "prod" ]]; then
+        echo "There is no production setup, stopping"
+        exit 1
+    else
+        echo "You need to specify an environment first, check _sourced/set_environment for options"
+        exit 1
+    fi
+}

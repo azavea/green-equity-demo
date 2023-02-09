@@ -1,0 +1,43 @@
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+      - hotfix/**
+      - release/**
+      - test/**
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    # Run Mega Linter against code base
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint Code Base
+        uses: oxsecurity/megalinter/flavors/cupcake@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: develop
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up environment
+        run: ./scripts/bootstrap
+
+      - name: CI Tasks
+        run: ./scripts/citasks
+
+      - name: Update
+        run: ./scripts/update
+
+      - name: Test
+        run: ./scripts/test

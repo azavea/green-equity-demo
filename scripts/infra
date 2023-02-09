@@ -1,0 +1,79 @@
+#!/bin/bash
+
+USAGE_ARG_LIST="ENVIRONMENT COMMAND OPTION[S]"
+USAGE="Execute our Terraform subcommands with remote state management.
+
+Options:
+    plan - terraform init and plan command)
+    apply - applies output from previous plan)
+    passthrough - execute ;
+    update-tfvars uploads tfvars for that environment"
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+set_environment "$1"
+
+tf() {
+    # Called it tf so it's harder to confuse with running terraform manually
+    # We are only using Docker terraform to ensure a specific version
+    docker run -i -t -v "$(pwd)":/usr/local/src \
+        -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+        --user "$(id -u)":"$(id -g)" \
+        --workdir /usr/local/src \
+        hashicorp/terraform:1.3.3 "$@"
+}
+
+DIR="$(dirname "$0")"
+
+TERRAFORM_DIR="${DIR}/../deployment/terraform"
+
+sleep 3
+
+if [[ -n "${FULLNAME}" ]]; then
+    CONFIG_BUCKET="${FULLNAME}"-config
+    pushd "${TERRAFORM_DIR}"
+
+    case "${2}" in
+    plan)
+        aws s3 cp "s3://${CONFIG_BUCKET}/terraform/terraform.tfvars" \
+            "${CONFIG_BUCKET}.tfvars"
+
+        # Clear stale modules & remote state, then re-initialize
+        rm -rf .terraform terraform.tfstate*
+
+        tf init \
+            -backend-config="bucket=${CONFIG_BUCKET}" \
+            -backend-config="key=terraform/state"
+
+        tf plan \
+            -var="image_tag=${GIT_COMMIT}" \
+            -var-file="${CONFIG_BUCKET}.tfvars" \
+            -out="${CONFIG_BUCKET}.tfplan"
+        ;;
+    apply)
+        tf apply "${CONFIG_BUCKET}.tfplan"
+        ;;
+    passthrough)
+        echo "Running terraform " "${@:3}"
+        tf "${@:3}"
+
+        ;;
+    update-tfvars)
+        aws s3 cp "${CONFIG_BUCKET}.tfvars" \
+            "s3://${CONFIG_BUCKET}/terraform/terraform.tfvars" --sse=aws:kms
+        ;;
+    "")
+        echo -e "\nERROR: You didn't specify enough arguments, please see --help for more"
+        exit 1
+        ;;
+    *)
+        echo -e "\nERROR: I don't have support for that Terraform subcommand, try passthrough to run it!"
+        exit 1
+        ;;
+    esac
+
+    popd
+else
+    echo -e "\nERROR: No FULLNAME variable defined."
+    exit 1
+fi

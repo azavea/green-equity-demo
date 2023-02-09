@@ -1,0 +1,9 @@
+---
+
+services:
+  app:
+    ports:
+      - 4567:4567
+  django:
+    ports:
+      - 8080:8080

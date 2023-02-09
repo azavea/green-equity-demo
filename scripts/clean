@@ -1,0 +1,9 @@
+#!/bin/bash
+
+USAGE="Clean up unused Docker resources to free disk space."
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+docker compose down
+docker system prune --filter "label=com.project.name=project-name"

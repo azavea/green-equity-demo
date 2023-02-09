@@ -1,0 +1,8 @@
+#!/bin/bash
+
+USAGE="Bring up all of the services required for the project to function."
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+docker compose up database django app

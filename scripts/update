@@ -1,0 +1,25 @@
+#!/bin/bash
+
+USAGE="Build container images."
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+# Ensure container images are current
+docker compose build
+
+# Update Yarn dependencies
+./scripts/yarn install --frozen-lockfile
+
+# Build static asset bundle for React frontend
+./scripts/yarn run build
+
+# Bring up PostgreSQL and Django in a way that respects
+# configured service health checks.
+docker compose up -d database django
+
+# Apply any outstanding Django migrations
+./scripts/manage migrate
+
+# Collect Django static files
+./scripts/manage collectstatic --no-input
