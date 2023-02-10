@@ -1,37 +1,27 @@
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
-} from 'react-router-dom';
-import { Center } from '@chakra-ui/react';
+import { Center, Heading, Spacer, Text, VStack } from '@chakra-ui/react';
 
-import PerCapitaMap from './pages/PerCapitaMap';
-import AnimatedMap from './pages/AnimatedMap';
-import Home from './pages/Home';
-
-import SiteHeader from './components/SiteHeader';
-import { SITE_URL } from './constants';
+import PerCapitaMap from './components/PerCapitaMap';
+import AnimatedMap from './components/AnimatedMap';
 
 function App() {
     return (
         <Center>
-            <Router>
-                <Routes>
-                    <Route path={SITE_URL.HOME} element={<Home />} />
-                    <Route element={<SiteHeader />}>
-                        <Route
-                            path={SITE_URL.PER_CAPITA_MAP}
-                            element={<PerCapitaMap />}
-                        />
-                        <Route
-                            path={SITE_URL.ANIMATED_MAP}
-                            element={<AnimatedMap />}
-                        />
-                    </Route>
-                    <Route path='*' element={<Navigate to={SITE_URL.HOME} />} />
-                </Routes>
-            </Router>
+            <VStack mt={4} spacing={4}>
+                <Heading variant='title'>Welcome to Green Equity</Heading>
+                <Heading variant='subtitle'>
+                    A demonstration project by{' '}
+                    <a href='https://www.azavea.com/'>Azavea</a>
+                </Heading>
+                <Spacer />
+                <Text>
+                    This site contains two maps to help visualize how and where
+                    the Bipartisan Infrastructure Law award money is being
+                    spent.
+                </Text>
+                <Spacer />
+                <PerCapitaMap />
+                <AnimatedMap />
+            </VStack>
         </Center>
     );
 }

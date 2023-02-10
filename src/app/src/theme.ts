@@ -15,14 +15,6 @@ const theme = extendTheme({
                 },
             },
         },
-        Text: {
-            variants: {
-                headerTitle: {
-                    fontSize: '18pt',
-                    fontWeight: 'bold',
-                },
-            },
-        },
     },
     fonts: {
         heading: `'Helvetica', sans-serif`,
