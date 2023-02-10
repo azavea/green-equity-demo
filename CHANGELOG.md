@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Use Closes # in PR template [#9](https://github.com/azavea/green-equity-demo/pull/9)
+
 ### Fixed
 
 ### Removed
