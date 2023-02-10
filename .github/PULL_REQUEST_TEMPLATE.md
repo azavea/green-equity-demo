@@ -2,7 +2,7 @@
 
 Brief description of what this PR does, and why it is needed.
 
-Connects #XXX
+Closes #XXX
 
 ### Demo
 
