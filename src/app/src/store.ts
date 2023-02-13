@@ -1,8 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { spendingApi } from './api';
+
 export const store = configureStore({
-    reducer: {},
+    reducer: {
+        [spendingApi.reducerPath]: spendingApi.reducer,
+    },
+
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware().concat(spendingApi.middleware),
 });
 
 export type AppState = ReturnType<typeof store.getState>;

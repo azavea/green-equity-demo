@@ -1,54 +1,106 @@
-import { useEffect, useState } from 'react';
-import { Container, Input, Select } from '@chakra-ui/react';
-import requestBodyForStateAndAgency from '../request';
+import { useMemo, useState } from 'react';
+import { skipToken } from '@reduxjs/toolkit/query';
+import { Select, Text, VStack } from '@chakra-ui/react';
 
-const SPENDING_ENDPOINT = 'https://api.usaspending.gov/api/v2/search/spending_by_geography/';
-
+import {
+    getAgenciesForCategory,
+    getDefaultSpendingByGeographyRequest,
+} from '../util';
+import { useGetSpendingByGeographyQuery, useGetStatesQuery } from '../api';
+import { SpendingByGeographyRequest } from '../types/api';
+import { Category, isCategory } from '../enums';
 
 export default function DataSandbox() {
-    const [stateOrTerritory, setStateOrTerritory] = useState('MS');
-    const [category, setCategory] = useState('CLIMATE');
-    const [dataDump, setDataDump] = useState('Loading ...')
+    const [stateOrTerritory, setStateOrTerritory] = useState<string>();
+    const [category, setCategory] = useState<Category>();
 
-    useEffect(() => {
-        setDataDump('Loading ...');
-        fetch(
-            SPENDING_ENDPOINT,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBodyForStateAndAgency(stateOrTerritory, category)),
-            }
-        )
-        .then((response) => response.json())
-        .then((data) => data.results.length ? setDataDump(data.results[0].per_capita) : setDataDump("No spending."));
-        // TODO: "Other" should eventually take the difference of all spending, regardless
-        // of category, minus known categories, to account for subagencies that have not
-        // been hardcoded to map to a category
-    }, [stateOrTerritory, category]);
+    const spendingRequestBody = useMemo((): SpendingByGeographyRequest => {
+        const defaultBody = getDefaultSpendingByGeographyRequest();
+
+        if (stateOrTerritory) {
+            defaultBody.geo_layer_filters = [stateOrTerritory];
+        }
+
+        if (category) {
+            defaultBody.filters.agencies = getAgenciesForCategory(category);
+        }
+
+        return defaultBody;
+    }, [category, stateOrTerritory]);
+
+    const { data: states, isFetching: isFetchingStates } = useGetStatesQuery();
+    const { data: spending, isFetching: isFetchingSpending } =
+        useGetSpendingByGeographyQuery(
+            isFetchingStates ? skipToken : spendingRequestBody
+        );
+
+    const CategorySelect = (
+        <Select
+            value={category}
+            onChange={({ target: { value } }) => {
+                if (isCategory(value)) {
+                    setCategory(value);
+                } else {
+                    setCategory(undefined);
+                }
+            }}
+            size='sm'
+        >
+            <option>All categories</option>
+            <option value={Category.BROADBAND}>{Category.BROADBAND}</option>
+            <option value={Category.CIVIL_WORKS}>{Category.CIVIL_WORKS}</option>
+            <option value={Category.CLIMATE}>{Category.CLIMATE}</option>
+            <option value={Category.TRANSPORTATION}>
+                {Category.TRANSPORTATION}
+            </option>
+            <option value={Category.OTHER}>{Category.OTHER}</option>
+        </Select>
+    );
+
+    const StateSelect =
+        !isFetchingStates && states ? (
+            <Select
+                value={stateOrTerritory}
+                onChange={({ target: { value } }) => setStateOrTerritory(value)}
+                size='sm'
+            >
+                <option>All states</option>
+                {states.map(state => (
+                    <option key={state.fips} value={state.code}>
+                        {state.name}
+                    </option>
+                ))}
+            </Select>
+        ) : (
+            <Text>Loading states...</Text>
+        );
+
+    const Results =
+        !isFetchingSpending || isFetchingStates ? (
+            spending ? (
+                <>
+                    <Text>
+                        {category ? `${category} spending` : 'Spending'} for{' '}
+                        {stateOrTerritory ?? 'all states'}:
+                    </Text>
+                    <pre style={{ textAlign: 'left', width: '100%' }}>
+                        {JSON.stringify(spending, null, 4)}
+                    </pre>
+                </>
+            ) : (
+                <Text>
+                    Select a state to see spending details for that state.
+                </Text>
+            )
+        ) : (
+            <Text>Loading spending...</Text>
+        );
 
     return (
-        <>
-            <Container maxWidth='650px'>
-                <Input
-                    onChange={({ target: { value } }) => setStateOrTerritory(value)}
-                    placeholder='State (abbrev)'
-                    value={stateOrTerritory}
-                    size='sm'
-                />
-                <Select onChange={({ target: { value } }) => setCategory(value)} value={category}>
-                    <option value='CLIMATE'>Climate, Energy, and the Environment</option>
-                    <option value='BROADBAND'>Broadband</option>
-                    <option value='CIVIL WORKS'>Civil Works</option>
-                    <option value='TRANSPORTATION'>Transportation</option>
-                    <option value='OTHER'>Other</option>
-                </Select>
-            </Container>
-            <Container maxWidth='650px'>
-                {`Per capita spending for ${stateOrTerritory}: $${dataDump}`}
-            </Container>
-        </>
+        <VStack spacing={4} minW='640px'>
+            {CategorySelect}
+            {StateSelect}
+            {Results}
+        </VStack>
     );
 }
