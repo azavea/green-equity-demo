@@ -3,17 +3,18 @@
 */
 import { extendTheme } from '@chakra-ui/react';
 
-const Button = {
-    variants: {
-        demo: {
-            bg: 'yellow.400',
-        },
-    },
-};
-
 const theme = extendTheme({
     components: {
-        Button,
+        Heading: {
+            variants: {
+                title: {
+                    fontSize: '24pt',
+                },
+                subtitle: {
+                    fontSize: '20pt',
+                },
+            },
+        },
     },
     fonts: {
         heading: `'Helvetica', sans-serif`,

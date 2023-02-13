@@ -11,7 +11,7 @@ function lint() {
 }
 
 function test_app() {
-    ./scripts/yarn test --watchAll=false
+    ./scripts/yarn test --watchAll=false --passWithNoTests
 }
 
 if [[ -n "${CI}" ]]; then
