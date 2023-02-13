@@ -97,7 +97,7 @@ export default function DataSandbox() {
         );
 
     return (
-        <VStack spacing={4} minW='640px'>
+        <VStack spacing={4} w='100%'>
             {CategorySelect}
             {StateSelect}
             {Results}
