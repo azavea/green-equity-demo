@@ -2,6 +2,7 @@ import { Center, Heading, Spacer, Text, VStack } from '@chakra-ui/react';
 
 import PerCapitaMap from './components/PerCapitaMap';
 import AnimatedMap from './components/AnimatedMap';
+import DataSandbox from './components/DataSandbox';
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                 <Spacer />
                 <PerCapitaMap />
                 <AnimatedMap />
+                <DataSandbox />
             </VStack>
         </Center>
     );
