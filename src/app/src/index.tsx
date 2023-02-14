@@ -13,15 +13,18 @@ import App from './App';
 import theme from './theme';
 import { store } from './store';
 
+import '../node_modules/leaflet/dist/leaflet.css';
+
+import './index.css';
 
 const root = createRoot(document.getElementById('root')!);
 
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-        <ChakraProvider theme={theme}>
-            <App />
-        </ChakraProvider>
+            <ChakraProvider theme={theme}>
+                <App />
+            </ChakraProvider>
         </Provider>
     </React.StrictMode>
 );
