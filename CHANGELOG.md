@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add sandbox for testing usaspending.gov endpoint [#10](https://github.com/azavea/green-equity-demo/pull/10)
+- Add US state boundary GeoJSON [#6](https://github.com/azavea/green-equity-demo/pull/6)
 
 ### Changed
 
