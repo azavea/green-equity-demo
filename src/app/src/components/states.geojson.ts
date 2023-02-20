@@ -1,4 +1,4 @@
-import { LatLngTuple } from "leaflet";
+import { LatLngTuple } from 'leaflet';
 
 export type StateGeometry = GeoJSON.Polygon | GeoJSON.MultiPolygon;
 export type StateProperties = {
@@ -18,11 +18,15 @@ export type StatesCollection = GeoJSON.FeatureCollection<
     StateProperties
 >;
 
-export function isMultiPolygon(geometry: StateGeometry): geometry is GeoJSON.MultiPolygon {
-    return geometry.coordinates.length === 3;
+export function isMultiPolygon(
+    geometry: StateGeometry
+): geometry is GeoJSON.MultiPolygon {
+    return geometry.type === 'MultiPolygon';
 }
 
-export function isLatLngTuple(coordinates: number[]): coordinates is LatLngTuple {
+export function isLatLngTuple(
+    coordinates: number[]
+): coordinates is LatLngTuple {
     return coordinates.length === 2;
 }
 
