@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add sandbox for testing usaspending.gov endpoint [#10](https://github.com/azavea/green-equity-demo/pull/10)
 - Add US state boundary GeoJSON [#6](https://github.com/azavea/green-equity-demo/pull/6)
+- Add redux store and RTK query API client [#15](https://github.com/azavea/green-equity-demo/pull/15)
 
 ### Changed
 

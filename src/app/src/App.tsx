@@ -1,8 +1,17 @@
-import { Center, Heading, Spacer, Text, VStack } from '@chakra-ui/react';
+import {
+    Button,
+    Center,
+    Heading,
+    Spacer,
+    Text,
+    useDisclosure,
+    VStack,
+} from '@chakra-ui/react';
 
 import PerCapitaMap from './components/PerCapitaMap';
 import AnimatedMap from './components/AnimatedMap';
 import DataSandbox from './components/DataSandbox';
+import SimpleModal from './components/SimpleModal';
 
 function App() {
     return (
@@ -22,9 +31,27 @@ function App() {
                 <Spacer />
                 <PerCapitaMap />
                 <AnimatedMap />
-                <DataSandbox />
+                <DataSandboxWrapper />
             </VStack>
         </Center>
+    );
+}
+
+function DataSandboxWrapper() {
+    const { isOpen, onClose, getButtonProps } = useDisclosure();
+
+    return (
+        <>
+            <Button {...getButtonProps()}>Show Data Sandbox</Button>
+            <SimpleModal
+                title='Data Sandbox'
+                isOpen={isOpen}
+                onClose={onClose}
+                size='2xl'
+            >
+                <DataSandbox />
+            </SimpleModal>
+        </>
     );
 }
 
