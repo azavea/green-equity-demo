@@ -1,5 +1,10 @@
-import { Text } from '@chakra-ui/react';
+import UsaMapContainer from './UsaMapContainer';
+import StatesLayer from './StatesLayer';
 
 export default function PerCapitaMap() {
-    return <Text>Per Capita Map will go here</Text>;
+    return (
+        <UsaMapContainer>
+            <StatesLayer />
+        </UsaMapContainer>
+    );
 }
