@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Center, CircularProgress } from '@chakra-ui/react';
@@ -43,6 +43,8 @@ function StatesAndMarkersLayer({
     spending: SpendingByGeographyResponse['results'];
 }) {
     const map = useMap();
+    const markerReference = useRef<L.Marker[]>([]);
+
     const spendingByState = useMemo(
         () =>
             Object.fromEntries(
@@ -70,7 +72,7 @@ function StatesAndMarkersLayer({
 
                     const amountCategory = getAmountCategory(perCapitaSpending);
 
-                    new L.Marker(
+                    const marker = new L.Marker(
                         (event.sourceTarget as L.Polygon)
                             .getBounds()
                             .getCenter(),
@@ -86,7 +88,15 @@ function StatesAndMarkersLayer({
                                 className: '',
                             }),
                         }
-                    ).addTo(map);
+                    );
+                    marker.addTo(map);
+                    markerReference.current.push(marker);
+                });
+
+                layer.on('remove', () => {
+                    markerReference.current
+                        .splice(0)
+                        .forEach(marker => marker.removeFrom(map));
                 });
             }}
         />
