@@ -1,3 +1,4 @@
+import { AMOUNT_CATEGORIES } from './constants';
 import {
     AgencyTier,
     AgencyType,
@@ -6,6 +7,7 @@ import {
     GeoLayer,
     Scope,
 } from './enums';
+import { AmountCategory } from './types';
 import { Agency, SpendingByGeographyRequest } from './types/api';
 
 export function getDefaultSpendingByGeographyRequest(): SpendingByGeographyRequest {
@@ -116,4 +118,16 @@ export function getAgenciesForCategory(category: Category): Agency[] {
                 { ...baseAgency, name: 'Delta Regional Authority' },
             ];
     }
+}
+
+export function getAmountCategory(amount: number): AmountCategory {
+    const category = AMOUNT_CATEGORIES.find(
+        amountCategory => amount > amountCategory.min
+    );
+
+    if (!category) {
+        throw Error(`Could not find amount category for amount: ${amount}`);
+    }
+
+    return category;
 }
