@@ -122,7 +122,7 @@ export function getAgenciesForCategory(category: Category): Agency[] {
 
 export function getAmountCategory(amount: number): AmountCategory {
     const category = AMOUNT_CATEGORIES.find(
-        amountCategory => amount > amountCategory.min
+        amountCategory => amount > amountCategory.min + 0.99
     );
 
     if (!category) {

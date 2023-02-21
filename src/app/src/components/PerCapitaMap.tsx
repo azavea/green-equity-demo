@@ -7,6 +7,7 @@ import L from 'leaflet';
 import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
 import PersonIcon from './PersonIcon';
+import PerCapitaMapLegend from './PerCapitaMapLegend';
 
 import { useGetSpendingByGeographyQuery } from '../api';
 import {
@@ -21,15 +22,18 @@ export default function PerCapitaMap() {
     );
 
     return (
-        <UsaMapContainer>
-            {data && !isFetching ? (
-                <StatesAndMarkersLayer spending={data.results} />
-            ) : (
-                <Center p={4}>
-                    <CircularProgress isIndeterminate />
-                </Center>
-            )}
-        </UsaMapContainer>
+        <>
+            <UsaMapContainer>
+                {data && !isFetching ? (
+                    <StatesAndMarkersLayer spending={data.results} />
+                ) : (
+                    <Center p={4}>
+                        <CircularProgress isIndeterminate />
+                    </Center>
+                )}
+            </UsaMapContainer>
+            <PerCapitaMapLegend />
+        </>
     );
 }
 
