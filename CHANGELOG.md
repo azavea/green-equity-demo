@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add US state boundary GeoJSON [#6](https://github.com/azavea/green-equity-demo/pull/6)
 - Add redux store and RTK query API client [#15](https://github.com/azavea/green-equity-demo/pull/15)
 - Add leaflet and US States [#16](https://github.com/azavea/green-equity-demo/pull/16)
+- Add per-capita map markers [#27](https://github.com/azavea/green-equity-demo/pull/27)
 
 ### Changed
 
