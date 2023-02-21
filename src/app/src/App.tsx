@@ -16,7 +16,7 @@ import SimpleModal from './components/SimpleModal';
 function App() {
     return (
         <Center>
-            <VStack mt={4} spacing={4}>
+            <VStack mt={4} spacing={4} width='100%'>
                 <Heading variant='title'>Welcome to Green Equity</Heading>
                 <Heading variant='subtitle'>
                     A demonstration project by{' '}
@@ -30,6 +30,7 @@ function App() {
                 </Text>
                 <Spacer />
                 <PerCapitaMap />
+                <div style={{ height: 100 }} />
                 <AnimatedMap />
                 <DataSandboxWrapper />
             </VStack>
