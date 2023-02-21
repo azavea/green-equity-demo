@@ -17,8 +17,8 @@ const theme = extendTheme({
         },
     },
     fonts: {
-        heading: `'Helvetica', sans-serif`,
-        body: `'Arial', sans-serif`,
+        heading: `'Lato', 'Helvetica', sans-serif`,
+        body: `'Lato', 'Arial', sans-serif`,
     },
 });
 
