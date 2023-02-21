@@ -1,5 +1,3 @@
-import { LatLngTuple } from "leaflet";
-
 export type StateGeometry = GeoJSON.Polygon | GeoJSON.MultiPolygon;
 export type StateProperties = {
     STATEFP: string;
@@ -17,14 +15,6 @@ export type StatesCollection = GeoJSON.FeatureCollection<
     StateGeometry,
     StateProperties
 >;
-
-export function isMultiPolygon(geometry: StateGeometry): geometry is GeoJSON.MultiPolygon {
-    return geometry.coordinates.length === 3;
-}
-
-export function isLatLngTuple(coordinates: number[]): coordinates is LatLngTuple {
-    return coordinates.length === 2;
-}
 
 const stateGeoJson: StatesCollection = {
     type: 'FeatureCollection',

@@ -2,12 +2,15 @@ import L, { GeoJSONOptions } from 'leaflet';
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 
-import stateGeoJson, {  StateGeometry, StateProperties } from './states.geojson';
+import stateGeoJson, { StateGeometry, StateProperties } from './states.geojson';
 
 export default function StatesLayer({
     onEachFeature,
 }: {
-    onEachFeature?: GeoJSONOptions<StateProperties, StateGeometry>['onEachFeature'];
+    onEachFeature?: GeoJSONOptions<
+        StateProperties,
+        StateGeometry
+    >['onEachFeature'];
 }) {
     const map = useMap();
 
