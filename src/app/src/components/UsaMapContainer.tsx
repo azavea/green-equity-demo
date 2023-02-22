@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { MapContainer } from 'react-leaflet';
+import { ReactNode, useEffect } from 'react';
+import { MapContainer, useMap } from 'react-leaflet';
 
 import { AMERICA_CENTER } from '../constants';
 
@@ -11,15 +11,27 @@ export default function UsaMapContainer({
     return (
         <MapContainer
             center={AMERICA_CENTER}
-            zoom={4}
+            zoom={4.5}
+            zoomSnap={0.5}
             zoomControl={false}
             scrollWheelZoom={false}
             boxZoom={false}
             doubleClickZoom={false}
             dragging={false}
-            style={{ height: '460px', width: '100%' }}
+            style={{ height: '600px', width: '100%' }}
         >
+            <AttributionMover />
             {children}
         </MapContainer>
     );
+}
+
+function AttributionMover() {
+    const map = useMap();
+
+    useEffect(() => {
+        map.attributionControl.setPosition('topright');
+    }, [map]);
+
+    return null;
 }

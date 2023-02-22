@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Center, CircularProgress } from '@chakra-ui/react';
@@ -7,9 +7,13 @@ import L from 'leaflet';
 import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
 import PersonIcon from './PersonIcon';
+import PerCapitaMapLegend from './PerCapitaMapLegend';
 
 import { useGetSpendingByGeographyQuery } from '../api';
-import { getDefaultSpendingByGeographyRequest } from '../util';
+import {
+    getAmountCategory,
+    getDefaultSpendingByGeographyRequest,
+} from '../util';
 import { SpendingByGeographyResponse } from '../types/api';
 
 export default function PerCapitaMap() {
@@ -18,15 +22,18 @@ export default function PerCapitaMap() {
     );
 
     return (
-        <UsaMapContainer>
-            {data && !isFetching ? (
-                <StatesAndMarkersLayer spending={data.results} />
-            ) : (
-                <Center p={4}>
-                    <CircularProgress isIndeterminate />
-                </Center>
-            )}
-        </UsaMapContainer>
+        <>
+            <UsaMapContainer>
+                {data && !isFetching ? (
+                    <StatesAndMarkersLayer spending={data.results} />
+                ) : (
+                    <Center p={4}>
+                        <CircularProgress isIndeterminate />
+                    </Center>
+                )}
+            </UsaMapContainer>
+            <PerCapitaMapLegend />
+        </>
     );
 }
 
@@ -36,6 +43,8 @@ function StatesAndMarkersLayer({
     spending: SpendingByGeographyResponse['results'];
 }) {
     const map = useMap();
+    const markerReference = useRef<L.Marker[]>([]);
+
     const spendingByState = useMemo(
         () =>
             Object.fromEntries(
@@ -63,7 +72,7 @@ function StatesAndMarkersLayer({
 
                     const amountCategory = getAmountCategory(perCapitaSpending);
 
-                    new L.Marker(
+                    const marker = new L.Marker(
                         (event.sourceTarget as L.Polygon)
                             .getBounds()
                             .getCenter(),
@@ -79,50 +88,17 @@ function StatesAndMarkersLayer({
                                 className: '',
                             }),
                         }
-                    ).addTo(map);
+                    );
+                    marker.addTo(map);
+                    markerReference.current.push(marker);
+                });
+
+                layer.on('remove', () => {
+                    markerReference.current
+                        .splice(0)
+                        .forEach(marker => marker.removeFrom(map));
                 });
             }}
         />
     );
 }
-
-function getAmountCategory(amount: number): AmountCategory {
-    const category = AMOUNT_CATEGORIES.find(
-        amountCategory => amount > amountCategory.min
-    );
-
-    if (!category) {
-        throw Error(`Could not find amount category for amount: ${amount}`);
-    }
-
-    return category;
-}
-
-type AmountCategory = {
-    min: number;
-    color: string;
-    size: number;
-};
-
-const AMOUNT_CATEGORIES: AmountCategory[] = [
-    {
-        min: 3000,
-        color: '#81B06B',
-        size: 45,
-    },
-    {
-        min: 2000,
-        color: '#D330B0',
-        size: 35,
-    },
-    {
-        min: 1000,
-        color: '#D7671E',
-        size: 25,
-    },
-    {
-        min: 0,
-        color: '#465EB5',
-        size: 15,
-    },
-];

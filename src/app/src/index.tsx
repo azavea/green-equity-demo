@@ -13,6 +13,7 @@ import App from './App';
 import theme from './theme';
 import { store } from './store';
 
+import '@fontsource/lato';
 import '../node_modules/leaflet/dist/leaflet.css';
 
 import './index.css';
