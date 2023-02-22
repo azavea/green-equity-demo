@@ -1,7 +1,5 @@
 import { AmountCategory } from './types';
 
-export const AMERICA_CENTER: [number, number] = [37.09024, -95.712891];
-
 export const AMOUNT_CATEGORIES: AmountCategory[] = [
     {
         min: 3000,
