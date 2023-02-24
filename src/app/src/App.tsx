@@ -12,6 +12,7 @@ import PerCapitaMap from './components/PerCapitaMap';
 import AnimatedMap from './components/AnimatedMap';
 import DataSandbox from './components/DataSandbox';
 import SimpleModal from './components/SimpleModal';
+import BudgetTracker from './components/BudgetTracker';
 
 function App() {
     return (
@@ -28,6 +29,8 @@ function App() {
                     the Bipartisan Infrastructure Law award money is being
                     spent.
                 </Text>
+                <Spacer />
+                <BudgetTracker />
                 <Spacer />
                 <PerCapitaMap />
                 <div style={{ height: 100 }} />
