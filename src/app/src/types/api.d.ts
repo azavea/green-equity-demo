@@ -22,7 +22,7 @@ export type SpendingByGeographyRequest = {
         def_codes: DefCode[],
         time_period?: {
             start_date: string,
-            end_date: string,
+            end_date?: string
         }[],
         agencies?: Agency[],
     },
@@ -42,4 +42,25 @@ export type SpendingByGeographyResponse = {
         population: number,
         per_capita: number,
     }[],
+};
+
+export type MonthlySpendingOverTimeResponse = {
+        shape_code: string,
+        results: {
+            aggregated_amount: number,
+            time_period: {
+                fiscal_year: number,
+                month: number
+            }
+        }[],
+    }[];
+
+export type SpendingByGeographyAtMonth = {
+    [k: string]: {
+            aggregated_amount: number;
+            time_period: {
+                fiscal_year: number;
+                month: number;
+            };
+        } | undefined;
 };
