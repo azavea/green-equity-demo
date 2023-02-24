@@ -2,6 +2,7 @@
     This file is valid in both Javascript and Typescript
 */
 import { extendTheme } from '@chakra-ui/react';
+import { spendingTooltipCardStyle } from './components/SpendingTooltip';
 
 const theme = extendTheme({
     components: {
@@ -15,6 +16,7 @@ const theme = extendTheme({
                 },
             },
         },
+        Card: spendingTooltipCardStyle,
     },
     fonts: {
         heading: `'Lato', 'Helvetica', sans-serif`,

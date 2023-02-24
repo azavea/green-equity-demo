@@ -1,6 +1,7 @@
 import L, { GeoJSONOptions } from 'leaflet';
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
+import { STATE_STYLE_BASE } from '../constants';
 
 import stateGeoJson, { StateGeometry, StateProperties } from './states.geojson';
 
@@ -16,8 +17,8 @@ export default function StatesLayer({
 
     useEffect(() => {
         const layer = L.geoJSON<StateProperties, StateGeometry>(stateGeoJson, {
-            style: { color: 'black', weight: 0.62, fill: false },
-            interactive: false,
+            style: STATE_STYLE_BASE,
+            interactive: true,
             onEachFeature,
         });
 

@@ -24,3 +24,16 @@ export const AMOUNT_CATEGORIES: AmountCategory[] = [
         size: 15,
     },
 ];
+
+export const STATE_STYLE_BASE = Object.freeze(
+    { color: 'black', weight: 0.62, fill: false }
+);
+
+export const STATE_STYLE_HOVER = Object.freeze(
+    {
+        fill: true,
+        fillColor: '#D0DAFF',
+        color: '#465EB5',
+        weight: 2,
+    }
+);

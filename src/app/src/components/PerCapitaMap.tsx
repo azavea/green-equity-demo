@@ -1,5 +1,6 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
+import { createPortal } from 'react-dom';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Center, CircularProgress } from '@chakra-ui/react';
 import L from 'leaflet';
@@ -8,6 +9,7 @@ import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
 import PersonIcon from './PersonIcon';
 import PerCapitaMapLegend from './PerCapitaMapLegend';
+import SpendingTooltip from './SpendingTooltip';
 
 import { useGetSpendingByGeographyQuery } from '../api';
 import {
@@ -15,6 +17,7 @@ import {
     getDefaultSpendingByGeographyRequest,
 } from '../util';
 import { SpendingByGeographyResponse } from '../types/api';
+import { STATE_STYLE_BASE, STATE_STYLE_HOVER } from '../constants';
 
 export default function PerCapitaMap() {
     const { data, isFetching } = useGetSpendingByGeographyQuery(
@@ -56,49 +59,93 @@ function StatesAndMarkersLayer({
         [spending]
     );
 
+    const tooltips = Object.keys(spendingByState).map(stateCode => {
+        const tooltipDiv = document.createElement('div');
+        tooltipDiv.dataset.stateCode = stateCode;
+        tooltipDiv.id = `tooltip-${stateCode}`;
+        return tooltipDiv;
+    });
+    const [tooltipsAttached, setTooltipsAttached] = useState(false);
+
     return (
-        <StatesLayer
-            onEachFeature={(feature, layer) => {
-                layer.on('add', event => {
-                    const perCapitaSpending =
-                        spendingByState[feature.properties.STUSPS]?.per_capita;
+        <>
+            {tooltipsAttached && tooltips.map(tooltip => {
+                const stateSpending = spendingByState[tooltip.dataset?.stateCode!];
+                if (stateSpending === undefined) {
+                    return null
+                }
+                return createPortal(
+                    <SpendingTooltip
+                        state={stateSpending.display_name ?? ''}
+                        population={stateSpending.population ?? 0}
+                        dollarsPerCapita={stateSpending.per_capita ?? 0}
+                        funding={stateSpending.aggregated_amount ?? 0} />
+                , tooltip);
+                }
+            )}
+            <StatesLayer
+                onEachFeature={(feature, layer) => {
+                    layer.on('add', event => {
+                        const stateSpending = spendingByState[feature.properties.STUSPS];
+                        const perCapitaSpending = stateSpending?.per_capita;
 
-                    if (!perCapitaSpending) {
-                        console.warn(
-                            `No spending data for state: ${feature.properties.STUSPS}`
-                        );
-                        return;
-                    }
-
-                    const amountCategory = getAmountCategory(perCapitaSpending);
-
-                    const marker = new L.Marker(
-                        (event.sourceTarget as L.Polygon)
-                            .getBounds()
-                            .getCenter(),
-                        {
-                            icon: new L.DivIcon({
-                                html: renderToStaticMarkup(
-                                    <PersonIcon color={amountCategory.color} />
-                                ),
-                                iconSize: [
-                                    amountCategory.size,
-                                    amountCategory.size,
-                                ],
-                                className: '',
-                            }),
+                        if (!perCapitaSpending) {
+                            console.warn(
+                                `No spending data for state: ${feature.properties.STUSPS}`
+                            );
+                            return;
                         }
-                    );
-                    marker.addTo(map);
-                    markerReference.current.push(marker);
-                });
 
-                layer.on('remove', () => {
-                    markerReference.current
-                        .splice(0)
-                        .forEach(marker => marker.removeFrom(map));
-                });
-            }}
-        />
+                        const amountCategory = getAmountCategory(perCapitaSpending);
+
+                        const polygonCenter = (event.sourceTarget as L.Polygon).getBounds().getCenter();
+
+                        const marker = new L.Marker(
+                            polygonCenter,
+                            {
+                                icon: new L.DivIcon({
+                                    html: renderToStaticMarkup(
+                                        <PersonIcon color={amountCategory.color} />
+                                    ),
+                                    iconSize: [
+                                        amountCategory.size,
+                                        amountCategory.size,
+                                    ],
+                                    className: '',
+                                }),
+                                interactive: false,
+                            }
+                        );
+                        marker.addTo(map);
+                        markerReference.current.push(marker);
+
+                        const tooltipForState = tooltips.find(
+                            tooltip => tooltip.id === `tooltip-${feature.properties.STUSPS}`);
+                        if (tooltipForState !== undefined) {
+                            tooltipForState.dataset.stateName = feature.properties.NAME;
+                            layer.bindTooltip(
+                                tooltipForState,
+                                { opacity: 1.0, sticky: true, offset: new L.Point(15, 15) },
+                            );
+                            setTooltipsAttached(true);
+                        }
+                    });
+
+                    layer.on('mouseover', () => {
+                        (layer as any).setStyle(STATE_STYLE_HOVER)
+                    });
+
+                    layer.on('mouseout', () => {
+                        (layer as any).setStyle(STATE_STYLE_BASE)
+                    });
+
+                    layer.on('remove', () => {
+                        markerReference.current
+                            .splice(0)
+                            .forEach(marker => marker.removeFrom(map));
+                    });
+                }}
+            />
+        </>
     );
 }
