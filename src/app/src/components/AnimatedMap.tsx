@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import { Slider, Box, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
+import { HStack, Slider, Box, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
 
 import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
@@ -10,9 +10,21 @@ import {spendingDataByMonth} from './dummySpendingDataByMonth';
 
 export default function AnimatedMap() {
     return (
+        <>
         <UsaMapContainer>
             <StatesAndSliderLayer spending={spendingDataByMonth} />
         </UsaMapContainer>
+        <HStack spacing='0px' border={'1px'}>
+                <Box w='40px' h='40px' bg='white'>
+                </Box>
+                <Box w='40px' h='40px' bg='#94A4DF' textAlign={'center'} color={'white'} fontSize={'sm'}>
+                    ≥1% BIL
+                </Box>
+                <Box w='40px' h='40px' bg='#465EB5' textAlign={'center'} color={'white'} fontSize={'sm'}>
+                    ≥2% BIL
+                </Box>
+            </HStack>
+        </>
     );
 }
 
@@ -21,6 +33,7 @@ function StatesAndSliderLayer({
 }: {
     spending: MonthlySpendingOverTimeResponse;
 }) {
+    const SLIDER_PRESENT_STEP = 26;
     const [timeValue, setTimeValue] = useState(0);
     const map = useMap();
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() => getspendingByStateAtTime(1, spending));
@@ -31,14 +44,8 @@ function StatesAndSliderLayer({
         map && !!timeValue && map.eachLayer((l) => l.feature && l.setStyle({fillcolor: getColor(spendingAtTimeByState[l.feature.properties.STUSPS]?.aggregated_amount)}));
     }, [map, timeValue])
 
-    const labelStyles = {
-        mt: '2',
-        ml: '-2.5',
-        fontSize: 'sm',
-    };
-
     return (
-        <Box>
+        <>
             <StatesLayer
                 onEachFeature={(feature, layer) => {
                     const defaultFillColor = getColor(spendingAtTimeByState[feature.properties.STUSPS]?.aggregated_amount)
@@ -47,26 +54,26 @@ function StatesAndSliderLayer({
                     layer && layer.setStyle({fill: true, fillColor: defaultFillColor, fillOpacity: 100 });
                 }}
             />
-            <Slider aria-label='slider-ex-6' defaultValue={0} min={0} max={26} onChange={(val) => setTimeValue(val)} step={1} width='80%'>
-                <SliderThumb />
-                <SliderTrack>
-                    <SliderMark value={0} {...labelStyles}>
-                        2022
+            <Slider colorScheme={'blackAlpha'} aria-label='date-time-slider' defaultValue={0} min={0} max={SLIDER_PRESENT_STEP} onChange={(val) => setTimeValue(val)} step={1} mt='575px' width='50%' ml='20%'>
+                <SliderThumb ml='50px'/>
+                <SliderMark value={0} mt='-2' mr='15' fontSize='m'>
+                        2021
                     </SliderMark>
-                    <SliderMark value={14} {...labelStyles}>
+                    <SliderMark value={SLIDER_PRESENT_STEP} mt='-2' ml='70' fontSize='m'>
                         present
                     </SliderMark>
+                <SliderTrack ml='50px'>
                 <SliderFilledTrack />
                 </SliderTrack>
             </Slider>
-        </Box>
+        </>
     );
 }
 
 function getColor(amount: number | undefined): string {
-    const fractionOfTotalAwards = amount ? (amount/TOTAL_BIL_AWARD_AMOUNT) : 0;
-    return fractionOfTotalAwards > .15  ? '#465EB5' :
-          fractionOfTotalAwards > .10  ? '#94A4DF' :
+    const fractionOfTotalAwards = amount ? (amount/550000000000) : 0;
+    return fractionOfTotalAwards > .02  ? '#465EB5' :
+          fractionOfTotalAwards > .01  ? '#94A4DF' :
            'white';
 }
 
