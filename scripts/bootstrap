@@ -14,3 +14,5 @@ if [[ ! -f ".env" ]]; then
 fi
 
 popd
+
+./scripts/fetch-data

@@ -5,11 +5,11 @@ import {
     State,
 } from './types/api';
 
+export const spendingApiUrl = 'https://api.usaspending.gov/api/v2';
+
 export const spendingApi = createApi({
     reducerPath: 'spendingApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'https://api.usaspending.gov/api/v2',
-    }),
+    baseQuery: fetchBaseQuery({ baseUrl: spendingApiUrl }),
     endpoints: builder => ({
         getStates: builder.query<State[], void>({
             query: () => '/recipient/state/',
