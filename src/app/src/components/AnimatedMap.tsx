@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import {
+    Heading,
+    Spacer,
     HStack,
     Slider,
     Box,
@@ -25,6 +27,10 @@ import { spendingDataByMonth } from './dummySpendingDataByMonth';
 export default function AnimatedMap() {
     return (
         <>
+            <Heading variant='subtitle'>
+                Allocation of announced award funding over time
+            </Heading>
+            <Spacer></Spacer>
             <UsaMapContainer>
                 <StatesAndSliderLayer spending={spendingDataByMonth} />
             </UsaMapContainer>
