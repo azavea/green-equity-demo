@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { HStack, Slider, Box, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
 
+import L from 'leaflet';
 import UsaMapContainer from './UsaMapContainer';
+import { StateGeometry, StateProperties } from './states.geojson';
+
 import StatesLayer from './StatesLayer';
 
 import { MonthlySpendingOverTimeResponse, SpendingByGeographyAtMonth } from '../types/api';
@@ -38,8 +41,16 @@ function StatesAndSliderLayer({
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() => getspendingByStateAtTime(1, spending));
 
     useEffect(()=>{
-        // @ts-ignore
-        map && map.eachLayer((l) => l.feature && l.setStyle({fillcolor: getColor(spendingAtTimeByState[l.feature.properties.STUSPS]?.aggregated_amount)}));
+        map && map.eachLayer((l) => {
+            const asGeoJson = l as L.GeoJSON<StateProperties, StateGeometry>;
+            asGeoJson.feature && asGeoJson.setStyle(
+                {fillColor: getColor(
+                    spendingAtTimeByState[
+                        (asGeoJson.feature as GeoJSON.Feature<GeoJSON.MultiPoint, StateProperties>).properties.STUSPS
+                    ]?.aggregated_amount
+                )}
+            )}
+        );
     }, [map, spendingAtTimeByState])
 
     function onSliderChange(timeValue: number){
@@ -49,9 +60,8 @@ function StatesAndSliderLayer({
     return (
         <>
             <StatesLayer
-                onEachFeature={(feature, layer) => {
-                    const defaultFillColor = getColor(spendingAtTimeByState[feature.properties.STUSPS]?.aggregated_amount)
-                    // @ts-ignore
+                onEachFeature={(feature, layer: L.GeoJSON<StateProperties, StateGeometry>) => {
+                    const defaultFillColor = getColor(spendingAtTimeByState[feature.properties.STUSPS]?.aggregated_amount);
                     layer && layer.setStyle({fill: true, fillColor: defaultFillColor, fillOpacity: 100 });
                 }}
             />
