@@ -26,7 +26,7 @@ export const AMOUNT_CATEGORIES: AmountCategory[] = [
 ];
 
 export const STATE_STYLE_BASE = Object.freeze(
-    { color: 'black', weight: 0.62, fill: false }
+    { color: 'black', weight: 0.62, fill: true, fillColor: 'white' }
 );
 
 export const STATE_STYLE_HOVER = Object.freeze(
