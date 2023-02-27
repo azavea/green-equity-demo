@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add per-capita map legend [#29](https://github.com/azavea/green-equity-demo/pull/29)
 - Add state data tooltips [#36](https://github.com/azavea/green-equity-demo/pull/36)
 - Add budget tracker [#34](https://github.com/azavea/green-equity-demo/pull/34)
+- Add spending category selector [#30](https://github.com/azavea/green-equity-demo/pull/30)
 
 ### Changed
 
