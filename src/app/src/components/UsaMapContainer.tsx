@@ -1,8 +1,5 @@
 import { ReactNode, useEffect } from 'react';
 import { MapContainer, useMap } from 'react-leaflet';
-
-import { AMERICA_CENTER } from '../constants';
-
 export default function UsaMapContainer({
     children,
 }: {
@@ -10,7 +7,7 @@ export default function UsaMapContainer({
 }) {
     return (
         <MapContainer
-            center={AMERICA_CENTER}
+            center={[0, 0]} // Albers USA is not a "real" projection
             zoom={4.5}
             zoomSnap={0.5}
             zoomControl={false}
