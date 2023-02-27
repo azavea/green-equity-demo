@@ -131,3 +131,19 @@ export function getAmountCategory(amount: number): AmountCategory {
 
     return category;
 }
+
+export function abbreviateNumber(amount: number): string {
+    if (1e12 <= amount && amount < 1e15) {
+        return Math.round(amount / 1e12).toLocaleString() + 'T';
+    }
+    if (1e9 <= amount && amount < 1e12) {
+        return Math.round(amount / 1e9).toLocaleString() + 'B';
+    }
+    if (1e6 <= amount && amount < 1e9) {
+        return Math.round(amount / 1e6).toLocaleString() + 'M';
+    }
+    if (1e3 <= amount && amount < 1e6) {
+        return Math.round(amount / 1e3).toLocaleString() + 'K';
+    }
+    return Math.round(amount).toLocaleString();
+}

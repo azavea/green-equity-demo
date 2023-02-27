@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add leaflet and US States [#16](https://github.com/azavea/green-equity-demo/pull/16)
 - Add per-capita map markers [#27](https://github.com/azavea/green-equity-demo/pull/27)
 - Add per-capita map legend [#29](https://github.com/azavea/green-equity-demo/pull/29)
+- Add state data tooltips [#36](https://github.com/azavea/green-equity-demo/pull/36)
 
 ### Changed
 

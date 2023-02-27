@@ -1,4 +1,16 @@
 .leaflet-container {
     background: #fff;
     font-family: 'Lato', 'Helvetica', sans-serif;
+    overflow: visible;
+}
+.leaflet-tooltip {
+    border: 0;
+    padding: 0;
+    border-radius: 0.375rem;
+} 
+.leaflet-tooltip-top:before, 
+.leaflet-tooltip-bottom:before, 
+.leaflet-tooltip-left:before, 
+.leaflet-tooltip-right:before {
+    border: none;
 }

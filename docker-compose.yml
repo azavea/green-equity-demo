@@ -7,8 +7,7 @@ services:
     working_dir: /usr/local/src
     environment:
       - REACT_APP_GIT_COMMIT=${REACT_APP_GIT_COMMIT:-latest}
-      - CHOKIDAR_USEPOLLING=true
-      - CHOKIDAR_INTERVAL=100
+      - WATCHPACK_POLLING=true
       - PORT=8765
       - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
