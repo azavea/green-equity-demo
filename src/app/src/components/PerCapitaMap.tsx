@@ -22,8 +22,6 @@ import { SpendingByGeographyResponse } from '../types/api';
 import { STATE_STYLE_BASE, STATE_STYLE_HOVER } from '../constants';
 import { Category } from '../enums';
 
-
-
 export default function PerCapitaMap() {
     const [spendingCategory, setSpendingCategory] = useState<Category>();
 
@@ -100,7 +98,14 @@ function StatesAndMarkersLayer({
                         state={stateSpending.display_name ?? ''}
                         population={stateSpending.population ?? 0}
                         dollarsPerCapita={stateSpending.per_capita ?? 0}
-                        funding={stateSpending.aggregated_amount ?? 0} />
+                        funding={stateSpending.aggregated_amount ?? 0}
+                        spendingByCategory={
+                            new Map([
+                                [Category.BROADBAND, 200],
+                                [Category.CLIMATE, 300],
+                                [Category.TRANSPORTATION, 400],
+                                [Category.OTHER, 500]
+                            ])}/>
                 , tooltip);
                 }
             )}

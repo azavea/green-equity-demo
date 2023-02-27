@@ -12,15 +12,17 @@ import {
     StyleFunctionProps,
     Text,
 } from '@chakra-ui/react'
+import { Category } from '../enums';
 import { abbreviateNumber } from '../util';
 
 export default function SpendingTooltip({
-    state, dollarsPerCapita, funding, population
+    state, dollarsPerCapita, funding, population, spendingByCategory
 }: {
     state: string;
     dollarsPerCapita: number,
     funding: number,
     population: number,
+    spendingByCategory: Map<Category, number>,
 }) {
     return (
         <Card variant="spendingTooltip">
@@ -38,10 +40,9 @@ export default function SpendingTooltip({
                         <Text fontWeight={'medium'}>Population: {abbreviateNumber(population)}</Text>
                     </Box>
                     <Box>
-                        <Text>Transportation:</Text>
-                        <Text>Climate:</Text>
-                        <Text>Broadband:</Text>
-                        <Text>Other:</Text>
+                        {Array.from(spendingByCategory, ([cat, spending]) => {
+                            return <Text key={`tooltipCategory-${state}-${cat.toString()}`}>{cat.toString()}:</Text>
+                        })}
                     </Box>
                     <Box>{/* Empty box to generate divider before footer */}</Box>
                 </Stack>
