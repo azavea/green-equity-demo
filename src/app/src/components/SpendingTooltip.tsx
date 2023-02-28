@@ -5,7 +5,6 @@ import {
     Box,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
     Heading,
     Stack,
@@ -57,12 +56,8 @@ export default function SpendingTooltip({
                             );
                         })}
                     </Box>
-                    <Box>{/* Empty box to generate divider before footer */}</Box>
                 </Stack>
             </CardBody>
-            <CardFooter justify='right'>
-                <Text>See more details</Text>
-            </CardFooter>
         </Card>
     );
 };
@@ -92,7 +87,7 @@ const variants = {
         body: {
             paddingTop: '0.5rem', // to match <Stack spacing={2} />
             paddingLeft: '15px',
-            paddingBottom: '0',
+            paddingBottom: '0.5rem', // to match <Stack spacing={2} />
             fontWeight: 'normal',
         },
         footer: {
