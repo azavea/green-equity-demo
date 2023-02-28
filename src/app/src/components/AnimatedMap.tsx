@@ -70,7 +70,7 @@ function StatesAndSliderLayer({
 }: {
     spending: MonthlySpendingOverTimeResponse;
 }) {
-    const SLIDER_PRESENT_STEP = 26;
+    const PROGRESS_FINAL_MONTH = 26;
     const map = useMap();
     const [timeValue, setTimeValue] = useState(0);
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() =>
@@ -112,7 +112,7 @@ function StatesAndSliderLayer({
             );
             return () => {
                 clearInterval(monthlyInterval);
-                if(timeValue === SLIDER_PRESENT_STEP){
+                if(timeValue === PROGRESS_FINAL_MONTH){
                     setPlayButtonDisabled(false);
                     setRestartTimeControl(true);
                 }
@@ -157,7 +157,7 @@ function StatesAndSliderLayer({
                         colorScheme={'progress'}
                         aria-label='date-time-progress-bar'
                         min={0}
-                        max={SLIDER_PRESENT_STEP}
+                        max={PROGRESS_FINAL_MONTH}
                         width='100%'
                         maxWidth={'750px'}
                         height='20px'
