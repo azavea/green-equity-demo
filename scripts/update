@@ -11,5 +11,8 @@ docker compose build
 # Update Yarn dependencies
 ./scripts/yarn install --frozen-lockfile
 
+# Fetch data if it doesn't exist
+./scripts/fetch-data
+
 # Build static asset bundle for React frontend
 ./scripts/yarn run build

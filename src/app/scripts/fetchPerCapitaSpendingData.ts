@@ -1,4 +1,6 @@
 import fs from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+
 import path from 'node:path';
 
 import { spendingApiUrl } from '../src/api';
@@ -25,24 +27,33 @@ export default async function fetchPerCapitaSpendingData() {
 }
 
 async function writeSpendingDataFile(category?: Category) {
+    const filename = path.join(dataDir, `${category ?? 'all'}.spending.json`);
+
+    if (existsSync(filename)) {
+        console.warn(
+            `  Skipping ${
+                category ?? 'All'
+            } spending because the file already exists.`
+        );
+        return;
+    }
+
     const requestBody = getDefaultSpendingByGeographyRequest();
 
     if (category) {
         requestBody.filters.agencies = getAgenciesForCategory(category);
     }
 
-    return fs
-        .open(path.join(dataDir, `${category ?? 'all'}.spending.json`), 'w')
-        .then(async fileHandle => {
-            await httpsRequestToFile({
-                url: `${spendingApiUrl}/search/spending_by_geography/`,
-                fileHandle,
-                options: {
-                    method: 'POST',
-                },
-                body: JSON.stringify(requestBody),
-            });
-
-            fileHandle.close();
+    return fs.open(filename, 'w').then(async fileHandle => {
+        await httpsRequestToFile({
+            url: `${spendingApiUrl}/search/spending_by_geography/`,
+            fileHandle,
+            options: {
+                method: 'POST',
+            },
+            body: JSON.stringify(requestBody),
         });
+
+        fileHandle.close();
+    });
 }
