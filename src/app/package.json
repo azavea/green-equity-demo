@@ -43,7 +43,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "fetch-data": "ts-node scripts/fetchData.ts"
+    "fetch-data": "ts-node dataScripts/fetchData.ts"
   },
   "eslintConfig": {
     "extends": "react-app"
