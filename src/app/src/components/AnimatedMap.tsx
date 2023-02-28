@@ -4,12 +4,11 @@ import {
     Heading,
     Spacer,
     HStack,
-    Slider,
     Box,
-    SliderTrack,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderMark,
+    IconButton,
+    Progress,
+    Tag,
+    TagLabel,
 } from '@chakra-ui/react';
 
 import L from 'leaflet';
@@ -17,6 +16,7 @@ import UsaMapContainer from './UsaMapContainer';
 import { StateGeometry, StateProperties } from './states.geojson';
 
 import StatesLayer from './StatesLayer';
+import TimeControlIcon from './TimeControlIcon';
 
 import {
     MonthlySpendingOverTimeResponse,
@@ -68,9 +68,12 @@ function StatesAndSliderLayer({
 }) {
     const SLIDER_PRESENT_STEP = 26;
     const map = useMap();
+    const [timeValue, setTimeValue] = useState(0);
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() =>
         getSpendingByStateAtTime(1, spending)
     );
+    const [playButtonDisabled, setPlayButtonDisabled] = useState(false);
+    const [restartTimeControl, setRestartTimeControl] = useState(false);
 
     useEffect(() => {
         map &&
@@ -95,8 +98,30 @@ function StatesAndSliderLayer({
             });
     }, [map, spendingAtTimeByState]);
 
-    function onSliderChange(timeValue: number) {
-        setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+    useEffect(() => {
+        if(playButtonDisabled){
+            const monthlyInterval = setInterval(() => {
+                setTimeValue(timeValue + 1);
+                spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+            },
+                250
+            );
+            return () => {
+                clearInterval(monthlyInterval);
+                if(timeValue === SLIDER_PRESENT_STEP-1){
+                    setPlayButtonDisabled(false);
+                    setRestartTimeControl(true);
+                }
+            };
+        }
+    }, [playButtonDisabled, timeValue, spending]);
+
+    function onSelectTimeAnimation(){
+        if(restartTimeControl){
+            setTimeValue(0);
+            setRestartTimeControl(false);
+        }
+        setPlayButtonDisabled(true);
     }
 
     return (
@@ -118,34 +143,25 @@ function StatesAndSliderLayer({
                         });
                 }}
             />
-            <Slider
-                colorScheme={'blackAlpha'}
-                aria-label='date-time-slider'
-                defaultValue={0}
-                min={0}
-                max={SLIDER_PRESENT_STEP}
-                onChange={val => onSliderChange(val)}
-                step={1}
-                mt='575px'
-                width='50%'
-                ml='20%'
-            >
-                <SliderThumb ml='50px' />
-                <SliderMark value={0} mt='-2' mr='15' fontSize='m'>
-                    2021
-                </SliderMark>
-                <SliderMark
-                    value={SLIDER_PRESENT_STEP}
-                    mt='-2'
-                    ml='70'
-                    fontSize='m'
-                >
-                    present
-                </SliderMark>
-                <SliderTrack ml='50px'>
-                    <SliderFilledTrack />
-                </SliderTrack>
-            </Slider>
+            <Box mt='575px' textAlign={'center'}>
+                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={playButtonDisabled} />
+                <Tag width='60%' background='none'>
+                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
+                    <Progress
+                        value={timeValue}
+                        opacity={100}
+                        colorScheme={'blackAlpha'}
+                        aria-label='date-time-progress-bar'
+                        min={0}
+                        max={SLIDER_PRESENT_STEP}
+                        width='100%'
+                        height='20px'
+                        mt='10px'
+                        display={'inline-block'}
+                    />
+                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>Now</TagLabel>
+                </Tag>
+            </Box>
         </>
     );
 }
