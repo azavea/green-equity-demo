@@ -105,14 +105,14 @@ function StatesAndSliderLayer({
     useEffect(() => {
         if(playButtonDisabled){
             const monthlyInterval = setInterval(() => {
-                setTimeValue(timeValue + 1);
-                spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+                setTimeValue(Math.round((timeValue + 0.1)*10)/10);
+                (timeValue % 1 === 0) && spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
             },
-                250
+                25
             );
             return () => {
                 clearInterval(monthlyInterval);
-                if(timeValue === SLIDER_PRESENT_STEP-1){
+                if(timeValue === SLIDER_PRESENT_STEP){
                     setPlayButtonDisabled(false);
                     setRestartTimeControl(true);
                 }
@@ -149,16 +149,17 @@ function StatesAndSliderLayer({
             />
             <Box mt='575px' textAlign={'center'}>
                 <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={playButtonDisabled} />
-                <Tag width='60%' background='none'>
+                <Tag width='60%' maxWidth={'750px'} background='none'>
                     <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
                     <Progress
                         value={timeValue}
                         opacity={100}
-                        colorScheme={'blackAlpha'}
+                        colorScheme={'progress'}
                         aria-label='date-time-progress-bar'
                         min={0}
                         max={SLIDER_PRESENT_STEP}
                         width='100%'
+                        maxWidth={'750px'}
                         height='20px'
                         mt='10px'
                         display={'inline-block'}
