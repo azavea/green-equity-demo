@@ -3,17 +3,17 @@ import { PathOptions } from 'leaflet';
 
 export const AMOUNT_CATEGORIES: AmountCategory[] = [
     {
-        min: 3000,
+        min: 3001,
         color: '#81B06B',
         size: 45,
     },
     {
-        min: 2000,
+        min: 2001,
         color: '#D330B0',
         size: 35,
     },
     {
-        min: 1000,
+        min: 1001,
         color: '#D7671E',
         size: 25,
     },

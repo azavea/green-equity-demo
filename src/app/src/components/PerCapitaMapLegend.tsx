@@ -13,11 +13,10 @@ export default function PerCapitaMapLegend() {
                     .map((category, index, categories) => {
                         const nextCategory = categories[index + 1];
                         const label = nextCategory
-                            ? `$${(category.min === 0
-                                  ? category.min
-                                  : category.min + 1
-                              ).toLocaleString()} - $${nextCategory.min.toLocaleString()}`
-                            : `$${(category.min + 1).toLocaleString()}+`;
+                            ? `$${category.min.toLocaleString()} - $${(
+                                  nextCategory.min - 1
+                              ).toLocaleString()}`
+                            : `$${category.min.toLocaleString()}+`;
 
                         return (
                             <VStack

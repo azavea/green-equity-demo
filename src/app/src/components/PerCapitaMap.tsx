@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { createPortal } from 'react-dom';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { Center, CircularProgress } from '@chakra-ui/react';
+import { Center, CircularProgress, VStack } from '@chakra-ui/react';
 import L from 'leaflet';
 
 import UsaMapContainer from './UsaMapContainer';
@@ -10,22 +10,43 @@ import StatesLayer from './StatesLayer';
 import PersonIcon from './PersonIcon';
 import PerCapitaMapLegend from './PerCapitaMapLegend';
 import SpendingTooltip from './SpendingTooltip';
+import SpendingCategorySelector from './SpendingCategorySelector';
 
 import { useGetSpendingByGeographyQuery } from '../api';
 import {
+    getAgenciesForCategory,
     getAmountCategory,
     getDefaultSpendingByGeographyRequest,
 } from '../util';
 import { SpendingByGeographyResponse } from '../types/api';
 import { STATE_STYLE_BASE, STATE_STYLE_HOVER } from '../constants';
+import { Category } from '../enums';
+
+
 
 export default function PerCapitaMap() {
-    const { data, isFetching } = useGetSpendingByGeographyQuery(
-        getDefaultSpendingByGeographyRequest()
-    );
+    const [spendingCategory, setSpendingCategory] = useState<Category>();
+
+    const spendingRequest = useMemo(() => {
+        const baseRequest = getDefaultSpendingByGeographyRequest();
+
+        if (spendingCategory) {
+            baseRequest.filters.agencies =
+                getAgenciesForCategory(spendingCategory);
+        }
+
+        return baseRequest;
+    }, [spendingCategory]);
+
+    const { data, isFetching } =
+        useGetSpendingByGeographyQuery(spendingRequest);
 
     return (
-        <>
+        <VStack width='100%'>
+            <SpendingCategorySelector
+                value={spendingCategory}
+                onChange={setSpendingCategory}
+            />
             <UsaMapContainer>
                 {data && !isFetching ? (
                     <StatesAndMarkersLayer spending={data.results} />
@@ -36,7 +57,7 @@ export default function PerCapitaMap() {
                 )}
             </UsaMapContainer>
             <PerCapitaMapLegend />
-        </>
+        </VStack>
     );
 }
 
