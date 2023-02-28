@@ -3,14 +3,14 @@ import { existsSync } from 'node:fs';
 
 import path from 'node:path';
 
-import { spendingApiUrl } from '../src/api';
+import { spendingApiUrl } from '../src/constants';
 import { Category } from '../src/enums';
 import {
     getAgenciesForCategory,
     getDefaultSpendingByGeographyRequest,
 } from '../src/util';
 
-import { dataDir } from './constants';
+import { dataDir } from './nodeConstants';
 import httpsRequestToFile from './httpRequestToFile';
 
 export default async function fetchPerCapitaSpendingData() {

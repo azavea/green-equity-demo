@@ -4,14 +4,13 @@ import {
     SpendingByGeographyResponse,
     State,
 } from './types/api';
+import { spendingApiUrl } from './constants';
 
 /* Uncomment this to use the api */
 /* import {  fetchBaseQuery } from '@reduxjs/toolkit/query/react'; */
 
 /* Uncomment this to use cached data */
 import fetchBaseQuery from './cachedApiQuery';
-
-export const spendingApiUrl = 'https://api.usaspending.gov/api/v2';
 
 export const spendingApi = createApi({
     reducerPath: 'spendingApi',
