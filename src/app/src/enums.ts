@@ -28,6 +28,7 @@ export function isCategory(value: string): value is Category {
         Category.CIVIL_WORKS.toString(),
         Category.TRANSPORTATION.toString(),
         Category.BROADBAND.toString(),
+        Category.OTHER.toString(),
     ].includes(value);
 }
 

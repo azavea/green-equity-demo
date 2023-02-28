@@ -1,27 +1,35 @@
+import React from 'react';
 import { cardAnatomy } from '@chakra-ui/anatomy'
 import {
     createMultiStyleConfigHelpers,
     Box,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
     Heading,
     Stack,
     StackDivider,
     StyleFunctionProps,
     Text,
+    Progress,
 } from '@chakra-ui/react'
+import { Category } from '../enums';
 import { abbreviateNumber } from '../util';
 
 export default function SpendingTooltip({
-    state, dollarsPerCapita, funding, population
+    state, stateCode, dollarsPerCapita, funding, population, spendingByCategory
 }: {
     state: string;
+    stateCode: string,
     dollarsPerCapita: number,
     funding: number,
     population: number,
+    spendingByCategory: Map<Category, number>,
 }) {
+    const roundedPercent = (amount: number, total: number) => {
+        return Math.round(((amount ?? 0) / total) * 100);
+    };
+
     return (
         <Card variant="spendingTooltip">
             <CardHeader>
@@ -38,17 +46,18 @@ export default function SpendingTooltip({
                         <Text fontWeight={'medium'}>Population: {abbreviateNumber(population)}</Text>
                     </Box>
                     <Box>
-                        <Text>Transportation:</Text>
-                        <Text>Climate:</Text>
-                        <Text>Broadband:</Text>
-                        <Text>Other:</Text>
+                        {Array.from(spendingByCategory, ([cat, amount]) => {
+                            return (
+                            <React.Fragment key={`tooltipCategory-${stateCode}-${cat.toString()}`}>
+                                <Text>{cat.toString()}:</Text>
+                                <Text>{roundedPercent(amount, funding)}%</Text>
+                                <Progress mb={2} colorScheme='tooltip' size='lg' value={roundedPercent(amount, funding)}/>
+                            </React.Fragment>
+                            );
+                        })}
                     </Box>
-                    <Box>{/* Empty box to generate divider before footer */}</Box>
                 </Stack>
             </CardBody>
-            <CardFooter justify='right'>
-                <Text>See more details</Text>
-            </CardFooter>
         </Card>
     );
 };
@@ -78,7 +87,7 @@ const variants = {
         body: {
             paddingTop: '0.5rem', // to match <Stack spacing={2} />
             paddingLeft: '15px',
-            paddingBottom: '0',
+            paddingBottom: '0.5rem', // to match <Stack spacing={2} />
             fontWeight: 'normal',
         },
         footer: {

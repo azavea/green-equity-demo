@@ -22,6 +22,11 @@ const theme = extendTheme({
         heading: `'Lato', 'Helvetica', sans-serif`,
         body: `'Lato', 'Arial', sans-serif`,
     },
+    colors: {
+        tooltip: {
+          500: '#465EB5',
+        },
+    },
 });
 
 export default theme;
