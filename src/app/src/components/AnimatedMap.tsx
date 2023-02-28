@@ -168,11 +168,11 @@ function getSpendingByStateAtTime(
         2021 + Math.floor(isDecember ? timeValue / 13 : timeValue / 12);
     const monthSelection = !!timeValue && isDecember ? 12 : timeValue % 12;
     const spendingAtTimeValue = spending.map(stateSpending => {
-        const resultAtTimeValue = stateSpending.results.filter(
+        const resultAtTimeValue = stateSpending.results.find(
             entry =>
                 entry.time_period.fiscal_year === fiscalYearSelection &&
                 entry.time_period.month === monthSelection
-        )[0];
+        )!;
         return { ...stateSpending, results: resultAtTimeValue };
     });
     return Object.fromEntries(

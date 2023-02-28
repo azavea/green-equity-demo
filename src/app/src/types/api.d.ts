@@ -56,13 +56,11 @@ export type MonthlySpendingOverTimeResponse = {
 }[];
 
 export type SpendingByGeographyAtMonth = {
-    [k: string]:
-        | {
-              aggregated_amount: number,
-              time_period: {
-                  fiscal_year: number,
-                  month: number,
-              },
-          }
-        | undefined,
+    [k: string]: {
+        aggregated_amount: number,
+        time_period: {
+            fiscal_year: number,
+            month: number,
+        },
+    },
 };
