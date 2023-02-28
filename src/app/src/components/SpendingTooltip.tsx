@@ -1,3 +1,4 @@
+import React from 'react';
 import { cardAnatomy } from '@chakra-ui/anatomy'
 import {
     createMultiStyleConfigHelpers,
@@ -11,19 +12,25 @@ import {
     StackDivider,
     StyleFunctionProps,
     Text,
+    Progress,
 } from '@chakra-ui/react'
 import { Category } from '../enums';
 import { abbreviateNumber } from '../util';
 
 export default function SpendingTooltip({
-    state, dollarsPerCapita, funding, population, spendingByCategory
+    state, stateCode, dollarsPerCapita, funding, population, spendingByCategory
 }: {
     state: string;
+    stateCode: string,
     dollarsPerCapita: number,
     funding: number,
     population: number,
     spendingByCategory: Map<Category, number>,
 }) {
+    const roundedPercent = (amount: number, total: number) => {
+        return Math.round(((amount ?? 0) / total) * 100);
+    };
+
     return (
         <Card variant="spendingTooltip">
             <CardHeader>
@@ -40,8 +47,14 @@ export default function SpendingTooltip({
                         <Text fontWeight={'medium'}>Population: {abbreviateNumber(population)}</Text>
                     </Box>
                     <Box>
-                        {Array.from(spendingByCategory, ([cat, spending]) => {
-                            return <Text key={`tooltipCategory-${state}-${cat.toString()}`}>{cat.toString()}:</Text>
+                        {Array.from(spendingByCategory, ([cat, amount]) => {
+                            return (
+                            <React.Fragment key={`tooltipCategory-${stateCode}-${cat.toString()}`}>
+                                <Text>{cat.toString()}:</Text>
+                                <Text>{roundedPercent(amount, funding)}%</Text>
+                                <Progress mb={2} colorScheme='tooltip' size='lg' value={roundedPercent(amount, funding)}/>
+                            </React.Fragment>
+                            );
                         })}
                     </Box>
                     <Box>{/* Empty box to generate divider before footer */}</Box>
