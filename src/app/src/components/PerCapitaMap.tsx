@@ -22,7 +22,7 @@ import {
     getDefaultSpendingByGeographyRequest,
 } from '../util';
 import { SpendingByGeographyResponse } from '../types/api';
-import { STATE_STYLE_BASE, STATE_STYLE_HOVER } from '../constants';
+import { STATE_STYLE_BASE, STATE_STYLE_HOVER, MARKER_OVERRIDES } from '../constants';
 import { Category } from '../enums';
 
 
@@ -170,6 +170,12 @@ function StatesAndMarkersLayer({
         return poleOfInaccessibility;
     };
 
+    const getMarkerOverride = (feature: StateFeature) => {
+        const override = MARKER_OVERRIDES[feature.properties.STUSPS];
+        feature.properties.MRKOVERRIDE = override;
+        return override;
+    };
+
     return (
         <>
             {tooltipsAttached && tooltips.map(tooltip => {
@@ -205,10 +211,16 @@ function StatesAndMarkersLayer({
                         const amountCategory = getAmountCategory(perCapitaSpending);
 
                         // pole of inaccessibility: point (in largest polygon) furthest from edges
-                        const poleOfInaccessibility = feature.properties.INACSPOLE ?? findPoleofInaccessibility(feature);
+                        // some states have overrides for marker locations in the Atlantic
+                        const markerLocation = (
+                            feature.properties.MRKOVERRIDE ??
+                            getMarkerOverride(feature) ??
+                            feature.properties.INACSPOLE ??
+                            findPoleofInaccessibility(feature)
+                        );
 
                         const marker = new L.Marker(
-                            poleOfInaccessibility as LatLngTuple,
+                            markerLocation,
                             {
                                 icon: new L.DivIcon({
                                     html: renderToStaticMarkup(

@@ -12,6 +12,7 @@ export type StateProperties = {
     ALAND: number;
     AWATER: number;
     INACSPOLE?: LatLngTuple,
+    MRKOVERRIDE?: LatLngTuple,
 };
 export type StateFeature = GeoJSON.Feature<StateGeometry, StateProperties>;
 export type StatesCollection = GeoJSON.FeatureCollection<
