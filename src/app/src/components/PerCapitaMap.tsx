@@ -3,7 +3,9 @@ import { useMap } from 'react-leaflet';
 import { createPortal } from 'react-dom';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Center, CircularProgress, VStack } from '@chakra-ui/react';
-import L from 'leaflet';
+import L, { LatLngLiteral, LatLngTuple } from 'leaflet';
+import 'leaflet-draw';
+import polylabel from 'polylabel';
 
 import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
@@ -11,6 +13,7 @@ import PersonIcon from './PersonIcon';
 import PerCapitaMapLegend from './PerCapitaMapLegend';
 import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
+import { StateFeature } from './states.geojson';
 
 import { useGetSpendingByGeographyQuery, useGetStatesQuery } from '../api';
 import {
@@ -152,6 +155,19 @@ function StatesAndMarkersLayer({
     });
     const [tooltipsAttached, setTooltipsAttached] = useState(false);
 
+    const findPoleofInaccessibility = (feature: StateFeature) => {
+        const asPolygons = feature.geometry.coordinates.map(
+            polygonCoords => new L.Polygon(polygonCoords as LatLngTuple[])
+        );
+        const largestPolygon = asPolygons.reduce(
+            (prev, current) => (
+                L.GeometryUtil.geodesicArea(prev.getLatLngs()[0] as LatLngLiteral[]) >
+                L.GeometryUtil.geodesicArea(current.getLatLngs()[0] as LatLngLiteral[]))
+                ? prev : current
+            );
+        return polylabel(largestPolygon.toGeoJSON().geometry.coordinates as number[][][]) as LatLngTuple;
+    };
+
     return (
         <>
             {tooltipsAttached && tooltips.map(tooltip => {
@@ -186,10 +202,11 @@ function StatesAndMarkersLayer({
 
                         const amountCategory = getAmountCategory(perCapitaSpending);
 
-                        const polygonCenter = (event.sourceTarget as L.Polygon).getBounds().getCenter();
+                        // pole of inaccessibility: point (in largest polygon) furthest from edges
+                        const poleOfInaccessibility = findPoleofInaccessibility(feature);
 
                         const marker = new L.Marker(
-                            polygonCenter,
+                            poleOfInaccessibility as LatLngTuple,
                             {
                                 icon: new L.DivIcon({
                                     html: renderToStaticMarkup(
