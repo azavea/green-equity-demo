@@ -24,7 +24,10 @@ const theme = extendTheme({
     },
     colors: {
         tooltip: {
-          500: '#465EB5',
+            500: '#465EB5',
+        },
+        progress: {
+            500: '#000000',
         },
     },
 });

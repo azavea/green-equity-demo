@@ -3,13 +3,11 @@ import { useMap } from 'react-leaflet';
 import {
     Heading,
     Spacer,
-    HStack,
-    Slider,
     Box,
-    SliderTrack,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderMark,
+    IconButton,
+    Progress,
+    Tag,
+    TagLabel,
 } from '@chakra-ui/react';
 
 import L from 'leaflet';
@@ -17,12 +15,14 @@ import UsaMapContainer from './UsaMapContainer';
 import { StateGeometry, StateProperties } from './states.geojson';
 
 import StatesLayer from './StatesLayer';
+import TimeControlIcon from './TimeControlIcon';
 
 import {
     MonthlySpendingOverTimeResponse,
     SpendingByGeographyAtMonth,
 } from '../types/api';
 import { spendingDataByMonth } from './dummySpendingDataByMonth';
+import AnimatedMapLegend from './AnimatedMapLegend';
 
 export default function AnimatedMap() {
     return (
@@ -31,32 +31,10 @@ export default function AnimatedMap() {
                 Allocation of announced award funding over time
             </Heading>
             <Spacer></Spacer>
+            <AnimatedMapLegend />
             <UsaMapContainer>
                 <StatesAndSliderLayer spending={spendingDataByMonth} />
             </UsaMapContainer>
-            <HStack spacing='0px' border={'1px'}>
-                <Box w='40px' h='40px' bg='white'></Box>
-                <Box
-                    w='40px'
-                    h='40px'
-                    bg='#94A4DF'
-                    textAlign={'center'}
-                    color={'white'}
-                    fontSize={'sm'}
-                >
-                    ≥1% BIL
-                </Box>
-                <Box
-                    w='40px'
-                    h='40px'
-                    bg='#465EB5'
-                    textAlign={'center'}
-                    color={'white'}
-                    fontSize={'sm'}
-                >
-                    ≥2% BIL
-                </Box>
-            </HStack>
         </>
     );
 }
@@ -66,11 +44,14 @@ function StatesAndSliderLayer({
 }: {
     spending: MonthlySpendingOverTimeResponse;
 }) {
-    const SLIDER_PRESENT_STEP = 26;
+    const PROGRESS_FINAL_MONTH = 26;
     const map = useMap();
+    const [timeValue, setTimeValue] = useState(0);
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() =>
         getSpendingByStateAtTime(1, spending)
     );
+    const [animationEnabled, setAnimationEnabled] = useState(false);
+    const [restartTimeControl, setRestartTimeControl] = useState(false);
 
     useEffect(() => {
         map &&
@@ -95,8 +76,33 @@ function StatesAndSliderLayer({
             });
     }, [map, spendingAtTimeByState]);
 
-    function onSliderChange(timeValue: number) {
-        setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+    useEffect(() => {
+        (timeValue % 1 === 0) && spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+        if(timeValue === PROGRESS_FINAL_MONTH){
+            setAnimationEnabled(false);
+            setRestartTimeControl(true);
+        }
+    }, [timeValue, spending])
+
+    useEffect(() => {
+        if(animationEnabled){
+            const monthlyInterval = setInterval(() => {
+                setTimeValue(currentTimeValue => Math.round((currentTimeValue + 0.1)*10)/10);
+            },
+                25
+            );
+            return () => {
+                clearInterval(monthlyInterval);
+            };
+        }
+    }, [animationEnabled]);
+
+    function onSelectTimeAnimation(){
+        if(restartTimeControl){
+            setTimeValue(0);
+            setRestartTimeControl(false);
+        }
+        setAnimationEnabled(true);
     }
 
     return (
@@ -118,34 +124,26 @@ function StatesAndSliderLayer({
                         });
                 }}
             />
-            <Slider
-                colorScheme={'blackAlpha'}
-                aria-label='date-time-slider'
-                defaultValue={0}
-                min={0}
-                max={SLIDER_PRESENT_STEP}
-                onChange={val => onSliderChange(val)}
-                step={1}
-                mt='575px'
-                width='50%'
-                ml='20%'
-            >
-                <SliderThumb ml='50px' />
-                <SliderMark value={0} mt='-2' mr='15' fontSize='m'>
-                    2021
-                </SliderMark>
-                <SliderMark
-                    value={SLIDER_PRESENT_STEP}
-                    mt='-2'
-                    ml='70'
-                    fontSize='m'
-                >
-                    present
-                </SliderMark>
-                <SliderTrack ml='50px'>
-                    <SliderFilledTrack />
-                </SliderTrack>
-            </Slider>
+            <Box mt='575px' textAlign={'center'}>
+                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={animationEnabled} />
+                <Tag width='60%' maxWidth={'750px'} background='none'>
+                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
+                    <Progress
+                        value={timeValue}
+                        opacity={100}
+                        colorScheme={'progress'}
+                        aria-label='date-time-progress-bar'
+                        min={0}
+                        max={PROGRESS_FINAL_MONTH}
+                        width='100%'
+                        maxWidth={'750px'}
+                        height='20px'
+                        mt='10px'
+                        display={'inline-block'}
+                    />
+                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>Now</TagLabel>
+                </Tag>
+            </Box>
         </>
     );
 }
