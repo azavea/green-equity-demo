@@ -76,7 +76,7 @@ function StatesAndSliderLayer({
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() =>
         getSpendingByStateAtTime(1, spending)
     );
-    const [playButtonDisabled, setPlayButtonDisabled] = useState(false);
+    const [animationEnabled, setAnimationEnabled] = useState(false);
     const [restartTimeControl, setRestartTimeControl] = useState(false);
 
     useEffect(() => {
@@ -103,29 +103,32 @@ function StatesAndSliderLayer({
     }, [map, spendingAtTimeByState]);
 
     useEffect(() => {
-        if(playButtonDisabled){
+        (timeValue % 1 === 0) && spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+        if(timeValue === PROGRESS_FINAL_MONTH){
+            setAnimationEnabled(false);
+            setRestartTimeControl(true);
+        }
+    }, [timeValue, spending])
+
+    useEffect(() => {
+        if(animationEnabled){
             const monthlyInterval = setInterval(() => {
-                setTimeValue(Math.round((timeValue + 0.1)*10)/10);
-                (timeValue % 1 === 0) && spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
+                setTimeValue(currentTimeValue => Math.round((currentTimeValue + 0.1)*10)/10);
             },
                 25
             );
             return () => {
                 clearInterval(monthlyInterval);
-                if(timeValue === PROGRESS_FINAL_MONTH){
-                    setPlayButtonDisabled(false);
-                    setRestartTimeControl(true);
-                }
             };
         }
-    }, [playButtonDisabled, timeValue, spending]);
+    }, [animationEnabled]);
 
     function onSelectTimeAnimation(){
         if(restartTimeControl){
             setTimeValue(0);
             setRestartTimeControl(false);
         }
-        setPlayButtonDisabled(true);
+        setAnimationEnabled(true);
     }
 
     return (
@@ -148,7 +151,7 @@ function StatesAndSliderLayer({
                 }}
             />
             <Box mt='575px' textAlign={'center'}>
-                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={playButtonDisabled} />
+                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={animationEnabled} />
                 <Tag width='60%' maxWidth={'750px'} background='none'>
                     <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
                     <Progress
