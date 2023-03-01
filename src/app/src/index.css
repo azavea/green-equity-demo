@@ -14,3 +14,10 @@
 .leaflet-tooltip-right:before {
     border: none;
 }
+details summary > * { 
+    display: inline;
+    cursor: pointer;
+}
+ul {
+    list-style-position: inside;
+}
