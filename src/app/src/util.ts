@@ -120,6 +120,26 @@ export function getAgenciesForCategory(category: Category): Agency[] {
     }
 }
 
+export function getCategoryForAgencies(agencies: Agency[]): Category {
+    const anAgencyInEachCategory: Record<string, Category> = {
+        'Bureau of Reclamation': Category.CLIMATE,
+        'Corps of Engineers - Civil Works': Category.CIVIL_WORKS,
+        'Federal Aviation Administration': Category.TRANSPORTATION,
+        'Rural Utilities Service': Category.BROADBAND,
+        'Denali Commission': Category.OTHER,
+    };
+
+    for (const [agencyName, category] of Object.entries(
+        anAgencyInEachCategory
+    )) {
+        if (agencies.some(agency => agency.name === agencyName)) {
+            return category;
+        }
+    }
+
+    throw new Error(`Category not found for this agency list ${agencies}`);
+}
+
 export function getAmountCategory(amount: number): AmountCategory {
     const category =
         AMOUNT_CATEGORIES.find(

@@ -64,7 +64,7 @@ export default function DataSandbox() {
                 onChange={({ target: { value } }) => setStateOrTerritory(value)}
                 size='sm'
             >
-                <option>All states</option>
+                <option value=''>All states</option>
                 {states.map(state => (
                     <option key={state.fips} value={state.code}>
                         {state.name}

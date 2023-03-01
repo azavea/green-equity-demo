@@ -1,0 +1,8 @@
+#!/bin/bash
+
+USAGE="Fetch and save spending data"
+
+source ./scripts/_sourced
+check_for_help_flag "$@"
+
+./scripts/yarn run fetch-data

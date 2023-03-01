@@ -8,6 +8,7 @@
     "module": "commonjs",
     "noUncheckedIndexedAccess": true,
     "outDir": "build",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "es2016"
