@@ -46,6 +46,22 @@ export type SpendingByGeographyResponse = {
     results: SpendingByGeographySingleResult[];
 };
 
+export type SpendingOverTimeByStateRequest = {
+    filters: {
+        def_codes: DefCode[];
+        time_period?: {
+            start_date: string;
+            end_date: string;
+            date_type: string;
+        }[];
+        place_of_performance_locations: {
+            country: string;
+            state?: string;
+        }[];
+    };
+    group: string;
+};
+
 export type MonthlySpendingOverTimeResponse = {
     shape_code: string;
     results: {

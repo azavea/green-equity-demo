@@ -5,6 +5,7 @@ import { dataDir } from './nodeConstants';
 
 import fetchPerCapitaSpendingData from './fetchPerCapitaSpendingData';
 import fetchStatesData from './fetchStatesData';
+import fetchSpendingOverTimeData from './fetchSpendingOverTimeData';
 
 async function fetchData() {
     if (!existsSync(dataDir)) {
@@ -12,7 +13,11 @@ async function fetchData() {
     }
 
     try {
-        await Promise.all([fetchStatesData(), fetchPerCapitaSpendingData()]);
+        await Promise.all([
+            fetchStatesData(),
+            fetchPerCapitaSpendingData(),
+            fetchSpendingOverTimeData(),
+        ]);
     } catch {
         // Data not fetched.
         return;
