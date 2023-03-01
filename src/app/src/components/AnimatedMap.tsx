@@ -3,7 +3,6 @@ import { useMap } from 'react-leaflet';
 import {
     Heading,
     Spacer,
-    HStack,
     Box,
     IconButton,
     Progress,
@@ -23,6 +22,7 @@ import {
     SpendingByGeographyAtMonth,
 } from '../types/api';
 import { spendingDataByMonth } from './dummySpendingDataByMonth';
+import AnimatedMapLegend from './AnimatedMapLegend';
 
 export default function AnimatedMap() {
     return (
@@ -31,33 +31,7 @@ export default function AnimatedMap() {
                 Allocation of announced award funding over time
             </Heading>
             <Spacer></Spacer>
-            <Box width='100%' pl='20%'>
-                <HStack spacing='0px' border={'1px'} width='210px'>
-                    <Box w='70px' h='40px' bg='white'></Box>
-                    <Box
-                        w='70px'
-                        h='40px'
-                        bg='#94A4DF'
-                        textAlign={'center'}
-                        color={'white'}
-                        fontSize={'sm'}
-                        pt='8px'
-                    >
-                        ≥1% BIL
-                    </Box>
-                    <Box
-                        w='70px'
-                        h='40px'
-                        bg='#465EB5'
-                        textAlign={'center'}
-                        color={'white'}
-                        fontSize={'sm'}
-                        pt='8px'
-                    >
-                        ≥2% BIL
-                    </Box>
-                </HStack>
-            </Box>
+            <AnimatedMapLegend />
             <UsaMapContainer>
                 <StatesAndSliderLayer spending={spendingDataByMonth} />
             </UsaMapContainer>
