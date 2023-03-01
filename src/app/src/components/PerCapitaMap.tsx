@@ -165,7 +165,9 @@ function StatesAndMarkersLayer({
                 L.GeometryUtil.geodesicArea(current.getLatLngs()[0] as LatLngLiteral[]))
                 ? prev : current
             );
-        return polylabel(largestPolygon.toGeoJSON().geometry.coordinates as number[][][]) as LatLngTuple;
+        const poleOfInaccessibility = polylabel(largestPolygon.toGeoJSON().geometry.coordinates as number[][][]) as LatLngTuple;
+        feature.properties.INACSPOLE = poleOfInaccessibility;
+        return poleOfInaccessibility;
     };
 
     return (
@@ -203,7 +205,7 @@ function StatesAndMarkersLayer({
                         const amountCategory = getAmountCategory(perCapitaSpending);
 
                         // pole of inaccessibility: point (in largest polygon) furthest from edges
-                        const poleOfInaccessibility = findPoleofInaccessibility(feature);
+                        const poleOfInaccessibility = feature.properties.INACSPOLE ?? findPoleofInaccessibility(feature);
 
                         const marker = new L.Marker(
                             poleOfInaccessibility as LatLngTuple,
