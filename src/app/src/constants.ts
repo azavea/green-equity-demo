@@ -46,8 +46,7 @@ export const MARKER_OVERRIDES: { [stateCode: string]: LatLngTuple } = Object.fre
         'RI': [5.5, 21],
         'CT': [4.5, 20],
         'NJ': [3.6, 18.6],
-        'DE': [2.75, 17.75],
-        'MD': [1.6, 17.25],
+        'DE': [2.5, 17.75],
         'DC': [1.5, 21],
     }
 );

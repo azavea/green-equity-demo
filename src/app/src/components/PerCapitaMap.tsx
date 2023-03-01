@@ -135,6 +135,7 @@ function StatesAndMarkersLayer({
 }) {
     const map = useMap();
     const markerReference = useRef<L.Marker[]>([]);
+    const cheatLineReference = useRef<L.Polyline[]>([]);
 
     const spendingByState = useMemo(
         () =>
@@ -238,6 +239,22 @@ function StatesAndMarkersLayer({
                         marker.addTo(map);
                         markerReference.current.push(marker);
 
+                        if (feature.properties.MRKOVERRIDE) {
+                            const polygonCenter = (event.sourceTarget as L.Polygon).getBounds().getCenter();
+                            const fudgeFactor = amountCategory.size / 30;
+                            const line = new L.Polyline(
+                                [polygonCenter, [
+                                        // stop short of the marker
+                                        feature.properties.MRKOVERRIDE[0] - fudgeFactor,
+                                        feature.properties.MRKOVERRIDE[1] - fudgeFactor,
+                                    ]
+                                ],
+                                { color: '#465EB5', weight: 1, interactive: false }
+                            );
+                            line.addTo(map);
+                            cheatLineReference.current.push(line);
+                        }
+
                         const tooltipForState = tooltips.find(
                             tooltip => tooltip.id === `tooltip-${feature.properties.STUSPS}`);
                         if (tooltipForState !== undefined) {
@@ -262,6 +279,9 @@ function StatesAndMarkersLayer({
                         markerReference.current
                             .splice(0)
                             .forEach(marker => marker.removeFrom(map));
+                        cheatLineReference.current
+                            .splice(0)
+                            .forEach(line => line.removeFrom(map));
                     });
                 }}
             />
