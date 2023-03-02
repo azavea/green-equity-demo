@@ -11,6 +11,7 @@
   "bugs": {
     "url": "https://github.com/azavea/green-equity-demo/issues"
   },
+  "homepage": "https://azavea.github.io/green-equity-demo/",
   "dependencies": {
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11",

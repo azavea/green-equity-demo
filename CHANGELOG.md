@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add budget tracker [#34](https://github.com/azavea/green-equity-demo/pull/34)
 - Add spending category selector [#30](https://github.com/azavea/green-equity-demo/pull/30)
 - Add spending and state data fetching scripts [#40](https://github.com/azavea/green-equity-demo/pull/40)
+- Add Github Pages deploy to CI workflow [#48](https://github.com/azavea/green-equity-demo/pull/48)
 
 ### Changed
 
