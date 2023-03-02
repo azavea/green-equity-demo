@@ -1,3 +1,5 @@
+import { LatLngTuple } from 'leaflet';
+
 export type StateGeometry = GeoJSON.Polygon | GeoJSON.MultiPolygon;
 export type StateProperties = {
     STATEFP: string;
@@ -9,6 +11,8 @@ export type StateProperties = {
     LSAD: string;
     ALAND: number;
     AWATER: number;
+    INACSPOLE?: LatLngTuple,
+    MRKOVERRIDE?: LatLngTuple,
 };
 export type StateFeature = GeoJSON.Feature<StateGeometry, StateProperties>;
 export type StatesCollection = GeoJSON.FeatureCollection<

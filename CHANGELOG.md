@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use Closes # in PR template [#9](https://github.com/azavea/green-equity-demo/pull/9)
 - Change map to Albers USA projection [#31](https://github.com/azavea/green-equity-demo/pull/31)
+- Place state markers at the points farthest from edges [#45](https://github.com/azavea/green-equity-demo/pull/45)
 
 ### Fixed
 

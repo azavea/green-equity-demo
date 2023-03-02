@@ -1,4 +1,4 @@
-import { PathOptions } from 'leaflet';
+import { LatLngTuple, PathOptions } from 'leaflet';
 
 import { AmountCategory } from './types';
 
@@ -37,5 +37,16 @@ export const STATE_STYLE_HOVER: PathOptions = Object.freeze(
         fillColor: '#D0DAFF',
         color: '#465EB5',
         weight: 2,
+    }
+);
+
+export const MARKER_OVERRIDES: { [stateCode: string]: LatLngTuple } = Object.freeze(
+    {
+        'MA': [7.25, 20.5],
+        'RI': [5.5, 21],
+        'CT': [4.5, 20],
+        'NJ': [3.6, 18.6],
+        'DE': [2.5, 17.75],
+        'DC': [1.5, 21],
     }
 );

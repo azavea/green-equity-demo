@@ -3,7 +3,9 @@ import { useMap } from 'react-leaflet';
 import { createPortal } from 'react-dom';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Center, CircularProgress, VStack } from '@chakra-ui/react';
-import L from 'leaflet';
+import L, { LatLngLiteral, LatLngTuple } from 'leaflet';
+import 'leaflet-draw';
+import polylabel from 'polylabel';
 
 import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
@@ -11,6 +13,7 @@ import PersonIcon from './PersonIcon';
 import PerCapitaMapLegend from './PerCapitaMapLegend';
 import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
+import { StateFeature } from './states.geojson';
 
 import { useGetSpendingByGeographyQuery, useGetStatesQuery } from '../api';
 import {
@@ -19,7 +22,7 @@ import {
     getDefaultSpendingByGeographyRequest,
 } from '../util';
 import { SpendingByGeographyResponse } from '../types/api';
-import { STATE_STYLE_BASE, STATE_STYLE_HOVER } from '../constants';
+import { STATE_STYLE_BASE, STATE_STYLE_HOVER, MARKER_OVERRIDES } from '../constants';
 import { Category } from '../enums';
 
 
@@ -132,6 +135,7 @@ function StatesAndMarkersLayer({
 }) {
     const map = useMap();
     const markerReference = useRef<L.Marker[]>([]);
+    const cheatLineReference = useRef<L.Polyline[]>([]);
 
     const spendingByState = useMemo(
         () =>
@@ -151,6 +155,27 @@ function StatesAndMarkersLayer({
         return tooltipDiv;
     });
     const [tooltipsAttached, setTooltipsAttached] = useState(false);
+
+    const findPoleofInaccessibility = (feature: StateFeature) => {
+        const asPolygons = feature.geometry.coordinates.map(
+            polygonCoords => new L.Polygon(polygonCoords as LatLngTuple[])
+        );
+        const largestPolygon = asPolygons.reduce(
+            (prev, current) => (
+                L.GeometryUtil.geodesicArea(prev.getLatLngs()[0] as LatLngLiteral[]) >
+                L.GeometryUtil.geodesicArea(current.getLatLngs()[0] as LatLngLiteral[]))
+                ? prev : current
+            );
+        const poleOfInaccessibility = polylabel(largestPolygon.toGeoJSON().geometry.coordinates as number[][][]) as LatLngTuple;
+        feature.properties.INACSPOLE = poleOfInaccessibility;
+        return poleOfInaccessibility;
+    };
+
+    const getMarkerOverride = (feature: StateFeature) => {
+        const override = MARKER_OVERRIDES[feature.properties.STUSPS];
+        feature.properties.MRKOVERRIDE = override;
+        return override;
+    };
 
     return (
         <>
@@ -186,10 +211,17 @@ function StatesAndMarkersLayer({
 
                         const amountCategory = getAmountCategory(perCapitaSpending);
 
-                        const polygonCenter = (event.sourceTarget as L.Polygon).getBounds().getCenter();
+                        // pole of inaccessibility: point (in largest polygon) furthest from edges
+                        // some states have overrides for marker locations in the Atlantic
+                        const markerLocation = (
+                            feature.properties.MRKOVERRIDE ??
+                            getMarkerOverride(feature) ??
+                            feature.properties.INACSPOLE ??
+                            findPoleofInaccessibility(feature)
+                        );
 
                         const marker = new L.Marker(
-                            polygonCenter,
+                            markerLocation,
                             {
                                 icon: new L.DivIcon({
                                     html: renderToStaticMarkup(
@@ -206,6 +238,22 @@ function StatesAndMarkersLayer({
                         );
                         marker.addTo(map);
                         markerReference.current.push(marker);
+
+                        if (feature.properties.MRKOVERRIDE) {
+                            const polygonCenter = (event.sourceTarget as L.Polygon).getBounds().getCenter();
+                            const fudgeFactor = amountCategory.size / 30;
+                            const line = new L.Polyline(
+                                [polygonCenter, [
+                                        // stop short of the marker
+                                        feature.properties.MRKOVERRIDE[0] - fudgeFactor,
+                                        feature.properties.MRKOVERRIDE[1] - fudgeFactor,
+                                    ]
+                                ],
+                                { color: '#465EB5', weight: 1, interactive: false }
+                            );
+                            line.addTo(map);
+                            cheatLineReference.current.push(line);
+                        }
 
                         const tooltipForState = tooltips.find(
                             tooltip => tooltip.id === `tooltip-${feature.properties.STUSPS}`);
@@ -231,6 +279,9 @@ function StatesAndMarkersLayer({
                         markerReference.current
                             .splice(0)
                             .forEach(marker => marker.removeFrom(map));
+                        cheatLineReference.current
+                            .splice(0)
+                            .forEach(line => line.removeFrom(map));
                     });
                 }}
             />
