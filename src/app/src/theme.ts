@@ -17,6 +17,11 @@ const theme = extendTheme({
             },
         },
         Card: spendingTooltipCardStyle,
+        Link: {
+            baseStyle: {
+                textDecoration: 'underline',
+            },
+        },
     },
     fonts: {
         heading: `'Lato', 'Helvetica', sans-serif`,
