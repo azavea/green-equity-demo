@@ -24,7 +24,41 @@ import {
 import { spendingDataByMonth } from './dummySpendingDataByMonth';
 import AnimatedMapLegend from './AnimatedMapLegend';
 
+const PROGRESS_FINAL_MONTH = 26;
+
 export default function AnimatedMap() {
+    const [timeValue, setTimeValue] = useState(0);
+    const [animationEnabled, setAnimationEnabled] = useState(false);
+    const [restartTimeControl, setRestartTimeControl] = useState(false);
+
+    useEffect(() => {
+        if(animationEnabled){
+            const monthlyInterval = setInterval(() => {
+                setTimeValue(currentTimeValue => Math.round((currentTimeValue + 0.1)*10)/10);
+            },
+                25
+            );
+            return () => {
+                clearInterval(monthlyInterval);
+            };
+        }
+    }, [animationEnabled]);
+
+    useEffect(() => {
+        if(timeValue === PROGRESS_FINAL_MONTH){
+            setAnimationEnabled(false);
+            setRestartTimeControl(true);
+        }
+    }, [timeValue]);
+
+    function onSelectTimeAnimation(){
+        if(restartTimeControl){
+            setTimeValue(0);
+            setRestartTimeControl(false);
+        }
+        setAnimationEnabled(true);
+    }
+
     return (
         <>
             <Heading variant='subtitle'>
@@ -33,25 +67,44 @@ export default function AnimatedMap() {
             <Spacer></Spacer>
             <AnimatedMapLegend />
             <UsaMapContainer>
-                <StatesAndSliderLayer spending={spendingDataByMonth} />
+                <StatesAndSliderLayer spending={spendingDataByMonth} timeValue={timeValue} />
             </UsaMapContainer>
+            <Box  width="100%" textAlign={'center'}>
+                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={animationEnabled} size="lg"/>
+                <Tag width='60%' maxWidth={'750px'} background='none'>
+                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
+                    <Progress
+                        value={timeValue}
+                        opacity={100}
+                        colorScheme={'progress'}
+                        aria-label='date-time-progress-bar'
+                        min={0}
+                        max={PROGRESS_FINAL_MONTH}
+                        width='100%'
+                        maxWidth={'750px'}
+                        height='20px'
+                        mt='10px'
+                        display={'inline-block'}
+                    />
+                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>Now</TagLabel>
+                </Tag>
+            </Box>       
         </>
     );
 }
 
 function StatesAndSliderLayer({
     spending,
+    timeValue,
 }: {
     spending: MonthlySpendingOverTimeResponse;
+    timeValue: number
 }) {
-    const PROGRESS_FINAL_MONTH = 26;
     const map = useMap();
-    const [timeValue, setTimeValue] = useState(0);
+
     const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(() =>
         getSpendingByStateAtTime(1, spending)
     );
-    const [animationEnabled, setAnimationEnabled] = useState(false);
-    const [restartTimeControl, setRestartTimeControl] = useState(false);
 
     useEffect(() => {
         map &&
@@ -78,32 +131,7 @@ function StatesAndSliderLayer({
 
     useEffect(() => {
         (timeValue % 1 === 0) && spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
-        if(timeValue === PROGRESS_FINAL_MONTH){
-            setAnimationEnabled(false);
-            setRestartTimeControl(true);
-        }
     }, [timeValue, spending])
-
-    useEffect(() => {
-        if(animationEnabled){
-            const monthlyInterval = setInterval(() => {
-                setTimeValue(currentTimeValue => Math.round((currentTimeValue + 0.1)*10)/10);
-            },
-                25
-            );
-            return () => {
-                clearInterval(monthlyInterval);
-            };
-        }
-    }, [animationEnabled]);
-
-    function onSelectTimeAnimation(){
-        if(restartTimeControl){
-            setTimeValue(0);
-            setRestartTimeControl(false);
-        }
-        setAnimationEnabled(true);
-    }
 
     return (
         <>
@@ -124,26 +152,7 @@ function StatesAndSliderLayer({
                         });
                 }}
             />
-            <Box mt='575px' textAlign={'center'}>
-                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={animationEnabled} />
-                <Tag width='60%' maxWidth={'750px'} background='none'>
-                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
-                    <Progress
-                        value={timeValue}
-                        opacity={100}
-                        colorScheme={'progress'}
-                        aria-label='date-time-progress-bar'
-                        min={0}
-                        max={PROGRESS_FINAL_MONTH}
-                        width='100%'
-                        maxWidth={'750px'}
-                        height='20px'
-                        mt='10px'
-                        display={'inline-block'}
-                    />
-                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>Now</TagLabel>
-                </Tag>
-            </Box>
+
         </>
     );
 }
