@@ -5,7 +5,14 @@ import PersonIcon from './PersonIcon';
 
 export default function PerCapitaMapLegend() {
     return (
-        <VStack alignSelf='end' alignItems='flex-start' pb={10} pr={10}>
+        <VStack
+            alignSelf='end'
+            alignItems='flex-start'
+            pt={50}
+            pb={10}
+            pr={10}
+            zIndex={1}
+        >
             <Text fontSize={24}>Dollars per capita</Text>
             <HStack alignItems='end' justifyContent='end' spacing={5} w='100%'>
                 {[...AMOUNT_CATEGORIES]
