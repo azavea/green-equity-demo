@@ -15,10 +15,10 @@ export enum GeoLayer {
 }
 
 export enum Category {
-    CLIMATE = 'Climate',
-    CIVIL_WORKS = 'Civil Works',
-    TRANSPORTATION = 'Transportation',
     BROADBAND = 'Broadband',
+    CIVIL_WORKS = 'Civil Works',
+    CLIMATE = 'Climate',
+    TRANSPORTATION = 'Transportation',
     OTHER = 'Other',
 }
 

@@ -29,102 +29,126 @@ export function getDefaultSpendingByGeographyRequest(): SpendingByGeographyReque
     };
 }
 
-const baseAgency = {
+const baseSubAgency = {
     type: AgencyType.AWARDING,
     tier: AgencyTier.SUB,
 };
 
-export function getAgenciesForCategory(category: Category): Agency[] {
+const baseTopAgency = {
+    type: AgencyType.AWARDING,
+    tier: AgencyTier.TOP,
+};
+
+// These agencies cross-cut among our categories. So we filter
+// on their subagencies instead.
+const USDA = 'Department of Agriculture';
+const COMMERCE = 'Department of Commerce';
+const DHS = 'Department of Homeland Security';
+
+export function getAgenciesForCategory(
+    category: Category
+): Agency[] | undefined {
     switch (category) {
         case Category.CLIMATE:
             return [
-                { ...baseAgency, name: 'Bureau of Reclamation' },
+                { ...baseTopAgency, name: 'Department of Energy' },
+                { ...baseTopAgency, name: 'Department of the Interior' },
                 {
-                    ...baseAgency,
+                    ...baseTopAgency,
+                    name: 'Department of Health and Human Services',
+                },
+                { ...baseTopAgency, name: 'Environmental Protection Agency' },
+                {
+                    ...baseSubAgency,
+                    name: 'Forest Service',
+                    toptier_name: USDA,
+                },
+                {
+                    ...baseSubAgency,
                     name: 'Natural Resources Conservation Service',
+                    toptier_name: USDA,
                 },
-                { ...baseAgency, name: 'Bureau of Indian Affairs' },
-                { ...baseAgency, name: 'State and Tribal Assistance Grants' }, // EP
-                { ...baseAgency, name: 'Department-Wide Programs' }, // Interio
-                { ...baseAgency, name: 'Hazardous Substance Superfund' },
-                { ...baseAgency, name: 'Forest Service' },
-                { ...baseAgency, name: 'Federal Emergency Management Agency' },
                 {
-                    ...baseAgency,
+                    ...baseSubAgency,
+                    name: 'Under Secretary for Farm and Foreign Agricultural Services',
+                    toptier_name: USDA,
+                },
+                {
+                    ...baseSubAgency,
+                    name: 'Federal Emergency Management Agency',
+                    toptier_name: DHS,
+                },
+                {
+                    ...baseSubAgency,
                     name: 'National Oceanic and Atmospheric Administration',
-                },
-                {
-                    ...baseAgency,
-                    name: 'Energy Efficiency and Renewable Energy',
-                },
-                { ...baseAgency, name: 'Indian Health Service' },
-                { ...baseAgency, name: 'Nuclear Energy' },
-                {
-                    ...baseAgency,
-                    name: 'United States Fish and Wildlife Service',
-                },
-                {
-                    ...baseAgency,
-                    name: 'Environmental Programs and Management',
-                },
-                { ...baseAgency, name: 'United States Geological Survey' },
-                {
-                    ...baseAgency,
-                    name: 'Office of the Secretary',
-                    toptier_name: 'Department of Interior',
+                    toptier_name: COMMERCE,
                 },
             ];
         case Category.CIVIL_WORKS:
             return [
-                { ...baseAgency, name: 'Corps of Engineers - Civil Works' },
+                { ...baseTopAgency, name: 'Department of Defense' },
+                { ...baseTopAgency, name: 'General Services Administration' },
+                { ...baseTopAgency, name: 'Corps of Engineers - Civil Works' },
+                {
+                    ...baseSubAgency,
+                    name: 'U.S. Customs and Border Protection',
+                    toptier_name: DHS,
+                },
             ];
         case Category.TRANSPORTATION:
-            return [
-                { ...baseAgency, name: 'Federal Aviation Administration' },
-                { ...baseAgency, name: 'Federal Highway Administration' },
-                { ...baseAgency, name: 'Federal Transit Administration' },
-                { ...baseAgency, name: 'Real Property Activities' },
-                { ...baseAgency, name: 'Maritime Administration' },
-                {
-                    ...baseAgency,
-                    name: 'Office of the Secretary',
-                    toptier_name: 'Department of Transportation',
-                },
-                {
-                    ...baseAgency,
-                    name: 'Federal Motor Carrier Safety Administration',
-                },
-                {
-                    ...baseAgency,
-                    name: 'Energy Efficiency and Renewable Energy',
-                }, // electric vehicles
-            ];
+            return [{ ...baseTopAgency, name: 'Department of Transportation' }];
         case Category.BROADBAND:
             return [
-                { ...baseAgency, name: 'Rural Utilities Service' },
                 {
-                    ...baseAgency,
+                    ...baseSubAgency,
+                    name: 'Rural Utilities Service',
+                    toptier_name: USDA,
+                },
+                {
+                    ...baseSubAgency,
+                    name: 'National Institute of Standards and Technology',
+                    toptier_name: COMMERCE,
+                },
+                {
+                    ...baseSubAgency,
                     name: 'National Telecommunications and Information Administration',
+                    toptier_name: COMMERCE,
                 },
             ];
         case Category.OTHER:
             return [
-                { ...baseAgency, name: 'Denali Commission' },
+                { ...baseTopAgency, name: 'Department of Education' }, // none yet
                 {
-                    ...baseAgency,
+                    ...baseTopAgency,
+                    name: 'Department of Housing and Urban Development',
+                }, // none yet
+                { ...baseTopAgency, name: 'Department of Justice' }, // none yet
+                { ...baseTopAgency, name: 'Department of Labor' }, // none yet
+                { ...baseTopAgency, name: 'Department of State' }, // none yet
+                { ...baseTopAgency, name: 'Department of the Treasury' },
+                { ...baseTopAgency, name: 'Department of Veterans Affairs' }, // none yet
+                { ...baseTopAgency, name: 'Executive Office of the President' },
+                {
+                    ...baseSubAgency,
                     name: 'Office of the Secretary',
-                    toptier_name: 'Department of Agriculture',
+                    toptier_name: USDA,
                 },
-                { ...baseAgency, name: 'Delta Regional Authority' },
+                { ...baseTopAgency, name: 'Delta Regional Authority' },
+                {
+                    ...baseSubAgency,
+                    name: 'Office of Procurement Services',
+                    toptier_name: DHS,
+                },
+                { ...baseTopAgency, name: 'Denali Commission' },
             ];
     }
 }
 
 export function getCategoryForAgencies(agencies: Agency[]): Category {
     const anAgencyInEachCategory: Record<string, Category> = {
-        'Bureau of Reclamation': Category.CLIMATE,
-        'Corps of Engineers - Civil Works': Category.CIVIL_WORKS,
-        'Federal Aviation Administration': Category.TRANSPORTATION,
+        'Department of Energy': Category.CLIMATE,
+        'Department of Defense': Category.CIVIL_WORKS,
+        'Department of Transportation': Category.TRANSPORTATION,
         'Rural Utilities Service': Category.BROADBAND,
         'Denali Commission': Category.OTHER,
     };

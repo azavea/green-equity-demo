@@ -46,6 +46,7 @@ export default function SpendingCategorySelector({
         <HStack mb={75} zIndex={1}>
             <CategoryButton isFirst />
             <CategoryButton category={Category.BROADBAND} />
+            <CategoryButton category={Category.CIVIL_WORKS} />
             <CategoryButton category={Category.CLIMATE} />
             <CategoryButton category={Category.TRANSPORTATION} />
             <CategoryButton category={Category.OTHER} isLast />

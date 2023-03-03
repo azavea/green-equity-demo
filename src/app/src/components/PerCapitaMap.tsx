@@ -56,6 +56,11 @@ export default function PerCapitaMap() {
     const { data: broadbandData, isFetching: isFetchingBroadband } =
         useGetSpendingByGeographyQuery(requestForCategory(Category.BROADBAND));
 
+    const { data: civilWorksData, isFetching: isFetchingCivilWorks } =
+        useGetSpendingByGeographyQuery(
+            requestForCategory(Category.CIVIL_WORKS)
+        );
+
     const { data: climateData, isFetching: isFetchingClimate } =
         useGetSpendingByGeographyQuery(requestForCategory(Category.CLIMATE));
 
@@ -72,6 +77,7 @@ export default function PerCapitaMap() {
         isFetching ||
         isFetchingStates ||
         isFetchingBroadband ||
+        isFetchingCivilWorks ||
         isFetchingClimate ||
         isFetchingTransportation ||
         isFetchingOther;
@@ -83,18 +89,21 @@ export default function PerCapitaMap() {
                 state.code,
                 new Map<Category, number>()
             );
-            Object.values(Category)
-                .filter(cat => cat !== Category.CIVIL_WORKS)
-                .forEach(cat =>
-                    spendingByCategoryByState
-                        .get(state.code)!
-                        .set(cat as Category, 0)
-                );
+            Object.values(Category).forEach(cat =>
+                spendingByCategoryByState
+                    .get(state.code)!
+                    .set(cat as Category, 0)
+            );
         });
         broadbandData!.results.forEach(stateData => {
             spendingByCategoryByState
                 .get(stateData.shape_code)
                 ?.set(Category.BROADBAND, stateData.aggregated_amount);
+        });
+        civilWorksData!.results.forEach(stateData => {
+            spendingByCategoryByState
+                .get(stateData.shape_code)
+                ?.set(Category.CIVIL_WORKS, stateData.aggregated_amount);
         });
         climateData!.results.forEach(stateData => {
             spendingByCategoryByState
