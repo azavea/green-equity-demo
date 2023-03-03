@@ -3,9 +3,12 @@ import { Box, Link, List, ListItem, Text } from '@chakra-ui/react';
 import { getAgenciesForCategory } from '../util';
 import { AgencyTier, Category } from '../enums';
 
+import lastUpdated from '../data/lastUpdated.json';
 import { Agency } from '../types/api';
 
 export default function Attribution() {
+    const date = new Date(lastUpdated.lastUpdated);
+
     return (
         <Box ml={2} width='650px'>
             <details style={{ alignSelf: 'start' }}>
@@ -19,8 +22,8 @@ export default function Attribution() {
                     </Link>{' '}
                     API operated by the U.S. Department of the Treasury, Bureau
                     of the Fiscal Service. Data updates are anticipated to be
-                    made on an ad hoc basis. The most recent date data was
-                    fetched is noted at the top of the page.
+                    made on an ad hoc basis. (Last update:{' '}
+                    {date.toLocaleDateString()})
                 </Text>
                 <Text fontSize={12} pt={1}>
                     The query made to usaspending.gov requests the aggregated

@@ -3,6 +3,7 @@ import { Box, CircularProgress, HStack, Text, VStack } from '@chakra-ui/react';
 
 import { useGetSpendingByGeographyQuery } from '../api';
 import { getDefaultSpendingByGeographyRequest } from '../util';
+import lastUpdated from '../data/lastUpdated.json';
 
 export default function BudgetTracker() {
     const { data: spending } = useGetSpendingByGeographyQuery(
@@ -17,6 +18,8 @@ export default function BudgetTracker() {
             ),
         [spending?.results]
     );
+
+    const date = new Date(lastUpdated.lastUpdated);
 
     return (
         <Box
@@ -36,7 +39,9 @@ export default function BudgetTracker() {
                     <Text fontSize={20} fontWeight={500}>
                         $550B available in bill
                     </Text>
-                    <Text fontSize={14}>Updated Jan 13, 2023</Text>
+                    <Text fontSize={14}>
+                        Updated {date.toLocaleDateString()}
+                    </Text>
                 </VStack>
                 {spendingSum ? (
                     <BudgetTrackerProgressBar spending={spendingSum} />

@@ -35,7 +35,7 @@ async function writeSpendingDataFile(category?: Category) {
                 category ?? 'All'
             } spending because the file already exists.`
         );
-        return;
+        return Promise.reject();
     }
 
     const requestBody = getDefaultSpendingByGeographyRequest();
