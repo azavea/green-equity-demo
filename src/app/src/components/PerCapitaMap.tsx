@@ -124,7 +124,7 @@ export default function PerCapitaMap() {
     }
 
     return (
-        <VStack width='100%'>
+        <VStack width='100%' justifyContent='center'>
             <SpendingCategorySelector
                 value={spendingCategory}
                 onChange={setSpendingCategory}
