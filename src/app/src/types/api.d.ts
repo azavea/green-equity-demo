@@ -62,15 +62,23 @@ export type SpendingOverTimeByStateRequest = {
     group: string;
 };
 
+export type MonthlySpendingOverTime = {
+    aggregated_amount: number;
+    time_period: {
+        fiscal_year: number;
+        month: number;
+    };
+}[];
+
 export type MonthlySpendingOverTimeResponse = {
+    group: 'month';
+    results: MonthlySpendingOverTime;
+    messages?: string[];
+};
+
+export type MonthlySpendingOverTimeByState = {
     shape_code: string;
-    results: {
-        aggregated_amount: number;
-        time_period: {
-            fiscal_year: number;
-            month: number;
-        };
-    }[];
+    results: MonthlySpendingOverTime;
 }[];
 
 export type SpendingByGeographyAtMonth = {
