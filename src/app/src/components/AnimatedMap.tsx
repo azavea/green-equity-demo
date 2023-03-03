@@ -26,7 +26,13 @@ import {
 import AnimatedMapLegend from './AnimatedMapLegend';
 import { useGetSpendingOverTimeQuery } from '../api';
 
-const PROGRESS_FINAL_MONTH = 26;
+const START_YEAR = 2021;
+const END_DATE = new Date();
+const PROGRESS_FINAL_STEP = (() => {
+    const final_month_step = END_DATE.getMonth();
+    const final_year_step = END_DATE.getFullYear();
+    return 12 * (final_year_step - START_YEAR) + final_month_step;
+})();
 
 export default function AnimatedMap() {
     const { data, isFetching } = useGetSpendingOverTimeQuery();
@@ -50,7 +56,7 @@ export default function AnimatedMap() {
     }, [animationEnabled]);
 
     useEffect(() => {
-        if (timeValue === PROGRESS_FINAL_MONTH) {
+        if (timeValue === PROGRESS_FINAL_STEP) {
             setAnimationEnabled(false);
             setRestartTimeControl(true);
         }
@@ -101,7 +107,7 @@ export default function AnimatedMap() {
                                 colorScheme={'progress'}
                                 aria-label='date-time-progress-bar'
                                 min={0}
-                                max={PROGRESS_FINAL_MONTH}
+                                max={PROGRESS_FINAL_STEP}
                                 width='100%'
                                 maxWidth={'750px'}
                                 height='20px'
@@ -193,9 +199,9 @@ function StatesAndSliderLayer({
 
 function getColor(amount: number | undefined): string {
     const fractionOfTotalAwards = amount ? amount / 550000000000 : 0;
-    return fractionOfTotalAwards > 0.02
+    return fractionOfTotalAwards > 0.1
         ? '#465EB5'
-        : fractionOfTotalAwards > 0.01
+        : fractionOfTotalAwards > 0.05
         ? '#94A4DF'
         : 'white';
 }

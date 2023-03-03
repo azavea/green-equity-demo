@@ -21,8 +21,8 @@ export default function AnimatedMapLegend() {
         <Box width='100%' pl='20%'>
             <HStack spacing='0px' border={'1px'} width='210px'>
                 <ColorRangeBox bg='white' />
-                <ColorRangeBox bg='#94A4DF' text='≥1% BIL' />
-                <ColorRangeBox bg='#465EB5' text='≥2% BIL' />
+                <ColorRangeBox bg='#94A4DF' text='≥5% BIL' />
+                <ColorRangeBox bg='#465EB5' text='≥10% BIL' />
             </HStack>
         </Box>
     );
