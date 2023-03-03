@@ -38,10 +38,11 @@ export default function Attribution() {
                     <Link href='https://d2d.gsa.gov/report/bipartisan-infrastructure-law-bil-maps-dashboard'>
                         Bipartisan Infrastructure Law (BIL) Maps Dashboard
                     </Link>
-                    , which consumes the same data source, is informative: "All
-                    announcement data represented on these maps, including award
-                    and project locations and funding amounts, is preliminary
-                    and non-binding. Awards may be contingent on meeting certain
+                    , which consumes the same data source, is informative,
+                    despite also including announced funding: "All announcement
+                    data represented on these maps, including award and project
+                    locations and funding amounts, is preliminary and
+                    non-binding. Awards may be contingent on meeting certain
                     requirements. Data represents announced funding (formula and
                     discretionary) as of January 13, 2023. This is a small
                     subset of what the Bipartisan Infrastructure Law will fund

@@ -87,7 +87,7 @@ function BudgetTrackerProgressBarProgress({ spending }: { spending: number }) {
                     color: 'white',
                 }}
             >
-                {spendingBillions.toFixed()}B announced
+                {spendingBillions.toFixed()}B awarded
             </div>
             <div
                 style={{
