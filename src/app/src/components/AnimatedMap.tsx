@@ -32,12 +32,13 @@ export default function AnimatedMap() {
     const [restartTimeControl, setRestartTimeControl] = useState(false);
 
     useEffect(() => {
-        if(animationEnabled){
+        if (animationEnabled) {
             const monthlyInterval = setInterval(() => {
-                setTimeValue(currentTimeValue => Math.round((currentTimeValue + 0.1)*10)/10);
-            },
-                25
-            );
+                setTimeValue(
+                    currentTimeValue =>
+                        Math.round((currentTimeValue + 0.1) * 10) / 10
+                );
+            }, 25);
             return () => {
                 clearInterval(monthlyInterval);
             };
@@ -45,14 +46,14 @@ export default function AnimatedMap() {
     }, [animationEnabled]);
 
     useEffect(() => {
-        if(timeValue === PROGRESS_FINAL_MONTH){
+        if (timeValue === PROGRESS_FINAL_MONTH) {
             setAnimationEnabled(false);
             setRestartTimeControl(true);
         }
     }, [timeValue]);
 
-    function onSelectTimeAnimation(){
-        if(restartTimeControl){
+    function onSelectTimeAnimation() {
+        if (restartTimeControl) {
             setTimeValue(0);
             setRestartTimeControl(false);
         }
@@ -67,12 +68,25 @@ export default function AnimatedMap() {
             <Spacer></Spacer>
             <AnimatedMapLegend />
             <UsaMapContainer>
-                <StatesAndSliderLayer spending={spendingDataByMonth} timeValue={timeValue} />
+                <StatesAndSliderLayer
+                    spending={spendingDataByMonth}
+                    timeValue={timeValue}
+                />
             </UsaMapContainer>
-            <Box  width="100%" textAlign={'center'}>
-                <IconButton aria-label='Play time progress animation' icon={<TimeControlIcon restart={restartTimeControl} />} mr='25px' background='none' onClick={onSelectTimeAnimation} isDisabled={animationEnabled} size="lg"/>
+            <Box width='100%' textAlign={'center'}>
+                <IconButton
+                    aria-label='Play time progress animation'
+                    icon={<TimeControlIcon restart={restartTimeControl} />}
+                    mr='25px'
+                    background='none'
+                    onClick={onSelectTimeAnimation}
+                    isDisabled={animationEnabled}
+                    size='lg'
+                />
                 <Tag width='60%' maxWidth={'750px'} background='none'>
-                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>2021</TagLabel>
+                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>
+                        2021
+                    </TagLabel>
                     <Progress
                         value={timeValue}
                         opacity={100}
@@ -86,9 +100,11 @@ export default function AnimatedMap() {
                         mt='10px'
                         display={'inline-block'}
                     />
-                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>Now</TagLabel>
+                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>
+                        Now
+                    </TagLabel>
                 </Tag>
-            </Box>       
+            </Box>
         </>
     );
 }
@@ -98,7 +114,7 @@ function StatesAndSliderLayer({
     timeValue,
 }: {
     spending: MonthlySpendingOverTimeResponse;
-    timeValue: number
+    timeValue: number;
 }) {
     const map = useMap();
 
@@ -130,8 +146,12 @@ function StatesAndSliderLayer({
     }, [map, spendingAtTimeByState]);
 
     useEffect(() => {
-        (timeValue % 1 === 0) && spending && setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, spending));
-    }, [timeValue, spending])
+        timeValue % 1 === 0 &&
+            spending &&
+            setSpendingAtTimeByState(
+                getSpendingByStateAtTime(timeValue, spending)
+            );
+    }, [timeValue, spending]);
 
     return (
         <>
@@ -152,7 +172,6 @@ function StatesAndSliderLayer({
                         });
                 }}
             />
-
         </>
     );
 }

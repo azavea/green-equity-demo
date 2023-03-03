@@ -8,42 +8,51 @@ import { Agency } from '../types/api';
 export default function Attribution() {
     return (
         <Box ml={2} width='650px'>
-            <details style={{alignSelf: 'start'}}>
-                <summary><h3>Methodology</h3></summary>
+            <details style={{ alignSelf: 'start' }}>
+                <summary>
+                    <h3>Methodology</h3>
+                </summary>
                 <Text fontSize={12} pt={2}>
                     Data were downloaded from the{' '}
-                    <Link href="https://api.usaspending.gov">
+                    <Link href='https://api.usaspending.gov'>
                         https://api.usaspending.gov
                     </Link>{' '}
-                    API operated by the U.S. Department of the Treasury, Bureau of the Fiscal Service.
-                    Data updates are anticipated to be made on an ad hoc basis.
-                    The most recent date data was fetched is noted at the top of the page.
+                    API operated by the U.S. Department of the Treasury, Bureau
+                    of the Fiscal Service. Data updates are anticipated to be
+                    made on an ad hoc basis. The most recent date data was
+                    fetched is noted at the top of the page.
                 </Text>
                 <Text fontSize={12} pt={1}>
-                    The query made to usaspending.gov requests the aggregated amount of awards
-                    performed in a state with a Disaster Emergency Fund Code of "Z" or "1"
-                    (relating to the BIL). The populations for calculating per capita figures
-                    also come from usaspending.gov.
+                    The query made to usaspending.gov requests the aggregated
+                    amount of awards performed in a state with a Disaster
+                    Emergency Fund Code of "Z" or "1" (relating to the BIL). The
+                    populations for calculating per capita figures also come
+                    from usaspending.gov.
                 </Text>
                 <Text fontSize={12} pt={1}>
-                    The following advice from the General Services Administration's{' '}
-                    <Link href="https://d2d.gsa.gov/report/bipartisan-infrastructure-law-bil-maps-dashboard">
+                    The following advice from the General Services
+                    Administration's{' '}
+                    <Link href='https://d2d.gsa.gov/report/bipartisan-infrastructure-law-bil-maps-dashboard'>
                         Bipartisan Infrastructure Law (BIL) Maps Dashboard
-                    </Link>, which consumes the same data source, is informative:
-
-                    "All announcement data represented on these maps, including award and project locations
-                    and funding amounts, is preliminary and non-binding. Awards may be contingent on meeting
-                    certain requirements.
-
-                    Data represents announced funding (formula and discretionary) as of January 13, 2023.
-                    This is a small subset of what the Bipartisan Infrastructure Law will fund and is not
-                    intended to be comprehensive."
+                    </Link>
+                    , which consumes the same data source, is informative: "All
+                    announcement data represented on these maps, including award
+                    and project locations and funding amounts, is preliminary
+                    and non-binding. Awards may be contingent on meeting certain
+                    requirements. Data represents announced funding (formula and
+                    discretionary) as of January 13, 2023. This is a small
+                    subset of what the Bipartisan Infrastructure Law will fund
+                    and is not intended to be comprehensive."
                 </Text>
                 <Text fontSize={12} pt={1}>
-                    Assignments of grant-making agencies to categories (Broadband, Climate, Transportation, and Other)
-                    were modeled on the assignments shown in the .xlsx file included with that dashboard.
+                    Assignments of grant-making agencies to categories
+                    (Broadband, Climate, Transportation, and Other) were modeled
+                    on the assignments shown in the .xlsx file included with
+                    that dashboard.
                 </Text>
-                {Object.values(Category).map(category => <AgencyList key={category.toString()} category={category} />)}
+                {Object.values(Category).map(category => (
+                    <AgencyList key={category.toString()} category={category} />
+                ))}
             </details>
         </Box>
     );
@@ -55,15 +64,19 @@ function AgencyList({ category }: { category: Category }) {
             return agency.toptier_name + ' - ' + agency.name;
         }
         return agency.name;
-    }
+    };
 
     return (
         <Box mt={2}>
-            <Text as='b' fontSize={12}>Agencies for {category.toString()} spending:</Text>
+            <Text as='b' fontSize={12}>
+                Agencies for {category.toString()} spending:
+            </Text>
             <List fontSize={12} pt={1}>
-                {getAgenciesForCategory(category).map(
-                    agency => <ListItem key={agency.name} ml={2} >{niceAgencyName(agency)}</ListItem>
-                )}
+                {getAgenciesForCategory(category).map(agency => (
+                    <ListItem key={agency.name} ml={2}>
+                        {niceAgencyName(agency)}
+                    </ListItem>
+                ))}
             </List>
         </Box>
     );

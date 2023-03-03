@@ -1,6 +1,6 @@
 import { HStack, Box } from '@chakra-ui/react';
 
-export function ColorRangeBox({ bg, text }: { bg: string, text?: String }) {
+export function ColorRangeBox({ bg, text }: { bg: string; text?: String }) {
     return (
         <Box
             w='70px'
