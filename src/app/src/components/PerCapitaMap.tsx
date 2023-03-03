@@ -109,7 +109,7 @@ export default function PerCapitaMap() {
                 value={spendingCategory}
                 onChange={setSpendingCategory}
             />
-            <UsaMapContainer>
+            <UsaMapContainer negativeMargin>
                 {data && !anyIsFetching ? (
                     <StatesAndMarkersLayer
                         spending={data.results}

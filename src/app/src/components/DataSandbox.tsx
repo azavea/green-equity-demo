@@ -83,7 +83,13 @@ export default function DataSandbox() {
                         {category ? `${category} spending` : 'Spending'} for{' '}
                         {stateOrTerritory ?? 'all states'}:
                     </Text>
-                    <pre style={{ textAlign: 'left', width: '100%' }}>
+                    <pre
+                        style={{
+                            textAlign: 'left',
+                            width: '100%',
+                            overflowX: 'auto',
+                        }}
+                    >
                         {JSON.stringify(spending, null, 4)}
                     </pre>
                 </>

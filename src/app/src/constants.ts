@@ -40,6 +40,8 @@ export const STATE_STYLE_HOVER: PathOptions = Object.freeze(
     }
 );
 
+export const MAP_CONTAINER_NEGATIVE_MARGIN = 250;
+
 export const MARKER_OVERRIDES: { [stateCode: string]: LatLngTuple } = Object.freeze(
     {
         'MA': [7.25, 20.5],

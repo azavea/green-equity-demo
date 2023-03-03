@@ -1,8 +1,8 @@
 .leaflet-container {
     background: #fff;
     font-family: 'Lato', 'Helvetica', sans-serif;
-    overflow: visible;
 }
+
 .leaflet-tooltip {
     border: 0;
     padding: 0;

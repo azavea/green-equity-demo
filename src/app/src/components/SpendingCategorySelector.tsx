@@ -43,7 +43,7 @@ export default function SpendingCategorySelector({
     }
 
     return (
-        <HStack mb={10}>
+        <HStack mb={75} zIndex={1}>
             <CategoryButton isFirst />
             <CategoryButton category={Category.BROADBAND} />
             <CategoryButton category={Category.CLIMATE} />

@@ -19,7 +19,15 @@ export default function BudgetTracker() {
     );
 
     return (
-        <Box background='#F6F8FF' width='100%' pt={10} pb={10} pl={64} pr={64}>
+        <Box
+            background='#F6F8FF'
+            width='100%'
+            pt={10}
+            pb={10}
+            pl={64}
+            pr={64}
+            zIndex={1}
+        >
             <HStack justifyContent='space-around'>
                 <VStack alignItems='flex-start'>
                     <Text fontSize={24} fontWeight={700}>
