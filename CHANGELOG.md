@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add spending and state data fetching scripts [#40](https://github.com/azavea/green-equity-demo/pull/40)
 - Add Github Pages deploy to CI workflow [#48](https://github.com/azavea/green-equity-demo/pull/48)
 - Add data attribution section [#49](https://github.com/azavea/green-equity-demo/pull/49)
+- Add additional lato font weights for Chakra UI [#55](https://github.com/azavea/green-equity-demo/pull/55)
 
 ### Changed
 
