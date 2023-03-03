@@ -32,20 +32,11 @@ import { Category } from '../enums';
 export default function PerCapitaMap() {
     const [spendingCategory, setSpendingCategory] = useState<Category>();
 
-    const spendingRequest = useMemo(() => {
-        const baseRequest = getDefaultSpendingByGeographyRequest();
-
-        if (spendingCategory) {
-            baseRequest.filters.agencies =
-                getAgenciesForCategory(spendingCategory);
-        }
-
-        return baseRequest;
-    }, [spendingCategory]);
-
-    const { data, isFetching } =
-        useGetSpendingByGeographyQuery(spendingRequest);
     const { data: states, isFetching: isFetchingStates } = useGetStatesQuery();
+
+    const { data, isFetching } = useGetSpendingByGeographyQuery(
+        getDefaultSpendingByGeographyRequest()
+    );
 
     const requestForCategory = (category: Category) => {
         const baseRequest = getDefaultSpendingByGeographyRequest();
@@ -94,6 +85,11 @@ export default function PerCapitaMap() {
                     .get(state.code)!
                     .set(cat as Category, 0)
             );
+        });
+        data!.results.forEach(stateData => {
+            spendingByCategoryByState
+                .get(stateData.shape_code)
+                ?.set(Category.ALL, stateData.aggregated_amount);
         });
         broadbandData!.results.forEach(stateData => {
             spendingByCategoryByState
@@ -224,7 +220,9 @@ function StatesAndMarkersLayer({
                             stateCode={stateSpending.shape_code ?? ''}
                             population={stateSpending.population ?? 0}
                             dollarsPerCapita={stateSpending.per_capita ?? 0}
-                            funding={stateSpending.aggregated_amount ?? 0}
+                            allSpending={
+                                spendingByCategory.get(Category.ALL) ?? 0
+                            }
                             spendingByCategory={spendingByCategory}
                         />,
                         tooltip

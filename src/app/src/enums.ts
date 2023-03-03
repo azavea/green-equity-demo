@@ -15,6 +15,7 @@ export enum GeoLayer {
 }
 
 export enum Category {
+    ALL = 'All categories',
     BROADBAND = 'Broadband',
     CIVIL_WORKS = 'Civil Works',
     CLIMATE = 'Climate',

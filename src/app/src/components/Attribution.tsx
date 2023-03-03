@@ -54,9 +54,14 @@ export default function Attribution() {
                     on the assignments shown in the .xlsx file included with
                     that dashboard.
                 </Text>
-                {Object.values(Category).map(category => (
-                    <AgencyList key={category.toString()} category={category} />
-                ))}
+                {Object.values(Category)
+                    .filter(c => c !== Category.ALL)
+                    .map(category => (
+                        <AgencyList
+                            key={category.toString()}
+                            category={category}
+                        />
+                    ))}
             </details>
         </Box>
     );
@@ -76,7 +81,7 @@ function AgencyList({ category }: { category: Category }) {
                 Agencies for {category.toString()} spending:
             </Text>
             <List fontSize={12} pt={1}>
-                {getAgenciesForCategory(category).map(agency => (
+                {getAgenciesForCategory(category)?.map(agency => (
                     <ListItem key={agency.name} ml={2}>
                         {niceAgencyName(agency)}
                     </ListItem>

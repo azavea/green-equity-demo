@@ -20,14 +20,14 @@ export default function SpendingTooltip({
     state,
     stateCode,
     dollarsPerCapita,
-    funding,
+    allSpending,
     population,
     spendingByCategory,
 }: {
     state: string;
     stateCode: string;
     dollarsPerCapita: number;
-    funding: number;
+    allSpending: number;
     population: number;
     spendingByCategory: Map<Category, number>;
 }) {
@@ -50,7 +50,7 @@ export default function SpendingTooltip({
                     </Box>
                     <Box>
                         <Text fontWeight={'medium'}>
-                            Funding: ${abbreviateNumber(funding)}
+                            Funding: ${abbreviateNumber(allSpending)}
                         </Text>
                         <Text fontWeight={'medium'}>
                             Population: {abbreviateNumber(population)}
@@ -58,19 +58,25 @@ export default function SpendingTooltip({
                     </Box>
                     <Box>
                         {Array.from(spendingByCategory, ([cat, amount]) => {
+                            if (cat === Category.ALL) {
+                                return null;
+                            }
                             return (
                                 <React.Fragment
                                     key={`tooltipCategory-${stateCode}-${cat.toString()}`}
                                 >
                                     <Text>{cat.toString()}:</Text>
                                     <Text>
-                                        {roundedPercent(amount, funding)}%
+                                        {roundedPercent(amount, allSpending)}%
                                     </Text>
                                     <Progress
                                         mb={2}
                                         colorScheme='tooltip'
                                         size='lg'
-                                        value={roundedPercent(amount, funding)}
+                                        value={roundedPercent(
+                                            amount,
+                                            allSpending
+                                        )}
                                     />
                                 </React.Fragment>
                             );
