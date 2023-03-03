@@ -13,7 +13,9 @@ import App from './App';
 import theme from './theme';
 import { store } from './store';
 
-import '@fontsource/lato';
+import '@fontsource/lato/400.css';
+import '@fontsource/lato/700.css';
+
 import '../node_modules/leaflet/dist/leaflet.css';
 
 import './index.css';
