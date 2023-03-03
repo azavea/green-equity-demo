@@ -3,6 +3,7 @@ import { FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
     SpendingByGeographyRequest,
     SpendingByGeographyResponse,
+    MonthlySpendingOverTimeByState,
 } from './types/api';
 import { getCategoryForAgencies } from './util';
 import { Category } from './enums';
@@ -14,6 +15,7 @@ import civilWorksSpending from './data/Civil Works.spending.json';
 import climateSpending from './data/Climate.spending.json';
 import otherSpending from './data/Other.spending.json';
 import transportationSpending from './data/Transportation.spending.json';
+import allSpendingOverTime from './data/monthly.spending.json';
 
 const cachedApiQuery: typeof fetchBaseQuery = _ => {
     return (stringOrArgs, api) => {
@@ -30,6 +32,8 @@ const cachedApiQuery: typeof fetchBaseQuery = _ => {
                         args.body as SpendingByGeographyRequest
                     )
                 );
+            case '/search/spending_over_time/':
+                return wrapIntoData(getSpendingOverTime());
 
             default:
                 throw new Error(`Unknown url: ${args.url}`);
@@ -87,6 +91,10 @@ function getSpendingForCategory(
         case Category.ALL:
             return allSpending as SpendingByGeographyResponse;
     }
+}
+
+function getSpendingOverTime() {
+    return allSpendingOverTime as MonthlySpendingOverTimeByState;
 }
 
 export default cachedApiQuery;

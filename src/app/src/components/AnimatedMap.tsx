@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import {
+    Center,
+    CircularProgress,
     Heading,
     Spacer,
     Box,
@@ -18,15 +20,17 @@ import StatesLayer from './StatesLayer';
 import TimeControlIcon from './TimeControlIcon';
 
 import {
-    MonthlySpendingOverTimeResponse,
+    MonthlySpendingOverTimeByState,
     SpendingByGeographyAtMonth,
 } from '../types/api';
-import { spendingDataByMonth } from './dummySpendingDataByMonth';
 import AnimatedMapLegend from './AnimatedMapLegend';
+import { useGetSpendingOverTimeQuery } from '../api';
 
 const PROGRESS_FINAL_MONTH = 26;
 
 export default function AnimatedMap() {
+    const { data, isFetching } = useGetSpendingOverTimeQuery();
+
     const [timeValue, setTimeValue] = useState(0);
     const [animationEnabled, setAnimationEnabled] = useState(false);
     const [restartTimeControl, setRestartTimeControl] = useState(false);
@@ -66,45 +70,55 @@ export default function AnimatedMap() {
                 Allocation of awarded funding over time
             </Heading>
             <Spacer></Spacer>
-            <AnimatedMapLegend />
-            <UsaMapContainer>
-                <StatesAndSliderLayer
-                    spending={spendingDataByMonth}
-                    timeValue={timeValue}
-                />
-            </UsaMapContainer>
-            <Box width='100%' textAlign={'center'}>
-                <IconButton
-                    aria-label='Play time progress animation'
-                    icon={<TimeControlIcon restart={restartTimeControl} />}
-                    mr='25px'
-                    background='none'
-                    onClick={onSelectTimeAnimation}
-                    isDisabled={animationEnabled}
-                    size='lg'
-                />
-                <Tag width='60%' maxWidth={'750px'} background='none'>
-                    <TagLabel mt='-30px' mr='-35px' overflow={'none'}>
-                        2021
-                    </TagLabel>
-                    <Progress
-                        value={timeValue}
-                        opacity={100}
-                        colorScheme={'progress'}
-                        aria-label='date-time-progress-bar'
-                        min={0}
-                        max={PROGRESS_FINAL_MONTH}
-                        width='100%'
-                        maxWidth={'750px'}
-                        height='20px'
-                        mt='10px'
-                        display={'inline-block'}
-                    />
-                    <TagLabel mt='-30px' ml='-35px' overflow={'none'}>
-                        Now
-                    </TagLabel>
-                </Tag>
-            </Box>
+            {data && !isFetching ? (
+                <>
+                    <AnimatedMapLegend />
+                    <UsaMapContainer>
+                        <StatesAndSliderLayer
+                            spending={data}
+                            timeValue={timeValue}
+                        />
+                    </UsaMapContainer>
+                    <Box width='100%' textAlign={'center'}>
+                        <IconButton
+                            aria-label='Play time progress animation'
+                            icon={
+                                <TimeControlIcon restart={restartTimeControl} />
+                            }
+                            mr='25px'
+                            background='none'
+                            onClick={onSelectTimeAnimation}
+                            isDisabled={animationEnabled}
+                            size='lg'
+                        />
+                        <Tag width='60%' maxWidth={'750px'} background='none'>
+                            <TagLabel mt='-30px' mr='-35px' overflow={'none'}>
+                                2021
+                            </TagLabel>
+                            <Progress
+                                value={timeValue}
+                                opacity={100}
+                                colorScheme={'progress'}
+                                aria-label='date-time-progress-bar'
+                                min={0}
+                                max={PROGRESS_FINAL_MONTH}
+                                width='100%'
+                                maxWidth={'750px'}
+                                height='20px'
+                                mt='10px'
+                                display={'inline-block'}
+                            />
+                            <TagLabel mt='-30px' ml='-35px' overflow={'none'}>
+                                Now
+                            </TagLabel>
+                        </Tag>
+                    </Box>
+                </>
+            ) : (
+                <Center p={4}>
+                    <CircularProgress isIndeterminate />
+                </Center>
+            )}
         </>
     );
 }
@@ -113,7 +127,7 @@ function StatesAndSliderLayer({
     spending,
     timeValue,
 }: {
-    spending: MonthlySpendingOverTimeResponse;
+    spending: MonthlySpendingOverTimeByState;
     timeValue: number;
 }) {
     const map = useMap();
@@ -161,8 +175,9 @@ function StatesAndSliderLayer({
                     layer: L.GeoJSON<StateProperties, StateGeometry>
                 ) => {
                     const defaultFillColor = getColor(
-                        spendingAtTimeByState[feature.properties.STUSPS]
-                            ?.aggregated_amount
+                        spendingAtTimeByState[
+                            feature.properties.STUSPS.toString()
+                        ]?.aggregated_amount
                     );
                     layer &&
                         layer.setStyle({
@@ -187,18 +202,19 @@ function getColor(amount: number | undefined): string {
 
 function getSpendingByStateAtTime(
     timeValue: number,
-    spending: MonthlySpendingOverTimeResponse
+    spending: MonthlySpendingOverTimeByState
 ): SpendingByGeographyAtMonth {
     const isDecember = timeValue % 12 === 0;
     const fiscalYearSelection =
         2021 + Math.floor(isDecember ? timeValue / 13 : timeValue / 12);
     const monthSelection = !!timeValue && isDecember ? 12 : timeValue % 12;
     const spendingAtTimeValue = spending.map(stateSpending => {
-        const resultAtTimeValue = stateSpending.results.find(
-            entry =>
+        const resultAtTimeValue = stateSpending.results.find(entry => {
+            return (
                 entry.time_period.fiscal_year === fiscalYearSelection &&
                 entry.time_period.month === monthSelection
-        )!;
+            );
+        })!;
         return { ...stateSpending, results: resultAtTimeValue };
     });
     return Object.fromEntries(

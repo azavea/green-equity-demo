@@ -9,7 +9,7 @@ export default function httpsRequestToCallback({
     url: string;
     options?: https.RequestOptions;
     body?: string;
-    onDataResponse: any;
+    onDataResponse: (parsedResult: any) => void;
 }): Promise<void> {
     return new Promise((resolve, reject) => {
         const request = https.request(

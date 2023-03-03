@@ -72,7 +72,13 @@ export type MonthlySpendingOverTime = {
 
 export type MonthlySpendingOverTimeResponse = {
     group: 'month';
-    results: MonthlySpendingOverTime;
+    results: {
+        aggregated_amount: number;
+        time_period: {
+            fiscal_year: string;
+            month: string;
+        };
+    }[];
     messages?: string[];
 };
 

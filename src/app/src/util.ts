@@ -43,7 +43,7 @@ export function getSpendingOverTimeByStateRequest(): SpendingOverTimeByStateRequ
             ],
             time_period: [
                 {
-                    start_date: '2020-01-01',
+                    start_date: '2008-01-01',
                     end_date: '2024-01-01',
                     date_type: 'action_date',
                 },

@@ -6,6 +6,7 @@ import path from 'node:path';
 import { spendingApiUrl } from '../src/constants';
 import { getSpendingOverTimeByStateRequest } from '../src/util';
 import {
+    MonthlySpendingOverTime,
     MonthlySpendingOverTimeByState,
     MonthlySpendingOverTimeResponse,
 } from '../src/types/api';
@@ -72,16 +73,29 @@ async function fetchSpendingData(state: string, responseCallback: any) {
     });
 }
 
-function cleanDataDump(dataDump: MonthlySpendingOverTimeResponse) {
-    // aggregate spending value across months
-    const aggregatedOverMonths = [...dataDump.results];
-    dataDump.results.reduce((sum, { aggregated_amount }, i) => {
-        const aggregated = sum + aggregated_amount;
-        aggregatedOverMonths[i] = {
-            ...aggregatedOverMonths[i]!,
-            aggregated_amount: aggregated,
-        };
-        return aggregated;
-    }, 0);
+function cleanDataDump(
+    dataDump: MonthlySpendingOverTimeResponse
+): MonthlySpendingOverTime {
+    // Aggregate spending value across months
+    // Make String types into Number
+    const aggregatedOverMonths: MonthlySpendingOverTime = [];
+    dataDump.results.reduce(
+        (
+            sum,
+            { aggregated_amount, time_period: { fiscal_year, month } },
+            i
+        ) => {
+            const aggregated = sum + aggregated_amount;
+            aggregatedOverMonths.push({
+                aggregated_amount: aggregated,
+                time_period: {
+                    fiscal_year: parseInt(fiscal_year),
+                    month: parseInt(month),
+                },
+            });
+            return aggregated;
+        },
+        0
+    );
     return aggregatedOverMonths;
 }

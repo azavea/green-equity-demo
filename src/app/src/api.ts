@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import {
+    MonthlySpendingOverTimeByState,
     SpendingByGeographyRequest,
     SpendingByGeographyResponse,
     State,
@@ -29,8 +30,21 @@ export const spendingApi = createApi({
                 body: spendingByGeographyRequest,
             }),
         }),
+        getSpendingOverTime: builder.query<
+            MonthlySpendingOverTimeByState,
+            void
+        >({
+            query: getSpendingOverTimeByStateRequest => ({
+                url: '/search/spending_over_time/',
+                method: 'POST',
+                body: getSpendingOverTimeByStateRequest,
+            }),
+        }),
     }),
 });
 
-export const { useGetStatesQuery, useGetSpendingByGeographyQuery } =
-    spendingApi;
+export const {
+    useGetStatesQuery,
+    useGetSpendingByGeographyQuery,
+    useGetSpendingOverTimeQuery,
+} = spendingApi;
