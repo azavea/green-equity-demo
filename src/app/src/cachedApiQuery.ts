@@ -8,7 +8,7 @@ import { getCategoryForAgencies } from './util';
 import { Category } from './enums';
 
 import states from './data/states.json';
-import allSpending from './data/all.spending.json';
+import allSpending from './data/All categories.spending.json';
 import broadbandSpending from './data/Broadband.spending.json';
 import civilWorksSpending from './data/Civil Works.spending.json';
 import climateSpending from './data/Climate.spending.json';

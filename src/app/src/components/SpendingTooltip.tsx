@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { Category } from '../enums';
 import { abbreviateNumber } from '../util';
+import { SpendingByGeographySingleResult } from '../types/api';
 
 export default function SpendingTooltip({
     state,
@@ -29,7 +30,10 @@ export default function SpendingTooltip({
     dollarsPerCapita: number;
     allSpending: number;
     population: number;
-    spendingByCategory: Map<Category, number>;
+    spendingByCategory: Map<
+        Category,
+        SpendingByGeographySingleResult | undefined
+    >;
 }) {
     const roundedPercent = (amount: number, total: number) => {
         return Math.round(((amount ?? 0) / total) * 100);
@@ -57,10 +61,13 @@ export default function SpendingTooltip({
                         </Text>
                     </Box>
                     <Box>
-                        {Array.from(spendingByCategory, ([cat, amount]) => {
+                        {Array.from(spendingByCategory, ([cat, result]) => {
                             if (cat === Category.ALL) {
                                 return null;
                             }
+
+                            const amount = result?.aggregated_amount ?? 0;
+
                             return (
                                 <React.Fragment
                                     key={`tooltipCategory-${stateCode}-${cat.toString()}`}

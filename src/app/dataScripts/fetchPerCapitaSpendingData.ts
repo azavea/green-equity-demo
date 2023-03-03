@@ -17,7 +17,7 @@ export default async function fetchPerCapitaSpendingData() {
     console.log('Fetching per-capita spending data...');
 
     await Promise.all([
-        writeSpendingDataFile(),
+        writeSpendingDataFile(Category.ALL),
         writeSpendingDataFile(Category.CLIMATE),
         writeSpendingDataFile(Category.CIVIL_WORKS),
         writeSpendingDataFile(Category.TRANSPORTATION),
@@ -26,14 +26,12 @@ export default async function fetchPerCapitaSpendingData() {
     ]);
 }
 
-async function writeSpendingDataFile(category?: Category) {
-    const filename = path.join(dataDir, `${category ?? 'all'}.spending.json`);
+async function writeSpendingDataFile(category: Category) {
+    const filename = path.join(dataDir, `${category}.spending.json`);
 
     if (existsSync(filename)) {
         console.warn(
-            `  Skipping ${
-                category ?? 'All'
-            } spending because the file already exists.`
+            `  Skipping ${category} spending because the file already exists.`
         );
         return Promise.reject();
     }

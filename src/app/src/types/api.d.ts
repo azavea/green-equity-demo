@@ -32,16 +32,18 @@ export type SpendingByGeographyRequest = {
     geo_layer_filters?: string[];
 };
 
+export type SpendingByGeographySingleResult = {
+    shape_code: string;
+    display_name: string;
+    aggregated_amount: number;
+    population: number;
+    per_capita: number;
+};
+
 export type SpendingByGeographyResponse = {
     geo_layer: GeoLayer;
     scope: Scope;
-    results: {
-        shape_code: string;
-        display_name: string;
-        aggregated_amount: number;
-        population: number;
-        per_capita: number;
-    }[];
+    results: SpendingByGeographySingleResult[];
 };
 
 export type MonthlySpendingOverTimeResponse = {
