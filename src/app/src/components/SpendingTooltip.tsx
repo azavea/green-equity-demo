@@ -20,24 +20,27 @@ import { SpendingByGeographySingleResult } from '../types/api';
 export default function SpendingTooltip({
     state,
     stateCode,
-    dollarsPerCapita,
     allSpending,
     population,
     spendingByCategory,
+    selectedCategory,
 }: {
     state: string;
     stateCode: string;
-    dollarsPerCapita: number;
     allSpending: number;
     population: number;
     spendingByCategory: Map<
         Category,
         SpendingByGeographySingleResult | undefined
     >;
+    selectedCategory: Category;
 }) {
-    const roundedPercent = (amount: number, total: number) => {
-        return Math.round(((amount ?? 0) / total) * 100);
-    };
+    const categorySuffixPerCapita =
+        selectedCategory === Category.ALL
+            ? ''
+            : ' for ' + selectedCategory.toString().toLowerCase();
+
+    const categorySpending = spendingByCategory.get(selectedCategory);
 
     return (
         <Card variant='spendingTooltip'>
@@ -48,52 +51,77 @@ export default function SpendingTooltip({
                 <Stack divider={<StackDivider />} spacing={2}>
                     <Box>
                         <Text fontWeight={'bold'}>
-                            Dollars per capita: $
-                            {Math.round(dollarsPerCapita).toLocaleString()}
+                            Dollars per capita{categorySuffixPerCapita}: $
+                            {Math.round(
+                                categorySpending?.per_capita ?? 0
+                            ).toLocaleString()}
                         </Text>
                     </Box>
                     <Box>
                         <Text fontWeight={'medium'}>
-                            Funding: ${abbreviateNumber(allSpending)}
+                            Funding: $
+                            {abbreviateNumber(
+                                categorySpending?.aggregated_amount ?? 0
+                            )}
                         </Text>
                         <Text fontWeight={'medium'}>
                             Population: {abbreviateNumber(population)}
                         </Text>
                     </Box>
                     <Box>
-                        {Array.from(spendingByCategory, ([cat, result]) => {
-                            if (cat === Category.ALL) {
-                                return null;
-                            }
+                        {selectedCategory === Category.ALL &&
+                            Array.from(spendingByCategory, ([cat, result]) => {
+                                if (cat === Category.ALL) {
+                                    return null;
+                                }
 
-                            const amount = result?.aggregated_amount ?? 0;
+                                const amount = result?.aggregated_amount ?? 0;
 
-                            return (
-                                <React.Fragment
-                                    key={`tooltipCategory-${stateCode}-${cat.toString()}`}
-                                >
-                                    <Text>{cat.toString()}:</Text>
-                                    <Text>
-                                        {roundedPercent(amount, allSpending)}%
-                                    </Text>
-                                    <Progress
-                                        mb={2}
-                                        colorScheme='tooltip'
-                                        size='lg'
-                                        value={roundedPercent(
-                                            amount,
-                                            allSpending
-                                        )}
+                                return (
+                                    <SpendingBar
+                                        key={`tooltipCategory-${stateCode}-${cat.toString()}`}
+                                        cat={cat}
+                                        stateCode={stateCode}
+                                        amount={amount}
+                                        allSpending={allSpending}
                                     />
-                                </React.Fragment>
-                            );
-                        })}
+                                );
+                            })}
                     </Box>
                 </Stack>
             </CardBody>
         </Card>
     );
 }
+
+function SpendingBar({
+    cat,
+    stateCode,
+    amount,
+    allSpending,
+}: {
+    cat: Category;
+    stateCode: string;
+    amount: number;
+    allSpending: number;
+}) {
+    return (
+        <>
+            <Text>{cat.toString()}:</Text>
+            <Text>{roundedPercent(amount, allSpending)}%</Text>
+            <Progress
+                mb={2}
+                colorScheme='tooltip'
+                size='lg'
+                value={roundedPercent(amount, allSpending)}
+            />
+        </>
+    );
+}
+
+const roundedPercent = (amount: number, total: number) => {
+    return Math.round(((amount ?? 0) / total) * 100);
+};
 
 const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(cardAnatomy.keys);
@@ -104,7 +132,7 @@ const variants = {
             container: {
                 ...props.theme.components.Card.variants.elevated.container,
                 overflow: 'clip', // https://github.com/twbs/bootstrap/issues/37010
-                width: '194px',
+                minWidth: '194px',
                 padding: '0',
                 border: '0',
             },
