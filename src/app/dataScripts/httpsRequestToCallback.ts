@@ -1,16 +1,15 @@
-import { FileHandle } from 'node:fs/promises';
 import https from 'node:https';
 
-export default function httpsRequestToFile({
+export default function httpsRequestToCallback({
     url,
-    fileHandle,
     options = {},
     body,
+    onDataResponse,
 }: {
     url: string;
-    fileHandle: FileHandle;
     options?: https.RequestOptions;
     body?: string;
+    onDataResponse: (parsedResult: any) => void;
 }): Promise<void> {
     return new Promise((resolve, reject) => {
         const request = https.request(
@@ -23,11 +22,15 @@ export default function httpsRequestToFile({
                 ...options,
             },
             response => {
-                response.on('data', data => {
-                    fileHandle.write(data);
+                let completeData: string = '';
+                response.on('data', chunk => {
+                    if (chunk) {
+                        completeData += chunk.toString();
+                    }
                 });
 
                 response.on('end', () => {
+                    onDataResponse(JSON.parse(completeData));
                     resolve();
                 });
             }

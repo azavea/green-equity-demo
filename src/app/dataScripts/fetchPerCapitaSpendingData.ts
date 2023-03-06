@@ -11,7 +11,7 @@ import {
 } from '../src/util';
 
 import { dataDir } from './nodeConstants';
-import httpsRequestToFile from './httpRequestToFile';
+import httpsRequestToCallback from './httpsRequestToCallback';
 
 export default async function fetchPerCapitaSpendingData() {
     console.log('Fetching per-capita spending data...');
@@ -43,13 +43,13 @@ async function writeSpendingDataFile(category: Category) {
     }
 
     return fs.open(filename, 'w').then(async fileHandle => {
-        await httpsRequestToFile({
+        await httpsRequestToCallback({
             url: `${spendingApiUrl}/search/spending_by_geography/`,
-            fileHandle,
             options: {
                 method: 'POST',
             },
             body: JSON.stringify(requestBody),
+            onDataResponse: data => fileHandle.write(JSON.stringify(data)),
         });
 
         fileHandle.close();

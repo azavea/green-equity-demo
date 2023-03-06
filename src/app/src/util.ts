@@ -8,7 +8,11 @@ import {
     Scope,
 } from './enums';
 import { AmountCategory } from './types';
-import { Agency, SpendingByGeographyRequest } from './types/api';
+import {
+    Agency,
+    SpendingByGeographyRequest,
+    SpendingOverTimeByStateRequest,
+} from './types/api';
 
 export function getDefaultSpendingByGeographyRequest(): SpendingByGeographyRequest {
     return {
@@ -26,6 +30,30 @@ export function getDefaultSpendingByGeographyRequest(): SpendingByGeographyReque
         },
         geo_layer: GeoLayer.STATE,
         scope: Scope.PLACE_OF_PERFORMANCE,
+    };
+}
+
+export function getSpendingOverTimeByStateRequest(): SpendingOverTimeByStateRequest {
+    return {
+        group: 'month',
+        filters: {
+            def_codes: [
+                DefCode.INFRASTRUCTURE_EMERGENCY,
+                DefCode.INFRASTRUCTURE_NON_EMERGENCY,
+            ],
+            time_period: [
+                {
+                    start_date: '2008-01-01',
+                    end_date: '2024-01-01',
+                    date_type: 'action_date',
+                },
+            ],
+            place_of_performance_locations: [
+                {
+                    country: 'USA',
+                },
+            ],
+        },
     };
 }
 

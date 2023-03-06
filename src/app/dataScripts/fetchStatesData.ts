@@ -5,7 +5,7 @@ import path from 'node:path';
 import { spendingApiUrl } from '../src/constants';
 
 import { dataDir } from './nodeConstants';
-import httpsRequestToFile from './httpRequestToFile';
+import httpsRequestToCallback from './httpsRequestToCallback';
 
 export default async function fetchStatesData() {
     console.log('Fetching state data...');
@@ -18,9 +18,9 @@ export default async function fetchStatesData() {
     }
 
     await fs.open(filename, 'w').then(async fileHandle => {
-        await httpsRequestToFile({
+        await httpsRequestToCallback({
             url: `${spendingApiUrl}/recipient/state/`,
-            fileHandle,
+            onDataResponse: data => fileHandle.write(JSON.stringify(data)),
         });
 
         fileHandle.close();
