@@ -134,7 +134,7 @@ export default function PerCapitaMap() {
                     <StatesAndMarkersLayer
                         allSpending={data.results}
                         spendingByCategoryByState={spendingByCategoryByState}
-                        categoryForMarker={spendingCategory}
+                        selectedCategory={spendingCategory}
                     />
                 ) : (
                     <Center p={4}>
@@ -150,14 +150,14 @@ export default function PerCapitaMap() {
 function StatesAndMarkersLayer({
     allSpending,
     spendingByCategoryByState,
-    categoryForMarker,
+    selectedCategory,
 }: {
     allSpending: SpendingByGeographySingleResult[];
     spendingByCategoryByState: Map<
         String,
         Map<Category, SpendingByGeographySingleResult | undefined>
     >;
-    categoryForMarker: Category;
+    selectedCategory: Category;
 }) {
     const map = useMap();
     const markerReference = useRef<L.Marker[]>([]);
@@ -230,11 +230,11 @@ function StatesAndMarkersLayer({
                             state={allStateSpending.display_name ?? ''}
                             stateCode={allStateSpending.shape_code ?? ''}
                             population={allStateSpending.population ?? 0}
-                            dollarsPerCapita={allStateSpending.per_capita ?? 0}
                             allSpending={
                                 allStateSpending.aggregated_amount ?? 0
                             }
                             spendingByCategory={spendingByCategory}
+                            selectedCategory={selectedCategory}
                         />,
                         tooltip
                     );
@@ -244,7 +244,7 @@ function StatesAndMarkersLayer({
                     layer.on('add', event => {
                         const stateSpending = spendingByCategoryByState
                             .get(feature.properties.STUSPS)
-                            ?.get(categoryForMarker);
+                            ?.get(selectedCategory);
                         const perCapitaSpending = stateSpending?.per_capita;
 
                         if (!perCapitaSpending) {
