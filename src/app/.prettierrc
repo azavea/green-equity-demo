@@ -5,7 +5,6 @@
     "htmlWhitespaceSensitivity": "css",
     "insertPragma": false,
     "jsxSingleQuote": true,
-    "parser": "babel",
     "printWidth": 80,
     "proseWrap": "always",
     "requirePragma": false,
