@@ -248,9 +248,6 @@ function StatesAndMarkersLayer({
                         const perCapitaSpending = stateSpending?.per_capita;
 
                         if (!perCapitaSpending) {
-                            console.warn(
-                                `No spending data for state: ${feature.properties.STUSPS}`
-                            );
                             return;
                         }
 
