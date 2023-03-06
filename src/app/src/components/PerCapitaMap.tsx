@@ -21,7 +21,7 @@ import {
     getAmountCategory,
     getDefaultSpendingByGeographyRequest,
 } from '../util';
-import { SpendingByGeographyResponse } from '../types/api';
+import { SpendingByGeographySingleResult } from '../types/api';
 import {
     STATE_STYLE_BASE,
     STATE_STYLE_HOVER,
@@ -30,22 +30,15 @@ import {
 import { Category } from '../enums';
 
 export default function PerCapitaMap() {
-    const [spendingCategory, setSpendingCategory] = useState<Category>();
+    const [spendingCategory, setSpendingCategory] = useState<Category>(
+        Category.ALL
+    );
 
-    const spendingRequest = useMemo(() => {
-        const baseRequest = getDefaultSpendingByGeographyRequest();
-
-        if (spendingCategory) {
-            baseRequest.filters.agencies =
-                getAgenciesForCategory(spendingCategory);
-        }
-
-        return baseRequest;
-    }, [spendingCategory]);
-
-    const { data, isFetching } =
-        useGetSpendingByGeographyQuery(spendingRequest);
     const { data: states, isFetching: isFetchingStates } = useGetStatesQuery();
+
+    const { data, isFetching } = useGetSpendingByGeographyQuery(
+        getDefaultSpendingByGeographyRequest()
+    );
 
     const requestForCategory = (category: Category) => {
         const baseRequest = getDefaultSpendingByGeographyRequest();
@@ -55,6 +48,11 @@ export default function PerCapitaMap() {
 
     const { data: broadbandData, isFetching: isFetchingBroadband } =
         useGetSpendingByGeographyQuery(requestForCategory(Category.BROADBAND));
+
+    const { data: civilWorksData, isFetching: isFetchingCivilWorks } =
+        useGetSpendingByGeographyQuery(
+            requestForCategory(Category.CIVIL_WORKS)
+        );
 
     const { data: climateData, isFetching: isFetchingClimate } =
         useGetSpendingByGeographyQuery(requestForCategory(Category.CLIMATE));
@@ -67,11 +65,15 @@ export default function PerCapitaMap() {
     const { data: otherData, isFetching: isFetchingOther } =
         useGetSpendingByGeographyQuery(requestForCategory(Category.OTHER));
 
-    const spendingByCategoryByState = new Map<String, Map<Category, number>>();
+    const spendingByCategoryByState = new Map<
+        String,
+        Map<Category, SpendingByGeographySingleResult | undefined>
+    >();
     const anyIsFetching =
         isFetching ||
         isFetchingStates ||
         isFetchingBroadband ||
+        isFetchingCivilWorks ||
         isFetchingClimate ||
         isFetchingTransportation ||
         isFetchingOther;
@@ -81,35 +83,43 @@ export default function PerCapitaMap() {
         states!.forEach(state => {
             spendingByCategoryByState.set(
                 state.code,
-                new Map<Category, number>()
+                new Map<Category, SpendingByGeographySingleResult>()
             );
-            Object.values(Category)
-                .filter(cat => cat !== Category.CIVIL_WORKS)
-                .forEach(cat =>
-                    spendingByCategoryByState
-                        .get(state.code)!
-                        .set(cat as Category, 0)
-                );
+            Object.values(Category).forEach(cat =>
+                spendingByCategoryByState
+                    .get(state.code)!
+                    .set(cat as Category, undefined)
+            );
+        });
+        data!.results.forEach(stateData => {
+            spendingByCategoryByState
+                .get(stateData.shape_code)
+                ?.set(Category.ALL, stateData);
         });
         broadbandData!.results.forEach(stateData => {
             spendingByCategoryByState
                 .get(stateData.shape_code)
-                ?.set(Category.BROADBAND, stateData.aggregated_amount);
+                ?.set(Category.BROADBAND, stateData);
+        });
+        civilWorksData!.results.forEach(stateData => {
+            spendingByCategoryByState
+                .get(stateData.shape_code)
+                ?.set(Category.CIVIL_WORKS, stateData);
         });
         climateData!.results.forEach(stateData => {
             spendingByCategoryByState
                 .get(stateData.shape_code)
-                ?.set(Category.CLIMATE, stateData.aggregated_amount);
+                ?.set(Category.CLIMATE, stateData);
         });
         transportationData!.results.forEach(stateData => {
             spendingByCategoryByState
                 .get(stateData.shape_code)
-                ?.set(Category.TRANSPORTATION, stateData.aggregated_amount);
+                ?.set(Category.TRANSPORTATION, stateData);
         });
         otherData!.results.forEach(stateData => {
             spendingByCategoryByState
                 .get(stateData.shape_code)
-                ?.set(Category.OTHER, stateData.aggregated_amount);
+                ?.set(Category.OTHER, stateData);
         });
     }
 
@@ -120,10 +130,11 @@ export default function PerCapitaMap() {
                 onChange={setSpendingCategory}
             />
             <UsaMapContainer negativeMargin>
-                {data && !anyIsFetching ? (
+                {data && spendingByCategoryByState && !anyIsFetching ? (
                     <StatesAndMarkersLayer
-                        spending={data.results}
+                        allSpending={data.results}
                         spendingByCategoryByState={spendingByCategoryByState}
+                        categoryForMarker={spendingCategory}
                     />
                 ) : (
                     <Center p={4}>
@@ -137,28 +148,33 @@ export default function PerCapitaMap() {
 }
 
 function StatesAndMarkersLayer({
-    spending,
+    allSpending,
     spendingByCategoryByState,
+    categoryForMarker,
 }: {
-    spending: SpendingByGeographyResponse['results'];
-    spendingByCategoryByState: Map<String, Map<Category, number>>;
+    allSpending: SpendingByGeographySingleResult[];
+    spendingByCategoryByState: Map<
+        String,
+        Map<Category, SpendingByGeographySingleResult | undefined>
+    >;
+    categoryForMarker: Category;
 }) {
     const map = useMap();
     const markerReference = useRef<L.Marker[]>([]);
     const cheatLineReference = useRef<L.Polyline[]>([]);
 
-    const spendingByState = useMemo(
+    const allSpendingByState = useMemo(
         () =>
             Object.fromEntries(
-                spending.map(stateSpending => [
+                allSpending.map(stateSpending => [
                     stateSpending.shape_code,
                     stateSpending,
                 ])
             ),
-        [spending]
+        [allSpending]
     );
 
-    const tooltips = Object.keys(spendingByState).map(stateCode => {
+    const tooltips = Object.keys(allSpendingByState).map(stateCode => {
         const tooltipDiv = document.createElement('div');
         tooltipDiv.dataset.stateCode = stateCode;
         tooltipDiv.id = `tooltip-${stateCode}`;
@@ -197,13 +213,13 @@ function StatesAndMarkersLayer({
         <>
             {tooltipsAttached &&
                 tooltips.map(tooltip => {
-                    const stateSpending =
-                        spendingByState[tooltip.dataset?.stateCode!];
-                    if (stateSpending === undefined) {
+                    const allStateSpending =
+                        allSpendingByState[tooltip.dataset?.stateCode!];
+                    if (allStateSpending === undefined) {
                         return null;
                     }
                     const spendingByCategory = spendingByCategoryByState.get(
-                        stateSpending.shape_code
+                        allStateSpending.shape_code
                     );
                     if (spendingByCategory === undefined) {
                         return null;
@@ -211,11 +227,13 @@ function StatesAndMarkersLayer({
 
                     return createPortal(
                         <SpendingTooltip
-                            state={stateSpending.display_name ?? ''}
-                            stateCode={stateSpending.shape_code ?? ''}
-                            population={stateSpending.population ?? 0}
-                            dollarsPerCapita={stateSpending.per_capita ?? 0}
-                            funding={stateSpending.aggregated_amount ?? 0}
+                            state={allStateSpending.display_name ?? ''}
+                            stateCode={allStateSpending.shape_code ?? ''}
+                            population={allStateSpending.population ?? 0}
+                            dollarsPerCapita={allStateSpending.per_capita ?? 0}
+                            allSpending={
+                                allStateSpending.aggregated_amount ?? 0
+                            }
                             spendingByCategory={spendingByCategory}
                         />,
                         tooltip
@@ -224,8 +242,9 @@ function StatesAndMarkersLayer({
             <StatesLayer
                 onEachFeature={(feature, layer) => {
                     layer.on('add', event => {
-                        const stateSpending =
-                            spendingByState[feature.properties.STUSPS];
+                        const stateSpending = spendingByCategoryByState
+                            .get(feature.properties.STUSPS)
+                            ?.get(categoryForMarker);
                         const perCapitaSpending = stateSpending?.per_capita;
 
                         if (!perCapitaSpending) {

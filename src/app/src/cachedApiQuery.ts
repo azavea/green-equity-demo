@@ -8,7 +8,7 @@ import { getCategoryForAgencies } from './util';
 import { Category } from './enums';
 
 import states from './data/states.json';
-import allSpending from './data/all.spending.json';
+import allSpending from './data/All categories.spending.json';
 import broadbandSpending from './data/Broadband.spending.json';
 import civilWorksSpending from './data/Civil Works.spending.json';
 import climateSpending from './data/Climate.spending.json';
@@ -54,11 +54,9 @@ function getSpendingByGeography(
 ): SpendingByGeographyResponse {
     const category = request.filters.agencies
         ? getCategoryForAgencies(request.filters.agencies)
-        : undefined;
+        : Category.ALL;
 
-    const spending = category
-        ? getSpendingForCategory(category)
-        : (allSpending as SpendingByGeographyResponse);
+    const spending = getSpendingForCategory(category);
 
     if (request.geo_layer_filters) {
         return {
@@ -86,6 +84,8 @@ function getSpendingForCategory(
             return otherSpending as SpendingByGeographyResponse;
         case Category.TRANSPORTATION:
             return transportationSpending as SpendingByGeographyResponse;
+        case Category.ALL:
+            return allSpending as SpendingByGeographyResponse;
     }
 }
 

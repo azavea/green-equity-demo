@@ -3,9 +3,12 @@ import { Box, Link, List, ListItem, Text } from '@chakra-ui/react';
 import { getAgenciesForCategory } from '../util';
 import { AgencyTier, Category } from '../enums';
 
+import lastUpdated from '../data/lastUpdated.json';
 import { Agency } from '../types/api';
 
 export default function Attribution() {
+    const date = new Date(lastUpdated.lastUpdated);
+
     return (
         <Box ml={2} width='650px'>
             <details style={{ alignSelf: 'start' }}>
@@ -19,8 +22,8 @@ export default function Attribution() {
                     </Link>{' '}
                     API operated by the U.S. Department of the Treasury, Bureau
                     of the Fiscal Service. Data updates are anticipated to be
-                    made on an ad hoc basis. The most recent date data was
-                    fetched is noted at the top of the page.
+                    made on an ad hoc basis. (Last update:{' '}
+                    {date.toLocaleDateString()})
                 </Text>
                 <Text fontSize={12} pt={1}>
                     The query made to usaspending.gov requests the aggregated
@@ -35,10 +38,11 @@ export default function Attribution() {
                     <Link href='https://d2d.gsa.gov/report/bipartisan-infrastructure-law-bil-maps-dashboard'>
                         Bipartisan Infrastructure Law (BIL) Maps Dashboard
                     </Link>
-                    , which consumes the same data source, is informative: "All
-                    announcement data represented on these maps, including award
-                    and project locations and funding amounts, is preliminary
-                    and non-binding. Awards may be contingent on meeting certain
+                    , which consumes the same data source, is informative,
+                    despite also including announced funding: "All announcement
+                    data represented on these maps, including award and project
+                    locations and funding amounts, is preliminary and
+                    non-binding. Awards may be contingent on meeting certain
                     requirements. Data represents announced funding (formula and
                     discretionary) as of January 13, 2023. This is a small
                     subset of what the Bipartisan Infrastructure Law will fund
@@ -50,9 +54,14 @@ export default function Attribution() {
                     on the assignments shown in the .xlsx file included with
                     that dashboard.
                 </Text>
-                {Object.values(Category).map(category => (
-                    <AgencyList key={category.toString()} category={category} />
-                ))}
+                {Object.values(Category)
+                    .filter(c => c !== Category.ALL)
+                    .map(category => (
+                        <AgencyList
+                            key={category.toString()}
+                            category={category}
+                        />
+                    ))}
             </details>
         </Box>
     );
@@ -72,7 +81,7 @@ function AgencyList({ category }: { category: Category }) {
                 Agencies for {category.toString()} spending:
             </Text>
             <List fontSize={12} pt={1}>
-                {getAgenciesForCategory(category).map(agency => (
+                {getAgenciesForCategory(category)?.map(agency => (
                     <ListItem key={agency.name} ml={2}>
                         {niceAgencyName(agency)}
                     </ListItem>

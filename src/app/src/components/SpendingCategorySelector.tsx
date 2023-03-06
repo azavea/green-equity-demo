@@ -6,15 +6,15 @@ export default function SpendingCategorySelector({
     value,
     onChange,
 }: {
-    value?: Category;
-    onChange: (category?: Category) => void;
+    value: Category;
+    onChange: (category: Category) => void;
 }) {
     function CategoryButton({
         category,
         isFirst,
         isLast,
     }: {
-        category?: Category;
+        category: Category;
         isFirst?: boolean;
         isLast?: boolean;
     }) {
@@ -37,15 +37,16 @@ export default function SpendingCategorySelector({
                 _hover={{ background: 'rgba(32, 81, 255, 0.21)' }}
                 onClick={() => onChange(category)}
             >
-                {category ?? 'All categories'}
+                {category}
             </Box>
         );
     }
 
     return (
         <HStack mb={75} zIndex={1}>
-            <CategoryButton isFirst />
+            <CategoryButton category={Category.ALL} isFirst />
             <CategoryButton category={Category.BROADBAND} />
+            <CategoryButton category={Category.CIVIL_WORKS} />
             <CategoryButton category={Category.CLIMATE} />
             <CategoryButton category={Category.TRANSPORTATION} />
             <CategoryButton category={Category.OTHER} isLast />

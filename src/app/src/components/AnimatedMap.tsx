@@ -63,7 +63,7 @@ export default function AnimatedMap() {
     return (
         <>
             <Heading variant='subtitle'>
-                Allocation of announced award funding over time
+                Allocation of awarded funding over time
             </Heading>
             <Spacer></Spacer>
             <AnimatedMapLegend />

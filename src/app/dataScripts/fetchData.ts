@@ -1,5 +1,5 @@
 import { mkdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, writeFile } from 'node:fs';
 
 import { dataDir } from './nodeConstants';
 
@@ -11,7 +11,23 @@ async function fetchData() {
         await mkdir(dataDir);
     }
 
-    await Promise.all([fetchStatesData(), fetchPerCapitaSpendingData()]);
+    try {
+        await Promise.all([fetchStatesData(), fetchPerCapitaSpendingData()]);
+    } catch {
+        // Data not fetched.
+        return;
+    }
+
+    const today = new Date();
+    const todayJson = JSON.stringify({
+        lastUpdated: today.toISOString().substring(0, 10),
+    });
+    writeFile(
+        'src/data/lastUpdated.json',
+        todayJson,
+        { flag: 'w+' },
+        err => {}
+    );
 }
 
 fetchData();
