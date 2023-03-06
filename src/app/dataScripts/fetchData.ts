@@ -13,11 +13,9 @@ async function fetchData() {
     }
 
     try {
-        await Promise.all([
-            fetchStatesData(),
-            fetchPerCapitaSpendingData(),
-            fetchSpendingOverTimeData(),
-        ]);
+        await Promise.all([fetchStatesData(), fetchPerCapitaSpendingData()]);
+        // fetchSpendingOverTimeData relies on json product of fetchStatesData
+        await fetchSpendingOverTimeData();
     } catch {
         // Data not fetched.
         return;

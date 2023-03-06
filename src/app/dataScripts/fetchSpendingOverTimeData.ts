@@ -6,19 +6,30 @@ import path from 'node:path';
 import { spendingApiUrl } from '../src/constants';
 import { getSpendingOverTimeByStateRequest } from '../src/util';
 import {
+    State,
     MonthlySpendingOverTime,
     MonthlySpendingOverTimeByState,
     MonthlySpendingOverTimeResponse,
 } from '../src/types/api';
 
-import { dataDir } from './nodeConstants';
-import { STATE_CODES } from './stateCodes';
+import { dataDir, statesJSON } from './nodeConstants';
 import httpsRequestToCallback from './httpsRequestToCallback';
 
 export default async function fetchSpendingOverTimeData() {
     console.log('Fetching spending over time data for each state...');
     if (!existsSync(dataDir)) {
         await mkdir(dataDir);
+    }
+
+    let STATE_CODES: string[];
+    if (!existsSync(statesJSON)) {
+        console.warn('Exiting because states json does not exist');
+        return;
+    } else {
+        const states = await fs.readFile(statesJSON);
+        STATE_CODES = JSON.parse(states.toString()).map(
+            (state: State) => state.code
+        );
     }
 
     const filename = path.join(dataDir, `monthly.spending.json`);
