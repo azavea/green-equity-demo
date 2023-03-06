@@ -6,17 +6,17 @@ export default function SpendingCategorySelector({
     value,
     onChange,
 }: {
-    value?: Category,
-    onChange: (category?: Category) => void,
+    value?: Category;
+    onChange: (category?: Category) => void;
 }) {
     function CategoryButton({
         category,
         isFirst,
         isLast,
     }: {
-        category?: Category,
-        isFirst?: boolean,
-        isLast?: boolean,
+        category?: Category;
+        isFirst?: boolean;
+        isLast?: boolean;
     }) {
         const isSelected = category === value;
 
