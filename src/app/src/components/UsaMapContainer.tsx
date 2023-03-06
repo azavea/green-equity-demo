@@ -1,6 +1,9 @@
+import { useBreakpointValue } from '@chakra-ui/react';
 import { ReactNode, useEffect } from 'react';
 import { MapContainer, useMap } from 'react-leaflet';
+
 import { MAP_CONTAINER_NEGATIVE_MARGIN } from '../constants';
+
 export default function UsaMapContainer({
     negativeMargin = false,
     children,
@@ -8,10 +11,12 @@ export default function UsaMapContainer({
     negativeMargin?: boolean;
     children?: ReactNode;
 }) {
+    const startingZoom = useMapZoom();
+
     return (
         <MapContainer
             center={[0, 0]} // Albers USA is not a "real" projection
-            zoom={4.5}
+            zoom={startingZoom}
             zoomSnap={0.5}
             zoomControl={false}
             scrollWheelZoom={false}
@@ -32,6 +37,7 @@ export default function UsaMapContainer({
             }}
         >
             <AttributionMover />
+            <MobileZoomer />
             {children}
         </MapContainer>
     );
@@ -45,4 +51,25 @@ function AttributionMover() {
     }, [map]);
 
     return null;
+}
+
+function MobileZoomer() {
+    const map = useMap();
+    const mapZoom = useMapZoom();
+
+    useEffect(() => {
+        map.setZoom(mapZoom);
+    }, [mapZoom, map]);
+
+    return null;
+}
+
+function useMapZoom() {
+    return (
+        useBreakpointValue({
+            xs: 3.5,
+            sm: 4.0,
+            md: 4.5,
+        }) ?? 4.5
+    );
 }

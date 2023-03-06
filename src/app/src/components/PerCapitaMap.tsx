@@ -10,7 +10,7 @@ import polylabel from 'polylabel';
 import UsaMapContainer from './UsaMapContainer';
 import StatesLayer from './StatesLayer';
 import PersonIcon from './PersonIcon';
-import PerCapitaMapLegend from './PerCapitaMapLegend';
+import PerCapitaMapLegend, { useMarkerSizeReducer } from './PerCapitaMapLegend';
 import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
 import { StateFeature } from './states.geojson';
@@ -162,6 +162,7 @@ function StatesAndMarkersLayer({
     const map = useMap();
     const markerReference = useRef<L.Marker[]>([]);
     const cheatLineReference = useRef<L.Polyline[]>([]);
+    const markerSizeReducer = useMarkerSizeReducer();
 
     const allSpendingByState = useMemo(
         () =>
@@ -262,14 +263,17 @@ function StatesAndMarkersLayer({
                             feature.properties.INACSPOLE ??
                             findPoleofInaccessibility(feature);
 
+                        const responsiveMarkerSize =
+                            amountCategory.size - markerSizeReducer;
+
                         const marker = new L.Marker(markerLocation, {
                             icon: new L.DivIcon({
                                 html: renderToStaticMarkup(
                                     <PersonIcon color={amountCategory.color} />
                                 ),
                                 iconSize: [
-                                    amountCategory.size,
-                                    amountCategory.size,
+                                    responsiveMarkerSize,
+                                    responsiveMarkerSize,
                                 ],
                                 className: '',
                             }),
