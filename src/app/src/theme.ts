@@ -4,15 +4,22 @@
 import { extendTheme } from '@chakra-ui/react';
 import { spendingTooltipCardStyle } from './components/SpendingTooltip';
 
+const sitePadding = {
+    paddingLeft: 5,
+    paddingRight: 5,
+};
+
 const theme = extendTheme({
     components: {
         Heading: {
             variants: {
                 title: {
                     fontSize: '24pt',
+                    ...sitePadding,
                 },
                 subtitle: {
                     fontSize: '20pt',
+                    ...sitePadding,
                 },
             },
         },
@@ -34,6 +41,14 @@ const theme = extendTheme({
         progress: {
             500: '#000000',
         },
+    },
+    breakpoints: {
+        xs: '1em',
+        sm: '30em',
+        md: '48em',
+        lg: '62em',
+        xl: '80em',
+        '2xl': '96em',
     },
 });
 

@@ -17,7 +17,7 @@ import Attribution from './components/Attribution';
 
 function App() {
     return (
-        <Center>
+        <Center style={{ textAlign: 'center' }}>
             <VStack mt={4} spacing={4} width='100%'>
                 <Heading variant='title'>Welcome to Green Equity</Heading>
                 <Heading variant='subtitle'>
