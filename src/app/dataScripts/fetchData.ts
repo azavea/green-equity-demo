@@ -12,25 +12,26 @@ async function fetchData() {
         await mkdir(dataDir);
     }
 
-    try {
-        await Promise.all([fetchStatesData(), fetchPerCapitaSpendingData()]);
-        // fetchSpendingOverTimeData relies on json product of fetchStatesData
-        await fetchSpendingOverTimeData();
-    } catch {
-        // Data not fetched.
-        return;
-    }
+    // fetchSpendingOverTimeData relies on json product of fetchStatesData
+    await fetchStatesData();
 
-    const today = new Date();
-    const todayJson = JSON.stringify({
-        lastUpdated: today.toISOString().substring(0, 10),
-    });
-    writeFile(
-        'src/data/lastUpdated.json',
-        todayJson,
-        { flag: 'w+' },
-        err => {}
-    );
+    const [perCapitaResult] = await Promise.allSettled([
+        fetchPerCapitaSpendingData(),
+        fetchSpendingOverTimeData(),
+    ]);
+
+    if (perCapitaResult.status === 'fulfilled') {
+        const today = new Date();
+        const todayJson = JSON.stringify({
+            lastUpdated: today.toISOString().substring(0, 10),
+        });
+        writeFile(
+            'src/data/lastUpdated.json',
+            todayJson,
+            { flag: 'w+' },
+            err => {}
+        );
+    }
 }
 
 fetchData();
