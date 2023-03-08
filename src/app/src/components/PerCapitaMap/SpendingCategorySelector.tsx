@@ -1,7 +1,7 @@
 import { Box, HStack, Select } from '@chakra-ui/react';
 
-import { Category } from '../enums';
-import useIsMobileMode from '../useIsMobileMode';
+import useIsMobileMode from '../../useIsMobileMode';
+import { Category } from '../../enums';
 
 export default function SpendingCategorySelector({
     value,

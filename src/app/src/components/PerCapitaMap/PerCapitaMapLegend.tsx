@@ -1,7 +1,7 @@
 import { HStack, Text, useBreakpointValue, VStack } from '@chakra-ui/react';
 
-import { AMOUNT_CATEGORIES } from '../constants';
-import useIsMobileMode from '../useIsMobileMode';
+import useIsMobileMode from '../../useIsMobileMode';
+import { AMOUNT_CATEGORIES } from '../../constants';
 import PersonIcon from './PersonIcon';
 
 export function useMarkerSizeReducer() {

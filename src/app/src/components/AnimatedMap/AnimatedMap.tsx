@@ -13,18 +13,18 @@ import {
 } from '@chakra-ui/react';
 
 import L from 'leaflet';
-import UsaMapContainer from './UsaMapContainer';
-import { StateGeometry, StateProperties } from './states.geojson';
+import UsaMapContainer from '../UsaMapContainer';
+import { StateGeometry, StateProperties } from '../states.geojson';
 
-import StatesLayer from './StatesLayer';
+import StatesLayer from '../StatesLayer';
 import TimeControlIcon from './TimeControlIcon';
 
 import {
     MonthlySpendingOverTimeByState,
     SpendingByGeographyAtMonth,
-} from '../types/api';
+} from '../../types/api';
 import AnimatedMapLegend from './AnimatedMapLegend';
-import { useGetSpendingOverTimeQuery } from '../api';
+import { useGetSpendingOverTimeQuery } from '../../api';
 
 const START_YEAR = 2021;
 const END_DATE = new Date();

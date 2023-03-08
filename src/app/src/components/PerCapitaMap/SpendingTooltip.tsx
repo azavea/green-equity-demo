@@ -13,9 +13,9 @@ import {
     Text,
     Progress,
 } from '@chakra-ui/react';
-import { Category } from '../enums';
-import { abbreviateNumber } from '../util';
-import { SpendingByGeographySingleResult } from '../types/api';
+import { Category } from '../../enums';
+import { abbreviateNumber } from '../../util';
+import { SpendingByGeographySingleResult } from '../../types/api';
 
 export default function SpendingTooltip({
     state,
