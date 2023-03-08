@@ -7,27 +7,27 @@ import L, { LatLngLiteral, LatLngTuple } from 'leaflet';
 import 'leaflet-draw';
 import polylabel from 'polylabel';
 
-import UsaMapContainer from './UsaMapContainer';
-import StatesLayer from './StatesLayer';
+import UsaMapContainer from '../UsaMapContainer';
+import StatesLayer from '../StatesLayer';
 import PersonIcon from './PersonIcon';
 import PerCapitaMapLegend, { useMarkerSizeReducer } from './PerCapitaMapLegend';
 import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
-import { StateFeature } from './states.geojson';
+import { StateFeature } from '../states.geojson';
 
-import { useGetSpendingByGeographyQuery, useGetStatesQuery } from '../api';
+import { useGetSpendingByGeographyQuery, useGetStatesQuery } from '../../api';
 import {
     getAgenciesForCategory,
     getAmountCategory,
     getDefaultSpendingByGeographyRequest,
-} from '../util';
-import { SpendingByGeographySingleResult } from '../types/api';
+} from '../../util';
+import { SpendingByGeographySingleResult } from '../../types/api';
 import {
     STATE_STYLE_BASE,
     STATE_STYLE_HOVER,
     MARKER_OVERRIDES,
-} from '../constants';
-import { Category } from '../enums';
+} from '../../constants';
+import { Category } from '../../enums';
 
 export default function PerCapitaMap() {
     const [spendingCategory, setSpendingCategory] = useState<Category>(
