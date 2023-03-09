@@ -29,6 +29,15 @@ export const spendingApi = createApi({
                 method: 'POST',
                 body: spendingByGeographyRequest,
             }),
+            transformResponse(response: SpendingByGeographyResponse) {
+                // Filter spending with no state (seems like a USASpending bug)
+                return {
+                    ...response,
+                    results: response.results.filter(
+                        stateSpending => stateSpending.shape_code !== ''
+                    ),
+                };
+            },
         }),
         getSpendingOverTime: builder.query<
             MonthlySpendingOverTimeByState,
