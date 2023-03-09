@@ -25,6 +25,7 @@ export enum Category {
 
 export function isCategory(value: string): value is Category {
     return [
+        Category.ALL.toString(),
         Category.CLIMATE.toString(),
         Category.CIVIL_WORKS.toString(),
         Category.TRANSPORTATION.toString(),

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { createPortal } from 'react-dom';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -15,12 +15,7 @@ import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
 import { StateFeature } from '../states.geojson';
 
-import { useGetSpendingByGeographyQuery, useGetStatesQuery } from '../../api';
-import {
-    getAgenciesForCategory,
-    getAmountCategory,
-    getDefaultSpendingByGeographyRequest,
-} from '../../util';
+import { getAmountCategory } from '../../util';
 import { SpendingByGeographySingleResult } from '../../types/api';
 import {
     STATE_STYLE_BASE,
@@ -28,100 +23,11 @@ import {
     MARKER_OVERRIDES,
 } from '../../constants';
 import { Category } from '../../enums';
+import useSpendingByCategoryByState from './useSpendingByCategoryByState';
 
 export default function PerCapitaMap() {
-    const [spendingCategory, setSpendingCategory] = useState<Category>(
-        Category.ALL
-    );
-
-    const { data: states, isFetching: isFetchingStates } = useGetStatesQuery();
-
-    const { data, isFetching } = useGetSpendingByGeographyQuery(
-        getDefaultSpendingByGeographyRequest()
-    );
-
-    const requestForCategory = (category: Category) => {
-        const baseRequest = getDefaultSpendingByGeographyRequest();
-        baseRequest.filters.agencies = getAgenciesForCategory(category);
-        return baseRequest;
-    };
-
-    const { data: broadbandData, isFetching: isFetchingBroadband } =
-        useGetSpendingByGeographyQuery(requestForCategory(Category.BROADBAND));
-
-    const { data: civilWorksData, isFetching: isFetchingCivilWorks } =
-        useGetSpendingByGeographyQuery(
-            requestForCategory(Category.CIVIL_WORKS)
-        );
-
-    const { data: climateData, isFetching: isFetchingClimate } =
-        useGetSpendingByGeographyQuery(requestForCategory(Category.CLIMATE));
-
-    const { data: transportationData, isFetching: isFetchingTransportation } =
-        useGetSpendingByGeographyQuery(
-            requestForCategory(Category.TRANSPORTATION)
-        );
-
-    const { data: otherData, isFetching: isFetchingOther } =
-        useGetSpendingByGeographyQuery(requestForCategory(Category.OTHER));
-
-    const spendingByCategoryByState = new Map<
-        String,
-        Map<Category, SpendingByGeographySingleResult | undefined>
-    >();
-    const anyIsFetching =
-        isFetching ||
-        isFetchingStates ||
-        isFetchingBroadband ||
-        isFetchingCivilWorks ||
-        isFetchingClimate ||
-        isFetchingTransportation ||
-        isFetchingOther;
-
-    if (!anyIsFetching) {
-        // Reshape the data: organize by state
-        states!.forEach(state => {
-            spendingByCategoryByState.set(
-                state.code,
-                new Map<Category, SpendingByGeographySingleResult>()
-            );
-            Object.values(Category).forEach(cat =>
-                spendingByCategoryByState
-                    .get(state.code)!
-                    .set(cat as Category, undefined)
-            );
-        });
-        data!.results.forEach(stateData => {
-            spendingByCategoryByState
-                .get(stateData.shape_code)
-                ?.set(Category.ALL, stateData);
-        });
-        broadbandData!.results.forEach(stateData => {
-            spendingByCategoryByState
-                .get(stateData.shape_code)
-                ?.set(Category.BROADBAND, stateData);
-        });
-        civilWorksData!.results.forEach(stateData => {
-            spendingByCategoryByState
-                .get(stateData.shape_code)
-                ?.set(Category.CIVIL_WORKS, stateData);
-        });
-        climateData!.results.forEach(stateData => {
-            spendingByCategoryByState
-                .get(stateData.shape_code)
-                ?.set(Category.CLIMATE, stateData);
-        });
-        transportationData!.results.forEach(stateData => {
-            spendingByCategoryByState
-                .get(stateData.shape_code)
-                ?.set(Category.TRANSPORTATION, stateData);
-        });
-        otherData!.results.forEach(stateData => {
-            spendingByCategoryByState
-                .get(stateData.shape_code)
-                ?.set(Category.OTHER, stateData);
-        });
-    }
+    const [spendingCategory, setSpendingCategory] = useState(Category.ALL);
+    const spendingByCategoryByState = useSpendingByCategoryByState();
 
     return (
         <VStack width='100%' justifyContent='center'>
@@ -130,9 +36,8 @@ export default function PerCapitaMap() {
                 onChange={setSpendingCategory}
             />
             <UsaMapContainer negativeMargin>
-                {data && spendingByCategoryByState && !anyIsFetching ? (
+                {spendingByCategoryByState ? (
                     <StatesAndMarkersLayer
-                        allSpending={data.results}
                         spendingByCategoryByState={spendingByCategoryByState}
                         selectedCategory={spendingCategory}
                     />
@@ -148,14 +53,12 @@ export default function PerCapitaMap() {
 }
 
 function StatesAndMarkersLayer({
-    allSpending,
     spendingByCategoryByState,
     selectedCategory,
 }: {
-    allSpending: SpendingByGeographySingleResult[];
-    spendingByCategoryByState: Map<
-        String,
-        Map<Category, SpendingByGeographySingleResult | undefined>
+    spendingByCategoryByState: Record<
+        string,
+        Record<Category, SpendingByGeographySingleResult>
     >;
     selectedCategory: Category;
 }) {
@@ -164,18 +67,7 @@ function StatesAndMarkersLayer({
     const cheatLineReference = useRef<L.Polyline[]>([]);
     const markerSizeReducer = useMarkerSizeReducer();
 
-    const allSpendingByState = useMemo(
-        () =>
-            Object.fromEntries(
-                allSpending.map(stateSpending => [
-                    stateSpending.shape_code,
-                    stateSpending,
-                ])
-            ),
-        [allSpending]
-    );
-
-    const tooltips = Object.keys(allSpendingByState).map(stateCode => {
+    const tooltips = Object.keys(spendingByCategoryByState).map(stateCode => {
         const tooltipDiv = document.createElement('div');
         tooltipDiv.dataset.stateCode = stateCode;
         tooltipDiv.id = `tooltip-${stateCode}`;
@@ -214,26 +106,29 @@ function StatesAndMarkersLayer({
         <>
             {tooltipsAttached &&
                 tooltips.map(tooltip => {
-                    const allStateSpending =
-                        allSpendingByState[tooltip.dataset?.stateCode!];
-                    if (allStateSpending === undefined) {
+                    if (!tooltip.dataset.stateCode) {
+                        throw new Error('Unreachable code');
+                    }
+
+                    const spendingByCategory =
+                        spendingByCategoryByState[tooltip.dataset.stateCode];
+                    if (spendingByCategory === undefined) {
                         return null;
                     }
-                    const spendingByCategory = spendingByCategoryByState.get(
-                        allStateSpending.shape_code
-                    );
-                    if (spendingByCategory === undefined) {
+
+                    const allStateSpending =
+                        spendingByCategoryByState[
+                            tooltip.dataset?.stateCode!
+                        ]?.[Category.ALL];
+
+                    if (allStateSpending === undefined) {
                         return null;
                     }
 
                     return createPortal(
                         <SpendingTooltip
                             state={allStateSpending.display_name ?? ''}
-                            stateCode={allStateSpending.shape_code ?? ''}
                             population={allStateSpending.population ?? 0}
-                            allSpending={
-                                allStateSpending.aggregated_amount ?? 0
-                            }
                             spendingByCategory={spendingByCategory}
                             selectedCategory={selectedCategory}
                         />,
@@ -243,10 +138,10 @@ function StatesAndMarkersLayer({
             <StatesLayer
                 onEachFeature={(feature, layer) => {
                     layer.on('add', event => {
-                        const stateSpending = spendingByCategoryByState
-                            .get(feature.properties.STUSPS)
-                            ?.get(selectedCategory);
-                        const perCapitaSpending = stateSpending?.per_capita;
+                        const perCapitaSpending =
+                            spendingByCategoryByState[
+                                feature.properties.STUSPS
+                            ]?.[selectedCategory].per_capita;
 
                         if (!perCapitaSpending) {
                             return;
