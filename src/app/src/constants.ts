@@ -1,5 +1,3 @@
-import { PathOptions } from 'leaflet';
-
 import { AmountCategory } from './types';
 
 export const spendingApiUrl = 'https://api.usaspending.gov/api/v2';
