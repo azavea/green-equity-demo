@@ -15,17 +15,20 @@ import {
 import { Category, isCategory } from '../../enums';
 import { abbreviateNumber } from '../../util';
 import { SpendingByGeographySingleResult } from '../../types/api';
+import { createPortal } from 'react-dom';
 
 export default function SpendingTooltip({
     state,
     population,
     spendingByCategory,
     selectedCategory,
+    tooltipDiv,
 }: {
     state: string;
     population: number;
     spendingByCategory: Record<Category, SpendingByGeographySingleResult>;
     selectedCategory: Category;
+    tooltipDiv: HTMLDivElement | undefined;
 }) {
     const categorySuffixPerCapita =
         selectedCategory === Category.ALL
@@ -34,7 +37,11 @@ export default function SpendingTooltip({
 
     const categorySpending = spendingByCategory[selectedCategory];
 
-    return (
+    if (!tooltipDiv) {
+        return null;
+    }
+
+    return createPortal(
         <Card variant='spendingTooltip'>
             <CardHeader>
                 <Heading size='sm'>{state}</Heading>
@@ -90,7 +97,8 @@ export default function SpendingTooltip({
                     </Box>
                 </Stack>
             </CardBody>
-        </Card>
+        </Card>,
+        tooltipDiv
     );
 }
 
