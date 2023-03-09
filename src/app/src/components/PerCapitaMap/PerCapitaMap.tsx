@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Center, CircularProgress, VStack } from '@chakra-ui/react';
-import L, { Layer } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet-draw';
 
 import UsaMapContainer from '../UsaMapContainer';
@@ -9,10 +9,14 @@ import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
 
 import { SpendingByGeographySingleResult } from '../../types/api';
-import { STATE_STYLE_BASE, STATE_STYLE_HOVER } from '../../constants';
 import { Category } from '../../enums';
 import useSpendingByCategoryByState from './useSpendingByCategoryByState';
-import { StateFeature } from '../states.geojson';
+import {
+    StateFeature,
+    StatesLayer as StatesLayerType,
+} from '../states.geojson';
+import { getAmountCategory } from '../../util';
+import { STATE_STYLE_BASE } from '../../constants';
 
 export default function PerCapitaMap() {
     const [spendingCategory, setSpendingCategory] = useState(Category.ALL);
@@ -41,7 +45,7 @@ export default function PerCapitaMap() {
 }
 
 function StatesAndMarkersLayer({
-    spendingByCategoryByState,
+    spendingByCategoryByState: unfilteredSpendingByCategoryByState,
     selectedCategory,
 }: {
     spendingByCategoryByState: Record<
@@ -54,43 +58,73 @@ function StatesAndMarkersLayer({
         Record<string, HTMLDivElement | undefined>
     >({});
 
-    const onEachFeature = useCallback((feature: StateFeature, layer: Layer) => {
-        layer.on('add', () => {
-            const tooltipDiv = document.createElement('div');
+    const spendingByCategoryByState = useMemo(
+        () =>
+            Object.fromEntries(
+                Object.entries(unfilteredSpendingByCategoryByState).filter(
+                    ([, stateSpending]) =>
+                        Category.ALL in stateSpending &&
+                        selectedCategory in stateSpending
+                )
+            ),
+        [selectedCategory, unfilteredSpendingByCategoryByState]
+    );
 
-            layer.bindTooltip(tooltipDiv, {
-                opacity: 1.0,
-                sticky: true,
-                offset: new L.Point(15, 15),
+    const onEachFeature = useCallback(
+        (feature: StateFeature, layer: StatesLayerType) => {
+            const stateSpending =
+                spendingByCategoryByState[feature.properties.STUSPS];
+
+            if (stateSpending === undefined) {
+                return;
+            }
+
+            layer.setStyle({
+                fillColor: getAmountCategory(
+                    stateSpending[selectedCategory].per_capita
+                ).color,
             });
 
-            setTooltipDivs(tooltipDivs => ({
-                ...tooltipDivs,
-                [feature.properties.STUSPS]: tooltipDiv,
-            }));
-        });
+            layer.on('add', () => {
+                const tooltipDiv = document.createElement('div');
 
-        layer.on('mouseover', () => {
-            (layer as any).setStyle(STATE_STYLE_HOVER);
-        });
+                layer.bindTooltip(tooltipDiv, {
+                    opacity: 1.0,
+                    sticky: true,
+                    offset: new L.Point(15, 15),
+                });
 
-        layer.on('mouseout', () => {
-            (layer as any).setStyle(STATE_STYLE_BASE);
-        });
-        layer.on('remove', () => {
-            setTooltipDivs(tooltipDivs => ({
-                ...tooltipDivs,
-                [feature.properties.STUSPS]: undefined,
-            }));
-        });
-    }, []);
+                setTooltipDivs(tooltipDivs => ({
+                    ...tooltipDivs,
+                    [feature.properties.STUSPS]: tooltipDiv,
+                }));
+            });
+
+            layer.on('mouseover', () => {
+                (layer as any).setStyle({ weight: 2 });
+            });
+
+            layer.on('mouseout', () => {
+                (layer as any).setStyle({
+                    weight: STATE_STYLE_BASE.weight,
+                });
+            });
+
+            layer.on('remove', () => {
+                setTooltipDivs(tooltipDivs => ({
+                    ...tooltipDivs,
+                    [feature.properties.STUSPS]: undefined,
+                }));
+            });
+        },
+        [selectedCategory, spendingByCategoryByState]
+    );
 
     return (
         <>
             <StatesLayer onEachFeature={onEachFeature} />
-            {Object.entries(spendingByCategoryByState)
-                .filter(([, stateSpending]) => Category.ALL in stateSpending)
-                .map(([stateCode, stateSpending]) => (
+            {Object.entries(spendingByCategoryByState).map(
+                ([stateCode, stateSpending]) => (
                     <SpendingTooltip
                         key={stateCode}
                         state={stateSpending[Category.ALL].display_name}
@@ -99,7 +133,8 @@ function StatesAndMarkersLayer({
                         selectedCategory={selectedCategory}
                         tooltipDiv={tooltipDivs[stateCode]}
                     />
-                ))}
+                )
+            )}
         </>
     );
 }
