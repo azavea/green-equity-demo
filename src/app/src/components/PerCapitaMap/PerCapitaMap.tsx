@@ -7,6 +7,7 @@ import UsaMapContainer from '../UsaMapContainer';
 import StatesLayer from '../StatesLayer';
 import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
+import PerCapitaMapLegend from './PerCapitaMapLegend';
 
 import { SpendingByGeographySingleResult } from '../../types/api';
 import { Category } from '../../enums';
@@ -40,6 +41,7 @@ export default function PerCapitaMap() {
                     </Center>
                 )}
             </UsaMapContainer>
+            <PerCapitaMapLegend />
         </VStack>
     );
 }
