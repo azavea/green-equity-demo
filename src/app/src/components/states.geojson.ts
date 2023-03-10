@@ -19,6 +19,7 @@ export type StatesCollection = GeoJSON.FeatureCollection<
     StateGeometry,
     StateProperties
 >;
+export type StatesLayer = L.GeoJSON<StateProperties, StateGeometry>;
 
 const stateGeoJson: StatesCollection = {
     type: 'FeatureCollection',
