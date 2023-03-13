@@ -6,6 +6,7 @@ import { dataDir } from './nodeConstants';
 import fetchPerCapitaSpendingData from './fetchPerCapitaSpendingData';
 import fetchStatesData from './fetchStatesData';
 import fetchSpendingOverTimeData from './fetchSpendingOverTimeData';
+import fetchAgencyData from './fetchAgencyData';
 
 async function fetchData() {
     if (!existsSync(dataDir)) {
@@ -13,7 +14,12 @@ async function fetchData() {
     }
 
     try {
-        await Promise.all([fetchStatesData(), fetchPerCapitaSpendingData()]);
+        await Promise.all([
+            fetchStatesData(),
+            fetchPerCapitaSpendingData(),
+            fetchAgencyData(),
+        ]);
+
         // fetchSpendingOverTimeData relies on json product of fetchStatesData
         await fetchSpendingOverTimeData();
     } catch {
