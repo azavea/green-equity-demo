@@ -51,6 +51,8 @@ and this project adheres to
     [#45](https://github.com/azavea/green-equity-demo/pull/45)
 -   Show only selected category data in tooltip
     [#61](https://github.com/azavea/green-equity-demo/pull/61)
+-   Make site more responsive
+    [#62](https://github.com/azavea/green-equity-demo/pull/62)
 
 ### Fixed
 
