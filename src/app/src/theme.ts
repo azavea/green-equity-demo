@@ -2,7 +2,7 @@
     This file is valid in both Javascript and Typescript
 */
 import { extendTheme } from '@chakra-ui/react';
-import { spendingTooltipCardStyle } from './components/SpendingTooltip';
+import { spendingTooltipCardStyle } from './components/PerCapitaMap/SpendingTooltip';
 
 const sitePadding = {
     paddingLeft: 5,

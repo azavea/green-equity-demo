@@ -1,4 +1,3 @@
-import React from 'react';
 import { cardAnatomy } from '@chakra-ui/anatomy';
 import {
     createMultiStyleConfigHelpers,
@@ -13,36 +12,36 @@ import {
     Text,
     Progress,
 } from '@chakra-ui/react';
-import { Category } from '../enums';
-import { abbreviateNumber } from '../util';
-import { SpendingByGeographySingleResult } from '../types/api';
+import { Category, isCategory } from '../../enums';
+import { abbreviateNumber } from '../../util';
+import { SpendingByGeographySingleResult } from '../../types/api';
+import { createPortal } from 'react-dom';
 
 export default function SpendingTooltip({
     state,
-    stateCode,
-    allSpending,
     population,
     spendingByCategory,
     selectedCategory,
+    tooltipDiv,
 }: {
     state: string;
-    stateCode: string;
-    allSpending: number;
     population: number;
-    spendingByCategory: Map<
-        Category,
-        SpendingByGeographySingleResult | undefined
-    >;
+    spendingByCategory: Record<Category, SpendingByGeographySingleResult>;
     selectedCategory: Category;
+    tooltipDiv: HTMLDivElement | undefined;
 }) {
     const categorySuffixPerCapita =
         selectedCategory === Category.ALL
             ? ''
             : ' for ' + selectedCategory.toString().toLowerCase();
 
-    const categorySpending = spendingByCategory.get(selectedCategory);
+    const categorySpending = spendingByCategory[selectedCategory];
 
-    return (
+    if (!tooltipDiv) {
+        return null;
+    }
+
+    return createPortal(
         <Card variant='spendingTooltip'>
             <CardHeader>
                 <Heading size='sm'>{state}</Heading>
@@ -70,38 +69,45 @@ export default function SpendingTooltip({
                     </Box>
                     <Box>
                         {selectedCategory === Category.ALL &&
-                            Array.from(spendingByCategory, ([cat, result]) => {
-                                if (cat === Category.ALL) {
-                                    return null;
+                            Object.entries(spendingByCategory).map(
+                                ([cat, result]) => {
+                                    if (!isCategory(cat)) {
+                                        throw new Error('Unreachable code');
+                                    }
+
+                                    if (cat === Category.ALL) {
+                                        return null;
+                                    }
+
+                                    const amount = result.aggregated_amount;
+
+                                    return (
+                                        <SpendingBar
+                                            key={`tooltipCategory-${state}-${cat.toString()}`}
+                                            cat={cat}
+                                            amount={amount}
+                                            allSpending={
+                                                spendingByCategory[Category.ALL]
+                                                    .aggregated_amount
+                                            }
+                                        />
+                                    );
                                 }
-
-                                const amount = result?.aggregated_amount ?? 0;
-
-                                return (
-                                    <SpendingBar
-                                        key={`tooltipCategory-${stateCode}-${cat.toString()}`}
-                                        cat={cat}
-                                        stateCode={stateCode}
-                                        amount={amount}
-                                        allSpending={allSpending}
-                                    />
-                                );
-                            })}
+                            )}
                     </Box>
                 </Stack>
             </CardBody>
-        </Card>
+        </Card>,
+        tooltipDiv
     );
 }
 
 function SpendingBar({
     cat,
-    stateCode,
     amount,
     allSpending,
 }: {
     cat: Category;
-    stateCode: string;
     amount: number;
     allSpending: number;
 }) {

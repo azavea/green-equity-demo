@@ -9,5 +9,4 @@ declare global {
 export type AmountCategory = {
     min: number;
     color: string;
-    size: number;
 };
