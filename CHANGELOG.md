@@ -53,6 +53,8 @@ and this project adheres to
     [#61](https://github.com/azavea/green-equity-demo/pull/61)
 -   Make site more responsive
     [#62](https://github.com/azavea/green-equity-demo/pull/62)
+-   Convert per-capita map to choropleth
+    [#69](https://github.com/azavea/green-equity-demo/pull/69)
 
 ### Fixed
 
