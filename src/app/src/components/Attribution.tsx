@@ -10,7 +10,7 @@ export default function Attribution() {
     const date = new Date(lastUpdated.lastUpdated);
 
     return (
-        <Box ml={2} width='650px'>
+        <Box ml={2} maxWidth='650px'>
             <details style={{ alignSelf: 'start' }}>
                 <summary>
                     <h3>Methodology</h3>

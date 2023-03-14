@@ -1,11 +1,21 @@
 import { useMemo } from 'react';
-import { Box, CircularProgress, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+    Box,
+    CircularProgress,
+    HStack,
+    Stack,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
 
 import { useGetSpendingByGeographyQuery } from '../api';
 import { getDefaultSpendingByGeographyRequest } from '../util';
 import lastUpdated from '../data/lastUpdated.json';
+import useIsMobileMode from '../useIsMobileMode';
 
 export default function BudgetTracker() {
+    const isMobileMode = useIsMobileMode();
+
     const { data: spending } = useGetSpendingByGeographyQuery(
         getDefaultSpendingByGeographyRequest()
     );
@@ -27,12 +37,21 @@ export default function BudgetTracker() {
             width='100%'
             pt={10}
             pb={10}
-            pl={64}
-            pr={64}
+            pl={25}
+            pr={25}
             zIndex={1}
         >
-            <HStack justifyContent='space-around'>
-                <VStack alignItems='flex-start'>
+            <Stack
+                direction={isMobileMode ? 'column' : 'row'}
+                justifyContent='space-around'
+                maxWidth='800px'
+                margin='auto'
+            >
+                <VStack
+                    alignItems={isMobileMode ? 'center' : 'flex-start'}
+                    pl={4}
+                    pb={5}
+                >
                     <Text fontSize={24} fontWeight={700}>
                         BIL budget tracker
                     </Text>
@@ -48,14 +67,19 @@ export default function BudgetTracker() {
                 ) : (
                     <CircularProgress isIndeterminate />
                 )}
-            </HStack>
+            </Stack>
         </Box>
     );
 }
 
 function BudgetTrackerProgressBar({ spending }: { spending: number }) {
+    const isMobileMode = useIsMobileMode();
     return (
-        <VStack spacing={0} width='xl'>
+        <VStack
+            spacing={0}
+            flexGrow={1}
+            maxWidth={isMobileMode ? undefined : 'md'}
+        >
             <BudgetTrackerProgressBarProgress spending={spending} />
             <BudgetTrackerProgressBarTicks />
             <BudgetTrackerProgressBarLabels />

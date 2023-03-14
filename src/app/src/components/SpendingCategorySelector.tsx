@@ -1,6 +1,7 @@
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, HStack, Select } from '@chakra-ui/react';
 
 import { Category } from '../enums';
+import useIsMobileMode from '../useIsMobileMode';
 
 export default function SpendingCategorySelector({
     value,
@@ -9,6 +10,8 @@ export default function SpendingCategorySelector({
     value: Category;
     onChange: (category: Category) => void;
 }) {
+    const isMobileMode = useIsMobileMode();
+
     function CategoryButton({
         category,
         isFirst,
@@ -43,13 +46,31 @@ export default function SpendingCategorySelector({
     }
 
     return (
-        <HStack mb={75} zIndex={1}>
-            <CategoryButton category={Category.ALL} isFirst />
-            <CategoryButton category={Category.BROADBAND} />
-            <CategoryButton category={Category.CIVIL_WORKS} />
-            <CategoryButton category={Category.CLIMATE} />
-            <CategoryButton category={Category.TRANSPORTATION} />
-            <CategoryButton category={Category.OTHER} isLast />
-        </HStack>
+        <Box mb={75} zIndex={1} width='100%' pl={10} pr={10}>
+            {isMobileMode ? (
+                <Select
+                    value={value}
+                    onChange={event => onChange(event.target.value as Category)}
+                >
+                    <option value={Category.ALL}>{Category.ALL}</option>
+                    <option value={Category.BROADBAND}>
+                        {Category.BROADBAND}
+                    </option>
+                    <option value={Category.CLIMATE}>{Category.CLIMATE}</option>
+                    <option value={Category.TRANSPORTATION}>
+                        {Category.TRANSPORTATION}
+                    </option>
+                    <option value={Category.OTHER}>{Category.OTHER}</option>
+                </Select>
+            ) : (
+                <HStack justifyContent='center'>
+                    <CategoryButton category={Category.ALL} isFirst />
+                    <CategoryButton category={Category.BROADBAND} />
+                    <CategoryButton category={Category.CLIMATE} />
+                    <CategoryButton category={Category.TRANSPORTATION} />
+                    <CategoryButton category={Category.OTHER} isLast />
+                </HStack>
+            )}
+        </Box>
     );
 }
