@@ -46,6 +46,8 @@ export type SpendingByGeographyResponse = {
     results: SpendingByGeographySingleResult[];
 };
 
+export type StateSpending = Record<Category, SpendingByGeographySingleResult>;
+
 export type SpendingOverTimeByStateRequest = {
     filters: {
         def_codes: DefCode[];

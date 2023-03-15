@@ -1,6 +1,6 @@
 import { useGetStatesQuery, useGetSpendingByGeographyQuery } from '../../api';
 import { Category, isCategory } from '../../enums';
-import { SpendingByGeographySingleResult } from '../../types/api';
+import { StateSpending } from '../../types/api';
 import {
     getDefaultSpendingByGeographyRequest,
     getAgenciesForCategory,
@@ -15,7 +15,6 @@ export default function useSpendingByCategoryByState() {
         [Category.CIVIL_WORKS]: useCategoryData(Category.CIVIL_WORKS),
         [Category.CLIMATE]: useCategoryData(Category.CLIMATE),
         [Category.TRANSPORTATION]: useCategoryData(Category.TRANSPORTATION),
-        [Category.OTHER]: useCategoryData(Category.OTHER),
     };
 
     if (!states) {
@@ -49,10 +48,7 @@ export default function useSpendingByCategoryByState() {
             return spendingByCategoryByState;
         },
         Object.fromEntries(
-            states.map(state => [
-                state.code,
-                {} as Record<Category, SpendingByGeographySingleResult>,
-            ])
+            states.map(state => [state.code, {} as StateSpending])
         )
     );
 }

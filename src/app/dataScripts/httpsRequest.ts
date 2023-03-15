@@ -1,16 +1,14 @@
 import https from 'node:https';
 
-export default function httpsRequestToCallback({
+export default function httpsRequest<T>({
     url,
     options = {},
     body,
-    onDataResponse,
 }: {
     url: string;
     options?: https.RequestOptions;
     body?: string;
-    onDataResponse: (parsedResult: any) => void;
-}): Promise<void> {
+}): Promise<T> {
     return new Promise((resolve, reject) => {
         const request = https.request(
             url,
@@ -30,8 +28,7 @@ export default function httpsRequestToCallback({
                 });
 
                 response.on('end', () => {
-                    onDataResponse(JSON.parse(completeData));
-                    resolve();
+                    resolve(JSON.parse(completeData));
                 });
             }
         );

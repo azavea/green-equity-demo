@@ -12,10 +12,11 @@ import {
     Text,
     Progress,
 } from '@chakra-ui/react';
+import { createPortal } from 'react-dom';
+
 import { Category, isCategory } from '../../enums';
 import { abbreviateNumber } from '../../util';
-import { SpendingByGeographySingleResult } from '../../types/api';
-import { createPortal } from 'react-dom';
+import { StateSpending } from '../../types/api';
 
 export default function SpendingTooltip({
     state,
@@ -26,7 +27,7 @@ export default function SpendingTooltip({
 }: {
     state: string;
     population: number;
-    spendingByCategory: Record<Category, SpendingByGeographySingleResult>;
+    spendingByCategory: StateSpending;
     selectedCategory: Category;
     tooltipDiv: HTMLDivElement | undefined;
 }) {
@@ -67,34 +68,9 @@ export default function SpendingTooltip({
                             Population: {abbreviateNumber(population)}
                         </Text>
                     </Box>
-                    <Box>
-                        {selectedCategory === Category.ALL &&
-                            Object.entries(spendingByCategory).map(
-                                ([cat, result]) => {
-                                    if (!isCategory(cat)) {
-                                        throw new Error('Unreachable code');
-                                    }
-
-                                    if (cat === Category.ALL) {
-                                        return null;
-                                    }
-
-                                    const amount = result.aggregated_amount;
-
-                                    return (
-                                        <SpendingBar
-                                            key={`tooltipCategory-${state}-${cat.toString()}`}
-                                            cat={cat}
-                                            amount={amount}
-                                            allSpending={
-                                                spendingByCategory[Category.ALL]
-                                                    .aggregated_amount
-                                            }
-                                        />
-                                    );
-                                }
-                            )}
-                    </Box>
+                    {selectedCategory === Category.ALL ? (
+                        <SpendingBars spendingByCategory={spendingByCategory} />
+                    ) : null}
                 </Stack>
             </CardBody>
         </Card>,
@@ -102,25 +78,48 @@ export default function SpendingTooltip({
     );
 }
 
-function SpendingBar({
-    cat,
-    amount,
-    allSpending,
+function SpendingBars({
+    spendingByCategory,
 }: {
-    cat: Category;
-    amount: number;
-    allSpending: number;
+    spendingByCategory: StateSpending;
 }) {
+    const totalAmount = spendingByCategory[Category.ALL]!.aggregated_amount;
+    let leftoverPercent = 100;
+
+    return (
+        <Box>
+            {Object.entries(spendingByCategory).map(([cat, result]) => {
+                if (!isCategory(cat)) {
+                    throw new Error('Unreachable code');
+                }
+
+                if (cat === Category.ALL || cat === Category.OTHER) {
+                    return null;
+                }
+
+                const percent = roundedPercent(
+                    result.aggregated_amount,
+                    totalAmount
+                );
+
+                leftoverPercent -= percent;
+
+                return <SpendingBar key={cat} cat={cat} percent={percent} />;
+            })}
+            <SpendingBar
+                cat={Category.OTHER}
+                percent={Math.max(leftoverPercent, 0)}
+            />
+        </Box>
+    );
+}
+
+function SpendingBar({ cat, percent }: { cat: Category; percent: number }) {
     return (
         <>
             <Text>{cat.toString()}:</Text>
-            <Text>{roundedPercent(amount, allSpending)}%</Text>
-            <Progress
-                mb={2}
-                colorScheme='tooltip'
-                size='lg'
-                value={roundedPercent(amount, allSpending)}
-            />
+            <Text>{percent}%</Text>
+            <Progress mb={2} colorScheme='tooltip' size='lg' value={percent} />
         </>
     );
 }

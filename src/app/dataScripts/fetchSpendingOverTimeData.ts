@@ -13,7 +13,7 @@ import {
 } from '../src/types/api';
 
 import { dataDir, statesJSON } from './nodeConstants';
-import httpsRequestToCallback from './httpsRequestToCallback';
+import httpsRequest from './httpsRequest';
 
 export default async function fetchSpendingOverTimeData() {
     console.log('Fetching spending over time data for each state...');
@@ -67,21 +67,23 @@ export default async function fetchSpendingOverTimeData() {
     });
 }
 
-async function fetchSpendingData(state: string, responseCallback: any) {
+async function fetchSpendingData(
+    state: string,
+    responseCallback: (data: any) => void
+) {
     console.log(`Fetching ${state} spending.`);
 
     const requestBody = getSpendingOverTimeByStateRequest();
 
     requestBody.filters.place_of_performance_locations[0]!.state = state;
 
-    return await httpsRequestToCallback({
+    return await httpsRequest({
         url: `${spendingApiUrl}/search/spending_over_time/`,
         options: {
             method: 'POST',
         },
         body: JSON.stringify(requestBody),
-        onDataResponse: responseCallback,
-    });
+    }).then(responseCallback);
 }
 
 function cleanDataDump(
