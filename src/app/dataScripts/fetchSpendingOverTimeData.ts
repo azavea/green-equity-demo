@@ -13,7 +13,7 @@ import {
 } from '../src/types/api';
 
 import { dataDir, statesJSON } from './nodeConstants';
-import httpsRequest from './httpsRequest';
+import { httpsRequestJson } from './httpsRequest';
 
 export default async function fetchSpendingOverTimeData() {
     console.log('Fetching spending over time data for each state...');
@@ -77,7 +77,7 @@ async function fetchSpendingData(
 
     requestBody.filters.place_of_performance_locations[0]!.state = state;
 
-    return await httpsRequest({
+    return await httpsRequestJson({
         url: `${spendingApiUrl}/search/spending_over_time/`,
         options: {
             method: 'POST',

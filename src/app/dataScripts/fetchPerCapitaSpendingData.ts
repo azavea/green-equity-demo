@@ -11,7 +11,7 @@ import {
 } from '../src/util';
 
 import { dataDir } from './nodeConstants';
-import httpsRequest from './httpsRequest';
+import { httpsRequestJson } from './httpsRequest';
 
 export default async function fetchPerCapitaSpendingData() {
     console.log('Fetching per-capita spending data...');
@@ -43,7 +43,7 @@ async function writeSpendingDataFile(category: Category) {
     }
 
     return fs.open(filename, 'w').then(async fileHandle => {
-        const data = await httpsRequest({
+        const data = await httpsRequestJson({
             url: `${spendingApiUrl}/search/spending_by_geography/`,
             options: {
                 method: 'POST',

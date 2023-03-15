@@ -5,7 +5,7 @@ import path from 'node:path';
 import { spendingApiUrl } from '../src/constants';
 
 import { dataDir } from './nodeConstants';
-import httpsRequest from './httpsRequest';
+import { httpsRequestJson } from './httpsRequest';
 
 type TopTierAgency = {
     name: string;
@@ -63,7 +63,7 @@ async function fetchTopTeirAgencies(): Promise<TopTierAgencies> {
 
     const fileHandle = await fs.open(filename, 'w');
 
-    const data = await httpsRequest<TopTierAgencies>({
+    const data = await httpsRequestJson<TopTierAgencies>({
         url: `${spendingApiUrl}/bulk_download/list_agencies`,
         options: { method: 'POST' },
         body: JSON.stringify({ type: 'award_agencies' }),
@@ -106,7 +106,7 @@ async function fetchSubAgenciesForTopTierAgency(topTierAgency: TopTierAgency) {
 
     do {
         try {
-            data = await httpsRequest<TopTierAgencySubAgencies>({
+            data = await httpsRequestJson<TopTierAgencySubAgencies>({
                 url: `${spendingApiUrl}/agency/${topTierAgency.toptier_code}/sub_agency/?page=${page}&limit=100`,
             });
 
