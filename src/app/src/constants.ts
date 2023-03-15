@@ -19,4 +19,10 @@ export const STATE_STYLE_BASE = Object.freeze({
 
 export const MAP_CONTAINER_NEGATIVE_MARGIN = 290;
 
+export const DC_CENTER: L.LatLngTuple = [
+    1.6467356667879738, 14.997499934940763,
+];
+
 export const MONTHLY_TIME_DURATION = 250;
+
+export const TOTAL_BIL_AMOUNT = 550000000000;

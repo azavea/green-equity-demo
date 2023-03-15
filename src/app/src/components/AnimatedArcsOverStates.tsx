@@ -10,9 +10,7 @@ import {
     MonthlySpendingOverTime,
     MonthlySpendingOverTimeByState,
 } from '../types/api';
-import { MONTHLY_TIME_DURATION } from '../constants';
-
-const DC_CENTER: L.LatLngTuple = [1.6467356667879738, 14.997499934940763];
+import { MONTHLY_TIME_DURATION, DC_CENTER } from '../constants';
 
 function getBezierOffsetLatLng(end: L.LatLngTuple): L.LatLngTuple {
     // Modified Bezier curve function from https://gist.github.com/ryancatalani/6091e50bf756088bf9bf5de2017b32e6
