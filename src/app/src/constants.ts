@@ -18,3 +18,5 @@ export const STATE_STYLE_BASE = Object.freeze({
 });
 
 export const MAP_CONTAINER_NEGATIVE_MARGIN = 290;
+
+export const MONTHLY_TIME_DURATION = 250;

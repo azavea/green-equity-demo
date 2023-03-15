@@ -61,6 +61,8 @@ export default function AnimatedArcsAndMap() {
                     <UsaMapContainer>
                         <AnimatedArcsOverStates
                             animationEnabled={animationEnabled}
+                            spending={data}
+                            totalTimeSteps={PROGRESS_FINAL_STEP}
                         />
                         <AnimatedMap
                             animationEnabled={animationEnabled}

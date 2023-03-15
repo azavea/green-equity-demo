@@ -6,6 +6,11 @@ import '@elfalem/leaflet-curve';
 import { StateGeometry, StateProperties } from './states.geojson';
 
 import StatesLayer from './StatesLayer';
+import {
+    MonthlySpendingOverTime,
+    MonthlySpendingOverTimeByState,
+} from '../types/api';
+import { MONTHLY_TIME_DURATION } from '../constants';
 
 const DC_CENTER: L.LatLngTuple = [1.6467356667879738, 14.997499934940763];
 
@@ -31,15 +36,19 @@ function getBezierOffsetLatLng(end: L.LatLngTuple): L.LatLngTuple {
 
 export default function AnimatedArcsOverStates({
     animationEnabled,
+    spending,
+    totalTimeSteps,
 }: {
     animationEnabled: boolean;
+    spending: MonthlySpendingOverTimeByState;
+    totalTimeSteps: number;
 }) {
     const map = useMap();
-    const arcPathsReference = useRef<
-        { shape_code: string; curve: L.Curve; start: number }[]
-    >([]);
+    const arcPathsReference = useRef<{ shape_code: string; curve: L.Curve }[]>(
+        []
+    );
 
-    map.createPane('arcPathsPane');
+    !map.getPane('arcPathsPane') && map.createPane('arcPathsPane');
 
     const createArcPath = useCallback(
         (event: any) => {
@@ -61,6 +70,13 @@ export default function AnimatedArcsOverStates({
             const midpoint: L.LatLngTuple =
                 getBezierOffsetLatLng(polygonCenterTuple);
 
+            const { startMonth, playDuration } = getPathAnimationValues({
+                spendingForState: spending.find(
+                    data => data.shape_code === state
+                )!,
+                totalTimeSteps: totalTimeSteps,
+            });
+
             arcPathsReference.current.push({
                 shape_code: state,
                 curve: new L.Curve(
@@ -70,14 +86,15 @@ export default function AnimatedArcsOverStates({
                         weight: 1,
                         pane: 'arcPathsPane',
                         animate: {
-                            duration: 2000,
+                            duration: playDuration,
+                            iterationStart: startMonth,
+                            iterations: 1,
                         },
                     }
                 ),
-                start: 3,
             });
         },
-        [arcPathsReference]
+        [arcPathsReference, spending, totalTimeSteps]
     );
 
     useEffect(() => {
@@ -89,7 +106,7 @@ export default function AnimatedArcsOverStates({
         }
         animationEnabled &&
             arcPathsReference.current.forEach(path => {
-                path.curve.addTo(map).bringToFront();
+                path.curve.addTo(map);
             });
     }, [map, animationEnabled]);
 
@@ -105,4 +122,42 @@ export default function AnimatedArcsOverStates({
             />
         </>
     );
+}
+
+function getPathAnimationValues({
+    spendingForState,
+    totalTimeSteps,
+}: {
+    spendingForState: {
+        shape_code: string;
+        results: MonthlySpendingOverTime;
+    };
+    totalTimeSteps: number;
+}) {
+    const totalTime = totalTimeSteps * MONTHLY_TIME_DURATION;
+    const firstAward = spendingForState.results.find(
+        data => data.aggregated_amount > 0
+    );
+    if (!firstAward) {
+        return {
+            startMonth: totalTime,
+            playDuration: totalTime,
+        };
+    }
+    if (firstAward.time_period.fiscal_year < 2021) {
+        return {
+            startMonth: 0,
+            playDuration: totalTime,
+        };
+    }
+    const startAtTime =
+        (firstAward.time_period.fiscal_year -
+            2021 +
+            firstAward.time_period.month) *
+        MONTHLY_TIME_DURATION;
+
+    return {
+        startMonth: startAtTime,
+        playDuration: totalTime - startAtTime,
+    };
 }

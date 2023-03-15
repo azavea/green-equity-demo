@@ -11,6 +11,8 @@ import {
     SpendingByGeographyAtMonth,
 } from '../../types/api';
 
+import { MONTHLY_TIME_DURATION } from '../constants';
+
 export default function AnimatedMap({
     animationEnabled,
     spending,
@@ -34,7 +36,7 @@ export default function AnimatedMap({
                     currentTimeValue =>
                         Math.round((currentTimeValue + 0.1) * 10) / 10
                 );
-            }, 25);
+            }, MONTHLY_TIME_DURATION / 10);
             return () => {
                 clearInterval(monthlyInterval);
             };
