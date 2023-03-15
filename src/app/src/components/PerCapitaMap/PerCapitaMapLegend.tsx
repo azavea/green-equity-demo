@@ -28,7 +28,7 @@ export default function PerCapitaMapLegend() {
                             : `$${category.min.toLocaleString()}+`;
 
                         return (
-                            <VStack flex={1}>
+                            <VStack flex={1} key={category.min}>
                                 <Box
                                     height={isMobileMode ? '20px' : '30px'}
                                     width='100%'
