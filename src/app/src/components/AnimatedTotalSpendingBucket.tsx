@@ -27,13 +27,10 @@ export default function AnimatedTotalSpendingBucket({
 
     return (
         <Tag
-            width='60%'
-            maxWidth={'750px'}
             background='none'
+            className={'leaflet-bottom'}
             position={'absolute'}
-            left={'65%'}
-            top={'33%'}
-            zIndex={'900'}
+            right={'60'}
         >
             <Progress
                 value={amountLeft}
