@@ -16,8 +16,10 @@ import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
 import AnimatedMapLegend from './AnimatedMapLegend';
+import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 import { useGetSpendingOverTimeQuery } from '../api';
 import AnimatedArcsOverStates from './AnimatedArcsOverStates';
+import { getSpendingByStateAtTime } from '../util';
 
 const START_YEAR = 2021;
 const END_DATE = new Date();
@@ -31,8 +33,17 @@ export default function AnimatedArcsAndMap() {
     const { data, isFetching } = useGetSpendingOverTimeQuery();
 
     const [timeValue, setTimeValue] = useState(0);
+    const [spendingAtTimeByState, setSpendingAtTimeByState] = useState(
+        data && getSpendingByStateAtTime(1, data)
+    );
     const [animationEnabled, setAnimationEnabled] = useState(false);
     const [restartTimeControl, setRestartTimeControl] = useState(false);
+
+    useEffect(() => {
+        timeValue % 1 === 0 &&
+            data &&
+            setSpendingAtTimeByState(getSpendingByStateAtTime(timeValue, data));
+    }, [timeValue, data]);
 
     useEffect(() => {
         if (timeValue === PROGRESS_FINAL_STEP) {
@@ -55,10 +66,13 @@ export default function AnimatedArcsAndMap() {
                 Allocation of awarded funding over time
             </Heading>
             <Spacer></Spacer>
-            {data && !isFetching ? (
+            {data && spendingAtTimeByState && !isFetching ? (
                 <>
                     <AnimatedMapLegend />
                     <UsaMapContainer>
+                        <AnimatedTotalSpendingBucket
+                            spendingAtTimeByState={spendingAtTimeByState}
+                        />
                         <AnimatedArcsOverStates
                             animationEnabled={animationEnabled}
                             spending={data}
@@ -66,8 +80,7 @@ export default function AnimatedArcsAndMap() {
                         />
                         <AnimatedMap
                             animationEnabled={animationEnabled}
-                            spending={data}
-                            timeValue={timeValue}
+                            spendingAtTimeByState={spendingAtTimeByState}
                             setTimeValue={setTimeValue}
                         />
                     </UsaMapContainer>
