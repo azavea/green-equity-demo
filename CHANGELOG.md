@@ -55,6 +55,8 @@ and this project adheres to
     [#62](https://github.com/azavea/green-equity-demo/pull/62)
 -   Convert per-capita map to choropleth
     [#69](https://github.com/azavea/green-equity-demo/pull/69)
+-   Make other category remainder of spending
+    [#71](https://github.com/azavea/green-equity-demo/pull/71)
 
 ### Fixed
 
