@@ -3,14 +3,14 @@ import { useMap } from 'react-leaflet';
 
 import L from 'leaflet';
 import '@elfalem/leaflet-curve';
-import { StateGeometry, StateProperties } from './states.geojson';
+import { StateGeometry, StateProperties } from '../states.geojson';
 
-import StatesLayer from './StatesLayer';
+import StatesLayer from '../StatesLayer';
 import {
     MonthlySpendingOverTime,
     MonthlySpendingOverTimeByState,
-} from '../types/api';
-import { MONTHLY_TIME_DURATION, DC_CENTER } from '../constants';
+} from '../../types/api';
+import { MONTHLY_TIME_DURATION, DC_CENTER } from '../../constants';
 
 function getBezierOffsetLatLng(end: L.LatLngTuple): L.LatLngTuple {
     // Modified Bezier curve function from https://gist.github.com/ryancatalani/6091e50bf756088bf9bf5de2017b32e6

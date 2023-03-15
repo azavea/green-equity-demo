@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Progress, Tag, TagLabel } from '@chakra-ui/react';
 
-import { SpendingByGeographyAtMonth } from '../types/api';
-import { TOTAL_BIL_AMOUNT } from '../constants';
+import { SpendingByGeographyAtMonth } from '../../types/api';
+import { TOTAL_BIL_AMOUNT } from '../../constants';
 
 export default function AnimatedTotalSpendingBucket({
     spendingAtTimeByState,

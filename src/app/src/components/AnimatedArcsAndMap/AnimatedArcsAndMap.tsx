@@ -11,15 +11,15 @@ import {
     TagLabel,
 } from '@chakra-ui/react';
 
-import UsaMapContainer from './UsaMapContainer';
+import UsaMapContainer from '../UsaMapContainer';
 import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
 import AnimatedMapLegend from './AnimatedMapLegend';
 import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
-import { useGetSpendingOverTimeQuery } from '../api';
+import { useGetSpendingOverTimeQuery } from '../../api';
 import AnimatedArcsOverStates from './AnimatedArcsOverStates';
-import { getSpendingByStateAtTime } from '../util';
+import { getSpendingByStateAtTime } from '../../util';
 
 const START_YEAR = 2021;
 const END_DATE = new Date();

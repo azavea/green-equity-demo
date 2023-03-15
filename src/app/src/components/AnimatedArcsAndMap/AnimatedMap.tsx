@@ -6,9 +6,7 @@ import '@elfalem/leaflet-curve';
 
 import StatesLayer from '../StatesLayer';
 
-import {
-    SpendingByGeographyAtMonth,
-} from '../../types/api';
+import { SpendingByGeographyAtMonth } from '../../types/api';
 
 import { MONTHLY_TIME_DURATION, TOTAL_BIL_AMOUNT } from '../../constants';
 
