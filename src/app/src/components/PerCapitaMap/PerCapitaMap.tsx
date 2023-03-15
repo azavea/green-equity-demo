@@ -9,8 +9,7 @@ import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
 import PerCapitaMapLegend from './PerCapitaMapLegend';
 
-import { SpendingByGeographySingleResult } from '../../types/api';
-import { Category } from '../../enums';
+import { Category, isCategory } from '../../enums';
 import useSpendingByCategoryByState from './useSpendingByCategoryByState';
 import {
     StateFeature,
@@ -18,6 +17,7 @@ import {
 } from '../states.geojson';
 import { getAmountCategory } from '../../util';
 import { STATE_STYLE_BASE } from '../../constants';
+import { StateSpending } from '../../types/api';
 
 export default function PerCapitaMap() {
     const [spendingCategory, setSpendingCategory] = useState(Category.ALL);
@@ -50,26 +50,29 @@ function StatesAndMarkersLayer({
     spendingByCategoryByState: unfilteredSpendingByCategoryByState,
     selectedCategory,
 }: {
-    spendingByCategoryByState: Record<
-        string,
-        Record<Category, SpendingByGeographySingleResult>
-    >;
+    spendingByCategoryByState: Record<string, StateSpending>;
     selectedCategory: Category;
 }) {
     const [tooltipDivs, setTooltipDivs] = useState<
         Record<string, HTMLDivElement | undefined>
     >({});
 
+    const spendingByCategoryByStateWithoutOtherSpending = useMemo(
+        () =>
+            Object.entries(unfilteredSpendingByCategoryByState).filter(
+                byStatesWithSelectedCategoryData(selectedCategory)
+            ),
+        [selectedCategory, unfilteredSpendingByCategoryByState]
+    );
+
     const spendingByCategoryByState = useMemo(
         () =>
             Object.fromEntries(
-                Object.entries(unfilteredSpendingByCategoryByState).filter(
-                    ([, stateSpending]) =>
-                        Category.ALL in stateSpending &&
-                        selectedCategory in stateSpending
+                spendingByCategoryByStateWithoutOtherSpending.map(
+                    addOtherSpending
                 )
             ),
-        [selectedCategory, unfilteredSpendingByCategoryByState]
+        [spendingByCategoryByStateWithoutOtherSpending]
     );
 
     const onEachFeature = useCallback(
@@ -83,7 +86,7 @@ function StatesAndMarkersLayer({
 
             layer.setStyle({
                 fillColor: getAmountCategory(
-                    stateSpending[selectedCategory].per_capita
+                    stateSpending[selectedCategory]!.per_capita
                 ).color,
             });
 
@@ -129,8 +132,8 @@ function StatesAndMarkersLayer({
                 ([stateCode, stateSpending]) => (
                     <SpendingTooltip
                         key={stateCode}
-                        state={stateSpending[Category.ALL].display_name}
-                        population={stateSpending[Category.ALL].population}
+                        state={stateSpending[selectedCategory]!.display_name}
+                        population={stateSpending[selectedCategory]!.population}
                         spendingByCategory={stateSpending}
                         selectedCategory={selectedCategory}
                         tooltipDiv={tooltipDivs[stateCode]}
@@ -138,5 +141,49 @@ function StatesAndMarkersLayer({
                 )
             )}
         </>
+    );
+}
+
+function byStatesWithSelectedCategoryData(selectedCategory: Category) {
+    return ([, stateSpending]: [string, StateSpending]) =>
+        selectedCategory in stateSpending ||
+        // Category is added later, but uses the ALL category to calculate remainder
+        (selectedCategory === Category.OTHER && Category.ALL in stateSpending);
+}
+
+function addOtherSpending([state, stateSpending]: [string, StateSpending]): [
+    string,
+    StateSpending
+] {
+    const aggregateAmount = calculateOtherAggregateAmount(stateSpending);
+
+    return [
+        state,
+        {
+            ...stateSpending,
+            [Category.OTHER]: {
+                ...stateSpending[Category.ALL]!,
+                aggregated_amount: aggregateAmount,
+                per_capita:
+                    aggregateAmount / stateSpending[Category.ALL]!.population,
+            },
+        },
+    ];
+}
+
+function calculateOtherAggregateAmount(stateSpending: StateSpending): number {
+    return (
+        stateSpending[Category.ALL]!.aggregated_amount -
+        Object.entries(stateSpending).reduce((sum, [category, spending]) => {
+            if (!isCategory(category)) {
+                throw new Error('Unreachable code');
+            }
+
+            if (category === Category.ALL || category === Category.OTHER) {
+                return sum;
+            }
+
+            return sum + spending.aggregated_amount;
+        }, 0)
     );
 }

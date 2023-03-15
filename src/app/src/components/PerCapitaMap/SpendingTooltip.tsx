@@ -12,10 +12,11 @@ import {
     Text,
     Progress,
 } from '@chakra-ui/react';
+import { createPortal } from 'react-dom';
+
 import { Category, isCategory } from '../../enums';
 import { abbreviateNumber } from '../../util';
-import { SpendingByGeographySingleResult } from '../../types/api';
-import { createPortal } from 'react-dom';
+import { StateSpending } from '../../types/api';
 
 export default function SpendingTooltip({
     state,
@@ -26,7 +27,7 @@ export default function SpendingTooltip({
 }: {
     state: string;
     population: number;
-    spendingByCategory: Record<Category, SpendingByGeographySingleResult>;
+    spendingByCategory: StateSpending;
     selectedCategory: Category;
     tooltipDiv: HTMLDivElement | undefined;
 }) {
@@ -80,9 +81,9 @@ export default function SpendingTooltip({
 function SpendingBars({
     spendingByCategory,
 }: {
-    spendingByCategory: Record<Category, SpendingByGeographySingleResult>;
+    spendingByCategory: StateSpending;
 }) {
-    const totalAmount = spendingByCategory[Category.ALL].aggregated_amount;
+    const totalAmount = spendingByCategory[Category.ALL]!.aggregated_amount;
     let leftoverPercent = 100;
 
     return (
