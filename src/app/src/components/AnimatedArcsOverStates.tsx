@@ -39,6 +39,8 @@ export default function AnimatedArcsOverStates({
         { shape_code: string; curve: L.Curve; start: number }[]
     >([]);
 
+    map.createPane('arcPathsPane');
+
     const createArcPath = useCallback(
         (event: any) => {
             const state = event.sourceTarget.feature.properties.STUSPS;
@@ -66,6 +68,7 @@ export default function AnimatedArcsOverStates({
                     {
                         color: '#2051FF',
                         weight: 1,
+                        pane: 'arcPathsPane',
                         animate: {
                             duration: 2000,
                         },
