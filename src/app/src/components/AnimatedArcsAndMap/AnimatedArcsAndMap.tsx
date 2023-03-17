@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
     Center,
     CircularProgress,
@@ -16,10 +17,10 @@ import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
 import AnimatedMapLegend from './AnimatedMapLegend';
-import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import { getSpendingByStateAtTime, PROGRESS_FINAL_STEP } from '../../util';
 import { MONTHLY_TIME_DURATION } from '../../constants';
+import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 
 export default function AnimatedArcsAndMap() {
     const { data, isFetching } = useGetSpendingOverTimeQuery();
@@ -30,6 +31,7 @@ export default function AnimatedArcsAndMap() {
     );
     const [animationEnabled, setAnimationEnabled] = useState(false);
     const [restartTimeControl, setRestartTimeControl] = useState(false);
+    const spendingBucketContainerRef = useRef<Element | undefined>();
 
     useEffect(() => {
         timeValue % 1 === 0 &&
@@ -72,16 +74,24 @@ export default function AnimatedArcsAndMap() {
                 Allocation of awarded funding over time
             </Heading>
             <Spacer></Spacer>
-            {data && spendingAtTimeByState && !isFetching ? (
+            {data && !isFetching ? (
                 <>
                     <AnimatedMapLegend />
-                    <UsaMapContainer>
-                        <AnimatedTotalSpendingBucket
-                            spendingAtTimeByState={spendingAtTimeByState}
-                        />
+                    <UsaMapContainer containerRef={spendingBucketContainerRef}>
+                        <>
+                            {spendingBucketContainerRef.current &&
+                                createPortal(
+                                    <AnimatedTotalSpendingBucket
+                                        spendingAtTimeByState={
+                                            spendingAtTimeByState
+                                        }
+                                    />,
+                                    spendingBucketContainerRef.current
+                                )}
+                        </>
                         <AnimatedMap
                             animationEnabled={animationEnabled}
-                            spendingAtTimeByState={spendingAtTimeByState}
+                            spendingAtTimeByState={spendingAtTimeByState!}
                         />
                     </UsaMapContainer>
                     <Box width='100%' textAlign={'center'}>
