@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { StateGeometry, StateProperties } from '../states.geojson';
+import { StateGeometry, StateProperties } from '../../types/states';
 import '@elfalem/leaflet-curve';
 
 import StatesLayer from '../StatesLayer';

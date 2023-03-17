@@ -14,7 +14,7 @@ import useSpendingByCategoryByState from './useSpendingByCategoryByState';
 import {
     StateFeature,
     StatesLayer as StatesLayerType,
-} from '../states.geojson';
+} from '../../types/states';
 import { getAmountCategory } from '../../util';
 import { STATE_STYLE_BASE } from '../../constants';
 import { StateSpending } from '../../types/api';

@@ -3,7 +3,13 @@ import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import { STATE_STYLE_BASE } from '../constants';
 
-import stateGeoJson, { StateGeometry, StateProperties } from './states.geojson';
+import {
+    StateGeometry,
+    StateProperties,
+    StatesCollection,
+} from '../types/states';
+
+import stateGeoJson from '../data/states.lowres.geo.json';
 
 export default function StatesLayer({
     onEachFeature,
@@ -16,11 +22,14 @@ export default function StatesLayer({
     const map = useMap();
 
     useEffect(() => {
-        const layer = L.geoJSON<StateProperties, StateGeometry>(stateGeoJson, {
-            style: STATE_STYLE_BASE,
-            interactive: true,
-            onEachFeature,
-        });
+        const layer = L.geoJSON<StateProperties, StateGeometry>(
+            stateGeoJson as StatesCollection,
+            {
+                style: STATE_STYLE_BASE,
+                interactive: true,
+                onEachFeature,
+            }
+        );
 
         map.addLayer(layer);
 
