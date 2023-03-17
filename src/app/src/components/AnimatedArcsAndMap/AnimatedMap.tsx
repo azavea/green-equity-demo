@@ -16,7 +16,7 @@ export default function AnimatedMap({
     setTimeValue,
 }: {
     animationEnabled: boolean;
-    spendingAtTimeByState: SpendingByGeographyAtMonth;
+    spendingAtTimeByState: SpendingByGeographyAtMonth | undefined;
     setTimeValue: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const map = useMap();
@@ -36,7 +36,8 @@ export default function AnimatedMap({
     }, [animationEnabled, setTimeValue]);
 
     useEffect(() => {
-        map &&
+        spendingAtTimeByState &&
+            map &&
             map.eachLayer(l => {
                 const asGeoJson = l as L.GeoJSON<
                     StateProperties,
@@ -65,11 +66,13 @@ export default function AnimatedMap({
                     feature,
                     layer: L.GeoJSON<StateProperties, StateGeometry>
                 ) => {
-                    const defaultFillColor = getColor(
-                        spendingAtTimeByState[
-                            feature.properties.STUSPS.toString()
-                        ]?.aggregated_amount
-                    );
+                    const defaultFillColor =
+                        spendingAtTimeByState &&
+                        getColor(
+                            spendingAtTimeByState[
+                                feature.properties.STUSPS.toString()
+                            ]?.aggregated_amount
+                        );
                     layer &&
                         layer.setStyle({
                             fill: true,

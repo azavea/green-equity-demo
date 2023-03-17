@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
     Center,
     CircularProgress,
@@ -16,10 +17,10 @@ import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
 import AnimatedMapLegend from './AnimatedMapLegend';
-import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import AnimatedArcsOverStates from './AnimatedArcsOverStates';
 import { getSpendingByStateAtTime } from '../../util';
+import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 
 const START_YEAR = 2021;
 const END_DATE = new Date();
@@ -38,6 +39,7 @@ export default function AnimatedArcsAndMap() {
     );
     const [animationEnabled, setAnimationEnabled] = useState(false);
     const [restartTimeControl, setRestartTimeControl] = useState(false);
+    const spendingBucketContainerRef = useRef<Element | undefined>();
 
     useEffect(() => {
         timeValue % 1 === 0 &&
@@ -66,13 +68,21 @@ export default function AnimatedArcsAndMap() {
                 Allocation of awarded funding over time
             </Heading>
             <Spacer></Spacer>
-            {data && spendingAtTimeByState && !isFetching ? (
+            {data && !isFetching ? (
                 <>
                     <AnimatedMapLegend />
-                    <UsaMapContainer>
-                        <AnimatedTotalSpendingBucket
-                            spendingAtTimeByState={spendingAtTimeByState}
-                        />
+                    <UsaMapContainer containerRef={spendingBucketContainerRef}>
+                        <>
+                            {spendingBucketContainerRef.current &&
+                                createPortal(
+                                    <AnimatedTotalSpendingBucket
+                                        spendingAtTimeByState={
+                                            spendingAtTimeByState
+                                        }
+                                    />,
+                                    spendingBucketContainerRef.current
+                                )}
+                        </>
                         <AnimatedArcsOverStates
                             animationEnabled={animationEnabled}
                             spending={data}

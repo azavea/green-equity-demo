@@ -7,7 +7,7 @@ import { TOTAL_BIL_AMOUNT } from '../../constants';
 export default function AnimatedTotalSpendingBucket({
     spendingAtTimeByState,
 }: {
-    spendingAtTimeByState: SpendingByGeographyAtMonth;
+    spendingAtTimeByState: SpendingByGeographyAtMonth | undefined;
 }) {
     const [totalSpendingAtTime, setTotalSpendingAtTime] = useState(0);
 
@@ -26,12 +26,7 @@ export default function AnimatedTotalSpendingBucket({
     const amountLeft = divideByBillion(TOTAL_BIL_AMOUNT - totalSpendingAtTime);
 
     return (
-        <Tag
-            background='none'
-            className={'leaflet-bottom'}
-            position={'absolute'}
-            right={'60'}
-        >
+        <Tag background='none'>
             <Progress
                 value={amountLeft}
                 opacity={100}
