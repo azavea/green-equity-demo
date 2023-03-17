@@ -22,7 +22,7 @@ function App() {
                 <Heading variant='title'>Welcome to Green Equity</Heading>
                 <Heading variant='subtitle'>
                     A demonstration project by{' '}
-                    <a href='https://www.azavea.com/'>Azavea</a>
+                    <a href='https://www.element84.com/'>Element 84</a>
                 </Heading>
                 <Spacer />
                 <Text>
