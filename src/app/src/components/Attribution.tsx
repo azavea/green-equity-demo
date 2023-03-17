@@ -63,6 +63,16 @@ export default function Attribution() {
                         />
                     ))}
             </details>
+            <Text fontSize={12} pt={4}>
+                The maps on this page were created with{' '}
+                <a
+                    href='https://leafletjs.com/'
+                    style={{ textDecoration: 'underline' }}
+                >
+                    Leaflet
+                </a>
+                .
+            </Text>
         </Box>
     );
 }

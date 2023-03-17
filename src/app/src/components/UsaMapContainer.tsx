@@ -23,6 +23,7 @@ export default function UsaMapContainer({
             boxZoom={false}
             doubleClickZoom={false}
             dragging={false}
+            attributionControl={false}
             style={{
                 height: `${
                     600 + (negativeMargin ? MAP_CONTAINER_NEGATIVE_MARGIN : 0)
@@ -36,21 +37,10 @@ export default function UsaMapContainer({
                     : {}),
             }}
         >
-            <AttributionMover />
             <MobileZoomer />
             {children}
         </MapContainer>
     );
-}
-
-function AttributionMover() {
-    const map = useMap();
-
-    useEffect(() => {
-        map.attributionControl.setPosition('bottomleft');
-    }, [map]);
-
-    return null;
 }
 
 function MobileZoomer() {
