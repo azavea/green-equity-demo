@@ -1,5 +1,5 @@
 import L, { GeoJSONOptions } from 'leaflet';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { STATE_STYLE_BASE } from '../constants';
 
@@ -9,7 +9,7 @@ import {
     StatesCollection,
 } from '../types/states';
 
-import stateGeoJson from '../data/states.lowres.geo.json';
+import lowresStateData from '../data/states.lowres.geo.json';
 
 export default function StatesLayer({
     onEachFeature,
@@ -20,16 +20,22 @@ export default function StatesLayer({
     >['onEachFeature'];
 }) {
     const map = useMap();
+    const [stateData, setStateData] = useState<StatesCollection>(
+        lowresStateData as StatesCollection
+    );
 
     useEffect(() => {
-        const layer = L.geoJSON<StateProperties, StateGeometry>(
-            stateGeoJson as StatesCollection,
-            {
-                style: STATE_STYLE_BASE,
-                interactive: true,
-                onEachFeature,
-            }
-        );
+        import('../data/states.highres.geo.json').then(highResStateData => {
+            setStateData(highResStateData as unknown as StatesCollection);
+        });
+    }, []);
+
+    useEffect(() => {
+        const layer = L.geoJSON<StateProperties, StateGeometry>(stateData, {
+            style: STATE_STYLE_BASE,
+            interactive: true,
+            onEachFeature,
+        });
 
         map.addLayer(layer);
 
@@ -38,7 +44,7 @@ export default function StatesLayer({
                 map.removeLayer(layer);
             }
         };
-    }, [map, onEachFeature]);
+    }, [map, onEachFeature, stateData]);
 
     return null;
 }
