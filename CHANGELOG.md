@@ -63,5 +63,7 @@ and this project adheres to
 -   Fix layout issues [#53](https://github.com/azavea/green-equity-demo/pull/53)
 -   Fix tooltip percentage calculations and improve agency lookups
     [#54](https://github.com/azavea/green-equity-demo/pull/54)
+-   Fix various minor things
+    [#84](https://github.com/azavea/green-equity-demo/pull/84)
 
 ### Removed

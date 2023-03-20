@@ -56,6 +56,9 @@ export default function SpendingCategorySelector({
                     <option value={Category.BROADBAND}>
                         {Category.BROADBAND}
                     </option>
+                    <option value={Category.CIVIL_WORKS}>
+                        {Category.CIVIL_WORKS}
+                    </option>
                     <option value={Category.CLIMATE}>{Category.CLIMATE}</option>
                     <option value={Category.TRANSPORTATION}>
                         {Category.TRANSPORTATION}
@@ -66,6 +69,7 @@ export default function SpendingCategorySelector({
                 <HStack justifyContent='center'>
                     <CategoryButton category={Category.ALL} isFirst />
                     <CategoryButton category={Category.BROADBAND} />
+                    <CategoryButton category={Category.CIVIL_WORKS} />
                     <CategoryButton category={Category.CLIMATE} />
                     <CategoryButton category={Category.TRANSPORTATION} />
                     <CategoryButton category={Category.OTHER} isLast />
