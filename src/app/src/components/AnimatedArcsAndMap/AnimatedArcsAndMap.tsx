@@ -20,6 +20,7 @@ import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import AnimatedArcsOverStates from './AnimatedArcsOverStates';
 import { getSpendingByStateAtTime } from '../../util';
+import { MONTHLY_TIME_DURATION } from '../../constants';
 
 const START_YEAR = 2021;
 const END_DATE = new Date();
@@ -52,6 +53,20 @@ export default function AnimatedArcsAndMap() {
         }
     }, [timeValue]);
 
+    useEffect(() => {
+        if (animationEnabled) {
+            const monthlyInterval = setInterval(() => {
+                setTimeValue(
+                    currentTimeValue =>
+                        Math.round((currentTimeValue + 0.1) * 10) / 10
+                );
+            }, MONTHLY_TIME_DURATION / 10);
+            return () => {
+                clearInterval(monthlyInterval);
+            };
+        }
+    }, [animationEnabled, setTimeValue]);
+
     function onSelectTimeAnimation() {
         if (restartTimeControl) {
             setTimeValue(0);
@@ -79,9 +94,7 @@ export default function AnimatedArcsAndMap() {
                             totalTimeSteps={PROGRESS_FINAL_STEP}
                         />
                         <AnimatedMap
-                            animationEnabled={animationEnabled}
                             spendingAtTimeByState={spendingAtTimeByState}
-                            setTimeValue={setTimeValue}
                         />
                     </UsaMapContainer>
                     <Box width='100%' textAlign={'center'}>

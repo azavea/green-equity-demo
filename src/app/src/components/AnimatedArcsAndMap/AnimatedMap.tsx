@@ -8,32 +8,14 @@ import StatesLayer from '../StatesLayer';
 
 import { SpendingByGeographyAtMonth } from '../../types/api';
 
-import { MONTHLY_TIME_DURATION, TOTAL_BIL_AMOUNT } from '../../constants';
+import { TOTAL_BIL_AMOUNT } from '../../constants';
 
 export default function AnimatedMap({
-    animationEnabled,
     spendingAtTimeByState,
-    setTimeValue,
 }: {
-    animationEnabled: boolean;
     spendingAtTimeByState: SpendingByGeographyAtMonth;
-    setTimeValue: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const map = useMap();
-
-    useEffect(() => {
-        if (animationEnabled) {
-            const monthlyInterval = setInterval(() => {
-                setTimeValue(
-                    currentTimeValue =>
-                        Math.round((currentTimeValue + 0.1) * 10) / 10
-                );
-            }, MONTHLY_TIME_DURATION / 10);
-            return () => {
-                clearInterval(monthlyInterval);
-            };
-        }
-    }, [animationEnabled, setTimeValue]);
 
     useEffect(() => {
         map &&
