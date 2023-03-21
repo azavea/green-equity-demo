@@ -51,19 +51,3 @@ JAVASCRIPT_PRETTIER_RULES_PATH: src/app/
 TYPESCRIPT_PRETTIER_RULES_PATH: src/app/
 UPDATED_SOURCES_REPORTER: false
 SHOW_ELAPSED_TIME: true
-
-# Formatting has one annoying bug which apparently varies between Mac and Linux.
-# https://github.com/oxsecurity/megalinter/issues/1975
-# This works around it to set permissions equal to whatever .gitignore is set to.
-
-PRE_COMMANDS:
-  - command: |-
-      echo $(ls -lah .gitignore | sed 's/\s\+/ /g' | cut -d ' ' -f3,4 | sed 's/ /\:/') > perms.txt
-      cat perms.txt
-    cwd: "workspace"
-
-POST_COMMANDS:
-  - command: |-
-      find . -user root -group root -exec chown $(cat perms.txt) {} \;
-      rm perms.txt
-    cwd: "workspace"
