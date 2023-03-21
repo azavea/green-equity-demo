@@ -25,3 +25,23 @@ ul {
 .leaflet-arcPathsPane-pane {
     z-index: 800;
 }
+
+.portal-container {
+    margin-bottom: 0;
+    left: -25px !important;
+}
+
+.portal-container .leaflet-popup-content-wrapper {
+    background: none;
+    color: none;
+    box-shadow: none;
+}
+
+.portal-container .leaflet-popup-content {
+    width: fit-content !important;
+    margin: 0;
+}
+
+.portal-container > .leaflet-popup-tip-container {
+    display: none;
+}
