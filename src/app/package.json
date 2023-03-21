@@ -54,9 +54,6 @@
         "fetch-data:point": "ts-node dataScripts/fetchPointData.ts",
         "remove-bbox": "ts-node dataScripts/removeBbox.ts"
     },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
     "browserslist": {
         "production": [
             ">0.2%",

@@ -28,25 +28,25 @@ export default function Attribution() {
                 <Text fontSize={12} pt={1}>
                     The query made to usaspending.gov requests the aggregated
                     amount of awards performed in a state with a Disaster
-                    Emergency Fund Code of "Z" or "1" (relating to the BIL). The
-                    populations for calculating per capita figures also come
-                    from usaspending.gov.
+                    Emergency Fund Code of {'"'}Z{'"'} or {'"'}1{'"'} (relating
+                    to the BIL). The populations for calculating per capita
+                    figures also come from usaspending.gov.
                 </Text>
                 <Text fontSize={12} pt={1}>
                     The following advice from the General Services
-                    Administration's{' '}
+                    Administration{"'"}s{' '}
                     <Link href='https://d2d.gsa.gov/report/bipartisan-infrastructure-law-bil-maps-dashboard'>
                         Bipartisan Infrastructure Law (BIL) Maps Dashboard
                     </Link>
                     , which consumes the same data source, is informative,
-                    despite also including announced funding: "All announcement
-                    data represented on these maps, including award and project
-                    locations and funding amounts, is preliminary and
-                    non-binding. Awards may be contingent on meeting certain
+                    despite also including announced funding: {'"'}All
+                    announcement data represented on these maps, including award
+                    and project locations and funding amounts, is preliminary
+                    and non-binding. Awards may be contingent on meeting certain
                     requirements. Data represents announced funding (formula and
                     discretionary) as of January 13, 2023. This is a small
                     subset of what the Bipartisan Infrastructure Law will fund
-                    and is not intended to be comprehensive."
+                    and is not intended to be comprehensive.{'"'}
                 </Text>
                 <Text fontSize={12} pt={1}>
                     Assignments of grant-making agencies to categories
