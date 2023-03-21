@@ -87,7 +87,10 @@ function PortalContainerSetter({
     if (containerRef && !containerRef.current) {
         // Create container div for spending bucket animation
         const popupContainer = document.createElement('div');
-        L.popup().setLatLng(DC_CENTER).setContent(popupContainer).openOn(map);
+        L.popup({ className: 'portal-container', closeButton: false })
+            .setLatLng(DC_CENTER)
+            .setContent(popupContainer)
+            .openOn(map);
         containerRef.current = popupContainer;
     }
     return null;

@@ -26,7 +26,7 @@ export default function AnimatedTotalSpendingBucket({
     const amountLeft = divideByBillion(TOTAL_BIL_AMOUNT - totalSpendingAtTime);
 
     return (
-        <Tag background='none'>
+        <Tag background='none' paddingLeft={0}>
             <Progress
                 value={amountLeft}
                 opacity={100}
