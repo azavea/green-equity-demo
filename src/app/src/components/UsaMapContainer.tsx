@@ -1,9 +1,8 @@
 import { useBreakpointValue } from '@chakra-ui/react';
 import { ReactNode, useEffect } from 'react';
 import { MapContainer, useMap } from 'react-leaflet';
-import L from 'leaflet';
 
-import { MAP_CONTAINER_NEGATIVE_MARGIN, DC_CENTER } from '../constants';
+import { MAP_CONTAINER_NEGATIVE_MARGIN } from '../constants';
 
 export default function UsaMapContainer({
     negativeMargin = false,
@@ -41,7 +40,6 @@ export default function UsaMapContainer({
         >
             <AttributionMover />
             <MobileZoomer />
-            <PortalContainerSetter containerRef={containerRef} />
             {children}
         </MapContainer>
     );
@@ -76,22 +74,4 @@ function useMapZoom() {
             md: 4.5,
         }) ?? 4.5
     );
-}
-
-function PortalContainerSetter({
-    containerRef,
-}: {
-    containerRef?: React.MutableRefObject<Element | undefined>;
-}) {
-    const map = useMap();
-    if (containerRef && !containerRef.current) {
-        // Create container div for spending bucket animation
-        const popupContainer = document.createElement('div');
-        L.popup({ className: 'portal-container', closeButton: false })
-            .setLatLng(DC_CENTER)
-            .setContent(popupContainer)
-            .openOn(map);
-        containerRef.current = popupContainer;
-    }
-    return null;
 }

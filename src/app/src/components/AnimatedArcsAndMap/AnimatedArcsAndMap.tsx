@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
 import {
     Center,
     CircularProgress,
@@ -39,7 +38,6 @@ export default function AnimatedArcsAndMap() {
     );
     const [animationEnabled, setAnimationEnabled] = useState(false);
     const [restartTimeControl, setRestartTimeControl] = useState(false);
-    const spendingBucketContainerRef = useRef<Element | undefined>();
 
     useEffect(() => {
         timeValue % 1 === 0 &&
@@ -71,18 +69,10 @@ export default function AnimatedArcsAndMap() {
             {data && !isFetching ? (
                 <>
                     <AnimatedMapLegend />
-                    <UsaMapContainer containerRef={spendingBucketContainerRef}>
-                        <>
-                            {spendingBucketContainerRef.current &&
-                                createPortal(
-                                    <AnimatedTotalSpendingBucket
-                                        spendingAtTimeByState={
-                                            spendingAtTimeByState
-                                        }
-                                    />,
-                                    spendingBucketContainerRef.current
-                                )}
-                        </>
+                    <UsaMapContainer>
+                        <AnimatedTotalSpendingBucket
+                            spendingAtTimeByState={spendingAtTimeByState}
+                        />
                         <AnimatedArcsOverStates
                             animationEnabled={animationEnabled}
                             spending={data}
