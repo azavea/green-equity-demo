@@ -223,6 +223,14 @@ export function abbreviateNumber(amount: number): string {
     return Math.round(amount).toLocaleString();
 }
 
+const START_YEAR = 2021;
+const END_DATE = new Date();
+export const PROGRESS_FINAL_STEP = (() => {
+    const final_month_step = END_DATE.getMonth();
+    const final_year_step = END_DATE.getFullYear();
+    return 12 * (final_year_step - START_YEAR) + final_month_step;
+})();
+
 export function getSpendingByStateAtTime(
     timeValue: number,
     spending: MonthlySpendingOverTimeByState

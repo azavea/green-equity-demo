@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { StateGeometry, StateProperties } from '../states.geojson';
@@ -9,13 +9,20 @@ import StatesLayer from '../StatesLayer';
 import { SpendingByGeographyAtMonth } from '../../types/api';
 
 import { TOTAL_BIL_AMOUNT } from '../../constants';
+import useCreateArcPath from './useCreateArcPath';
 
 export default function AnimatedMap({
     spendingAtTimeByState,
+    animationEnabled,
 }: {
     spendingAtTimeByState: SpendingByGeographyAtMonth;
+    animationEnabled: boolean;
 }) {
     const map = useMap();
+    const arcPathsReference = useRef<{ shape_code: string; curve: L.Curve }[]>(
+        []
+    );
+    const createArcPath = useCreateArcPath(arcPathsReference);
 
     useEffect(() => {
         map &&
@@ -40,6 +47,19 @@ export default function AnimatedMap({
             });
     }, [map, spendingAtTimeByState]);
 
+    useEffect(() => {
+        if (!animationEnabled && arcPathsReference.current.length > 0) {
+            arcPathsReference.current.forEach(path => {
+                path.curve.removeFrom(map);
+            });
+            arcPathsReference.current = [];
+        }
+        animationEnabled &&
+            arcPathsReference.current.forEach(path => {
+                path.curve.addTo(map);
+            });
+    }, [map, animationEnabled]);
+
     return (
         <>
             <StatesLayer
@@ -47,6 +67,7 @@ export default function AnimatedMap({
                     feature,
                     layer: L.GeoJSON<StateProperties, StateGeometry>
                 ) => {
+                    layer.on('add', createArcPath);
                     const defaultFillColor = getColor(
                         spendingAtTimeByState[
                             feature.properties.STUSPS.toString()

@@ -18,17 +18,8 @@ import AnimatedMap from './AnimatedMap';
 import AnimatedMapLegend from './AnimatedMapLegend';
 import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 import { useGetSpendingOverTimeQuery } from '../../api';
-import AnimatedArcsOverStates from './AnimatedArcsOverStates';
-import { getSpendingByStateAtTime } from '../../util';
+import { getSpendingByStateAtTime, PROGRESS_FINAL_STEP } from '../../util';
 import { MONTHLY_TIME_DURATION } from '../../constants';
-
-const START_YEAR = 2021;
-const END_DATE = new Date();
-const PROGRESS_FINAL_STEP = (() => {
-    const final_month_step = END_DATE.getMonth();
-    const final_year_step = END_DATE.getFullYear();
-    return 12 * (final_year_step - START_YEAR) + final_month_step;
-})();
 
 export default function AnimatedArcsAndMap() {
     const { data, isFetching } = useGetSpendingOverTimeQuery();
@@ -88,12 +79,8 @@ export default function AnimatedArcsAndMap() {
                         <AnimatedTotalSpendingBucket
                             spendingAtTimeByState={spendingAtTimeByState}
                         />
-                        <AnimatedArcsOverStates
-                            animationEnabled={animationEnabled}
-                            spending={data}
-                            totalTimeSteps={PROGRESS_FINAL_STEP}
-                        />
                         <AnimatedMap
+                            animationEnabled={animationEnabled}
                             spendingAtTimeByState={spendingAtTimeByState}
                         />
                     </UsaMapContainer>
