@@ -16,6 +16,7 @@ import DataSandbox from './components/DataSandbox';
 import SimpleModal from './components/SimpleModal';
 import BudgetTracker from './components/BudgetTracker';
 import Attribution from './components/Attribution';
+import EquityMap from './components/EquityMap';
 
 enum TopMap {
     PER_CAPITA,
@@ -45,7 +46,9 @@ function App() {
                 <TopMapTabSelector value={topMap} onChange={setTopMap} />
                 {topMap === TopMap.PER_CAPITA ? (
                     <PerCapitaMap />
-                ) : topMap === TopMap.EQUITY ? null : null}
+                ) : topMap === TopMap.EQUITY ? (
+                    <EquityMap />
+                ) : null}
                 <div style={{ height: 100 }} />
                 <AnimatedArcsAndMap />
                 <div style={{ height: 36 }} />
