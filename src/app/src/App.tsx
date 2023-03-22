@@ -1,5 +1,7 @@
+import { ReactNode, useState } from 'react';
 import {
     Button,
+    ButtonGroup,
     Center,
     Heading,
     Spacer,
@@ -15,7 +17,14 @@ import SimpleModal from './components/SimpleModal';
 import BudgetTracker from './components/BudgetTracker';
 import Attribution from './components/Attribution';
 
+enum TopMap {
+    PER_CAPITA,
+    EQUITY,
+}
+
 function App() {
+    const [topMap, setTopMap] = useState<TopMap>(TopMap.PER_CAPITA);
+
     return (
         <Center style={{ textAlign: 'center' }}>
             <VStack mt={4} spacing={4} width='100%'>
@@ -33,7 +42,10 @@ function App() {
                 <Spacer />
                 <BudgetTracker />
                 <Spacer />
-                <PerCapitaMap />
+                <TopMapTabSelector value={topMap} onChange={setTopMap} />
+                {topMap === TopMap.PER_CAPITA ? (
+                    <PerCapitaMap />
+                ) : topMap === TopMap.EQUITY ? null : null}
                 <div style={{ height: 100 }} />
                 <AnimatedArcsAndMap />
                 <div style={{ height: 36 }} />
@@ -44,6 +56,40 @@ function App() {
                 <footer>©2023 Element 84</footer>
             </VStack>
         </Center>
+    );
+}
+
+function TopMapTabSelector({
+    value,
+    onChange,
+}: {
+    value: TopMap;
+    onChange: (value: TopMap) => void;
+}) {
+    const TopMapTabButton = ({
+        topMap,
+        children,
+    }: {
+        topMap: TopMap;
+        children: ReactNode;
+    }) => (
+        <Button
+            variant={value === topMap ? 'solid' : 'ghost'}
+            onClick={() => onChange(topMap)}
+        >
+            {children}
+        </Button>
+    );
+
+    return (
+        <ButtonGroup zIndex={1} pb={10}>
+            <TopMapTabButton topMap={TopMap.PER_CAPITA}>
+                Funding per capita
+            </TopMapTabButton>
+            <TopMapTabButton topMap={TopMap.EQUITY}>
+                Disadvantaged communities
+            </TopMapTabButton>
+        </ButtonGroup>
     );
 }
 
