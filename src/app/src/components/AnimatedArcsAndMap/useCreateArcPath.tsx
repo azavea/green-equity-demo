@@ -1,10 +1,13 @@
 import { useCallback } from 'react';
 import { useMap } from 'react-leaflet';
-import L from 'leaflet';
+import L, { LatLngLiteral, LatLngTuple } from 'leaflet';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import { MonthlySpendingOverTime } from '../../types/api';
 import { PROGRESS_FINAL_STEP } from '../../util';
 import { DC_CENTER, MONTHLY_TIME_DURATION } from '../../constants';
+import { StateFeature } from '../states.geojson';
+
+import polylabel from 'polylabel';
 
 export default function useCreateArcPath(
     arcPathsReference: React.MutableRefObject<
@@ -29,13 +32,9 @@ export default function useCreateArcPath(
             ) {
                 return;
             }
-            const polygonCenter = (event.sourceTarget as L.Polygon)
-                .getBounds()
-                .getCenter();
-            const polygonCenterTuple: L.LatLngTuple = [
-                polygonCenter.lat,
-                polygonCenter.lng,
-            ];
+            const polygonCenterTuple: LatLngTuple = findPoleofInaccessibility(
+                event.sourceTarget.feature
+            );
             const midpoint: L.LatLngTuple =
                 getBezierOffsetLatLng(polygonCenterTuple);
 
@@ -58,6 +57,7 @@ export default function useCreateArcPath(
                             duration: playDuration,
                             iterationStart: startMonth,
                             iterations: 1,
+                            easing: 'ease-out',
                         },
                     }
                 ),
@@ -124,3 +124,18 @@ function getBezierOffsetLatLng(end: L.LatLngTuple): L.LatLngTuple {
 
     return [midpointY, midpointX];
 }
+
+const findPoleofInaccessibility = (feature: StateFeature) => {
+    const asPolygons = feature.geometry.coordinates.map(
+        polygonCoords => new L.Polygon(polygonCoords as LatLngTuple[])
+    );
+    const largestPolygon = asPolygons.reduce((prev, current) =>
+        L.GeometryUtil.geodesicArea(prev.getLatLngs()[0] as LatLngLiteral[]) >
+        L.GeometryUtil.geodesicArea(current.getLatLngs()[0] as LatLngLiteral[])
+            ? prev
+            : current
+    );
+    return polylabel(
+        largestPolygon.toGeoJSON().geometry.coordinates as number[][][]
+    ) as LatLngTuple;
+};

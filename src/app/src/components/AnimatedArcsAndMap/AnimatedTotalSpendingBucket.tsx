@@ -23,7 +23,7 @@ export default function AnimatedTotalSpendingBucket({
         }
     }, [spendingAtTimeByState]);
 
-    const amountLeft = divideByBillion(TOTAL_BIL_AMOUNT - totalSpendingAtTime);
+    const amountLeft = TOTAL_BIL_AMOUNT - totalSpendingAtTime;
 
     return (
         <Tag
@@ -41,7 +41,7 @@ export default function AnimatedTotalSpendingBucket({
                 width={'60px'}
                 style={{ transform: 'rotate(270deg)' }}
                 min={0}
-                max={550}
+                max={TOTAL_BIL_AMOUNT}
             />
             <TagLabel
                 overflow={'none'}
@@ -49,7 +49,7 @@ export default function AnimatedTotalSpendingBucket({
                 ml={'-50px'}
                 backgroundColor={'white'}
             >
-                ${amountLeft}B
+                ${divideByBillion(amountLeft)}B
             </TagLabel>
         </Tag>
     );
