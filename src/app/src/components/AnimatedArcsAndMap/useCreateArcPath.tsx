@@ -10,12 +10,7 @@ import { StateFeature } from '../states.geojson';
 import polylabel from 'polylabel';
 
 export default function useCreateArcPath(
-    arcPathsReference: React.MutableRefObject<
-        {
-            shape_code: string;
-            curve: L.Curve;
-        }[]
-    >
+    arcPathsReference: React.MutableRefObject<Record<string, L.Curve>>
 ) {
     const { data: spending } = useGetSpendingOverTimeQuery();
     const map = useMap();
@@ -24,12 +19,7 @@ export default function useCreateArcPath(
     return useCallback(
         (event: any) => {
             const state = event.sourceTarget.feature.properties.STUSPS;
-            if (
-                arcPathsReference.current.find(
-                    path => path.shape_code === state
-                ) ||
-                !spending
-            ) {
+            if (arcPathsReference.current[state] || !spending) {
                 return;
             }
             const polygonCenterTuple: LatLngTuple = findPoleofInaccessibility(
@@ -45,23 +35,20 @@ export default function useCreateArcPath(
                 totalTimeSteps: PROGRESS_FINAL_STEP,
             });
 
-            arcPathsReference.current.push({
-                shape_code: state,
-                curve: new L.Curve(
-                    ['M', DC_CENTER, 'Q', midpoint, polygonCenterTuple],
-                    {
-                        color: '#2051FF',
-                        weight: 1,
-                        pane: 'arcPathsPane',
-                        animate: {
-                            duration: playDuration,
-                            iterationStart: startMonth,
-                            iterations: 1,
-                            easing: 'ease-out',
-                        },
-                    }
-                ),
-            });
+            arcPathsReference.current[state] = new L.Curve(
+                ['M', DC_CENTER, 'Q', midpoint, polygonCenterTuple],
+                {
+                    color: '#2051FF',
+                    weight: 1,
+                    pane: 'arcPathsPane',
+                    animate: {
+                        duration: playDuration,
+                        iterationStart: startMonth,
+                        iterations: 1,
+                        easing: 'ease-out',
+                    },
+                }
+            );
         },
         [arcPathsReference, spending]
     );

@@ -19,9 +19,7 @@ export default function AnimatedMap({
     animationEnabled: boolean;
 }) {
     const map = useMap();
-    const arcPathsReference = useRef<{ shape_code: string; curve: L.Curve }[]>(
-        []
-    );
+    const arcPathsReference = useRef<Record<string, L.Curve>>({});
     const createArcPath = useCreateArcPath(arcPathsReference);
 
     useEffect(() => {
@@ -48,15 +46,18 @@ export default function AnimatedMap({
     }, [map, spendingAtTimeByState]);
 
     useEffect(() => {
-        if (!animationEnabled && arcPathsReference.current.length > 0) {
-            arcPathsReference.current.forEach(path => {
-                path.curve.removeFrom(map);
+        if (
+            !animationEnabled &&
+            Object.keys(arcPathsReference.current).length > 0
+        ) {
+            Object.values(arcPathsReference.current).forEach(path => {
+                path.removeFrom(map);
             });
-            arcPathsReference.current = [];
+            arcPathsReference.current = {};
         }
         animationEnabled &&
-            arcPathsReference.current.forEach(path => {
-                path.curve.addTo(map);
+            Object.values(arcPathsReference.current).forEach(path => {
+                path.addTo(map);
             });
     }, [map, animationEnabled]);
 
