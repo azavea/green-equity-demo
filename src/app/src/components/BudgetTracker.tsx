@@ -29,16 +29,14 @@ export default function BudgetTracker() {
         [spending?.results]
     );
 
-    const date = new Date(lastUpdated.lastUpdated);
-
     return (
         <Box
             background='#F6F8FF'
             width='100%'
-            pt={10}
-            pb={10}
-            pl={25}
-            pr={25}
+            pt={5}
+            pb={5}
+            pl={15}
+            pr={15}
             zIndex={1}
         >
             <Stack
@@ -47,20 +45,18 @@ export default function BudgetTracker() {
                 maxWidth='800px'
                 margin='auto'
             >
-                <VStack
-                    alignItems={isMobileMode ? 'center' : 'flex-start'}
-                    pl={4}
-                    pb={5}
-                >
+                <VStack alignItems='flex-start' pl={4} pb={5}>
                     <Text fontSize={24} fontWeight={700}>
                         BIL budget tracker
                     </Text>
-                    <Text fontSize={20} fontWeight={500}>
-                        $550B available in bill
+                    <Text
+                        fontSize={20}
+                        fontWeight={500}
+                        style={{ marginTop: 0 }}
+                    >
+                        Amount awarded of $550B budget
                     </Text>
-                    <Text fontSize={14}>
-                        Updated {date.toLocaleDateString()}
-                    </Text>
+                    {spendingSum ? <MoneyLeft spending={spendingSum} /> : null}
                 </VStack>
                 {spendingSum ? (
                     <BudgetTrackerProgressBar spending={spendingSum} />
@@ -72,96 +68,76 @@ export default function BudgetTracker() {
     );
 }
 
-function BudgetTrackerProgressBar({ spending }: { spending: number }) {
-    const isMobileMode = useIsMobileMode();
+function MoneyLeft({ spending }: { spending: number }) {
+    const date = new Date(lastUpdated.lastUpdated);
+    const billionsLeft = (550 - spending / 1_000_000_000).toFixed();
+
     return (
-        <VStack
-            spacing={0}
-            flexGrow={1}
-            maxWidth={isMobileMode ? undefined : 'md'}
-        >
-            <BudgetTrackerProgressBarProgress spending={spending} />
-            <BudgetTrackerProgressBarTicks />
-            <BudgetTrackerProgressBarLabels />
-        </VStack>
+        <Text fontSize={20} style={{ marginTop: 0 }}>
+            ${billionsLeft}B left as of {date.toLocaleDateString()}
+        </Text>
     );
 }
 
 const progressWidth = '90%';
 const progressColor = '#465EB5';
 const spendingDenominator = 550_000_000_000 / 100;
-function BudgetTrackerProgressBarProgress({ spending }: { spending: number }) {
+function BudgetTrackerProgressBar({ spending }: { spending: number }) {
+    const isMobileMode = useIsMobileMode();
+
     const spendingPercent = spending / spendingDenominator;
     const moneyLeftPercent = 100 - spendingPercent;
     const spendingBillions = spending / 1_000_000_000;
 
     return (
-        <HStack
-            height={30}
-            width={progressWidth}
+        <VStack
             spacing={0}
-            border={`1px solid ${progressColor}`}
+            flexGrow={1}
+            justifyContent='center'
+            maxWidth={isMobileMode ? undefined : 'md'}
         >
-            <div
-                style={{
-                    background: progressColor,
-                    width: `${spendingPercent}%`,
-                    height: '100%',
-                    textAlign: 'center',
-                    color: 'white',
-                }}
+            <HStack
+                height={30}
+                width={progressWidth}
+                spacing={0}
+                border={`1px solid ${progressColor}`}
             >
-                {spendingBillions.toFixed()}B awarded
-            </div>
-            <div
-                style={{
-                    width: `${moneyLeftPercent}%`,
-                    height: '100%',
-                    textAlign: 'center',
-                }}
-            >
-                {(550 - spendingBillions).toFixed()}B left
-            </div>
-        </HStack>
-    );
-}
-
-const baseTickStyle = { height: '100%', width: '50%' };
-const fullTick = 'solid 1px grey';
-const halfTick = 'solid .5px grey';
-function BudgetTrackerProgressBarTicks() {
-    return (
-        <HStack height='12px' width={progressWidth} spacing={0}>
-            <div
-                style={{
-                    ...baseTickStyle,
-                    borderLeft: fullTick,
-                    borderRight: halfTick,
-                }}
-            />
-            <div
-                style={{
-                    ...baseTickStyle,
-                    borderRight: fullTick,
-                    borderLeft: halfTick,
-                }}
-            />
-        </HStack>
-    );
-}
-
-function BudgetTrackerProgressBarLabels() {
-    return (
-        <HStack
-            height='12px'
-            width='100%'
-            justifyContent='space-between'
-            pt={5}
-            pl={4} // There could be a better way to align the labels
-        >
-            <Text>0%</Text>
-            <Text>50%</Text>
-            <Text>100%</Text>
-        </HStack>
+                <div
+                    style={{
+                        background: progressColor,
+                        width: `${spendingPercent}%`,
+                        height: '100%',
+                        textAlign: 'center',
+                        color: 'white',
+                    }}
+                >
+                    ${spendingBillions.toFixed()}B
+                </div>
+                <div
+                    style={{
+                        width: `${moneyLeftPercent}%`,
+                        height: '100%',
+                        textAlign: 'center',
+                    }}
+                />
+            </HStack>
+            <Box paddingTop={2} width={progressWidth}>
+                <Box
+                    marginLeft={`calc(${spendingPercent}% - 7px)`}
+                    width={0}
+                    height={0}
+                    borderLeft='7px solid transparent'
+                    borderRight='7px solid transparent'
+                    borderBottom='10px solid black'
+                />
+                <Text
+                    marginLeft={`${spendingPercent}%`}
+                    position='relative'
+                    transform='translateX(-50%)'
+                >
+                    {spendingPercent.toFixed()}%
+                </Text>
+            </Box>
+        </VStack>
     );
 }

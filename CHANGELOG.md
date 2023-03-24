@@ -63,6 +63,8 @@ and this project adheres to
     [#69](https://github.com/azavea/green-equity-demo/pull/69)
 -   Make other category remainder of spending
     [#71](https://github.com/azavea/green-equity-demo/pull/71)
+-   Update budget tracker style
+    [#89](https://github.com/azavea/green-equity-demo/pull/89)
 
 ### Fixed
 
