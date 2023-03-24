@@ -72,7 +72,7 @@ export default function AnimatedArcsAndMap() {
                 Allocation of awarded funding over time
             </Heading>
             <Spacer></Spacer>
-            {data && !isFetching ? (
+            {data && spendingAtTimeByState && !isFetching ? (
                 <>
                     <AnimatedMapLegend />
                     <UsaMapContainer>
@@ -81,7 +81,7 @@ export default function AnimatedArcsAndMap() {
                         />
                         <AnimatedMap
                             animationEnabled={animationEnabled}
-                            spendingAtTimeByState={spendingAtTimeByState!}
+                            spendingAtTimeByState={spendingAtTimeByState}
                         />
                     </UsaMapContainer>
                     <Box width='100%' textAlign={'center'}>

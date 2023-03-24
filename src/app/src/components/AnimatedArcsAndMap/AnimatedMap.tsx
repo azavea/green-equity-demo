@@ -23,8 +23,7 @@ export default function AnimatedMap({
     const createArcPath = useCreateArcPath(arcPathsReference);
 
     useEffect(() => {
-        spendingAtTimeByState &&
-            map &&
+        map &&
             map.eachLayer(l => {
                 const asGeoJson = l as L.GeoJSON<
                     StateProperties,
