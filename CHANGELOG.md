@@ -44,6 +44,8 @@ and this project adheres to
     [#75](https://github.com/azavea/green-equity-demo/pull/75)
 -   Add point data fetch script
     [#77](https://github.com/azavea/green-equity-demo/pull/77)
+-   Lazy load high-res state boundaries
+    [#82](https://github.com/azavea/green-equity-demo/pull/82)
 
 ### Changed
 

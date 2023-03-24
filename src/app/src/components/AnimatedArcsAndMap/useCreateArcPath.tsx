@@ -5,7 +5,7 @@ import { useGetSpendingOverTimeQuery } from '../../api';
 import { MonthlySpendingOverTime } from '../../types/api';
 import { PROGRESS_FINAL_STEP } from '../../util';
 import { DC_CENTER, MONTHLY_TIME_DURATION } from '../../constants';
-import { StateFeature } from '../states.geojson';
+import { StateFeature } from '../../types/states';
 
 import polylabel from 'polylabel';
 

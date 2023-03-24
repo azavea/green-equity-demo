@@ -1,9 +1,15 @@
 import L, { GeoJSONOptions } from 'leaflet';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { STATE_STYLE_BASE } from '../constants';
 
-import stateGeoJson, { StateGeometry, StateProperties } from './states.geojson';
+import {
+    StateGeometry,
+    StateProperties,
+    StatesCollection,
+} from '../types/states';
+
+import lowresStateData from '../data/states.lowres.geo.json';
 
 export default function StatesLayer({
     onEachFeature,
@@ -14,9 +20,18 @@ export default function StatesLayer({
     >['onEachFeature'];
 }) {
     const map = useMap();
+    const [stateData, setStateData] = useState<StatesCollection>(
+        lowresStateData as StatesCollection
+    );
 
     useEffect(() => {
-        const layer = L.geoJSON<StateProperties, StateGeometry>(stateGeoJson, {
+        import('../data/states.highres.geo.json').then(highResStateData => {
+            setStateData(highResStateData as unknown as StatesCollection);
+        });
+    }, []);
+
+    useEffect(() => {
+        const layer = L.geoJSON<StateProperties, StateGeometry>(stateData, {
             style: STATE_STYLE_BASE,
             interactive: true,
             onEachFeature,
@@ -29,7 +44,7 @@ export default function StatesLayer({
                 map.removeLayer(layer);
             }
         };
-    }, [map, onEachFeature]);
+    }, [map, onEachFeature, stateData]);
 
     return null;
 }
