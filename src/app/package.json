@@ -50,7 +50,8 @@
         "build": "craco build",
         "test": "craco test",
         "fetch-data": "ts-node dataScripts/fetchData.ts",
-        "fetch-data:agency": "ts-node dataScripts/fetchAgencyData.ts"
+        "fetch-data:agency": "ts-node dataScripts/fetchAgencyData.ts",
+        "fetch-data:point": "ts-node dataScripts/fetchPointData.ts"
     },
     "eslintConfig": {
         "extends": "react-app"

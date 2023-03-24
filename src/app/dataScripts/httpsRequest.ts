@@ -1,14 +1,16 @@
 import https from 'node:https';
 
-export default function httpsRequest<T>({
-    url,
-    options = {},
-    body,
-}: {
+type RequestParameters = {
     url: string;
     options?: https.RequestOptions;
     body?: string;
-}): Promise<T> {
+};
+
+export default function httpsRequest({
+    url,
+    options = {},
+    body,
+}: RequestParameters): Promise<Buffer> {
     return new Promise((resolve, reject) => {
         const request = https.request(
             url,
@@ -20,15 +22,15 @@ export default function httpsRequest<T>({
                 ...options,
             },
             response => {
-                let completeData: string = '';
+                const chunks: Array<Buffer> = [];
                 response.on('data', chunk => {
                     if (chunk) {
-                        completeData += chunk.toString();
+                        chunks.push(chunk);
                     }
                 });
 
                 response.on('end', () => {
-                    resolve(JSON.parse(completeData));
+                    resolve(Buffer.concat(chunks));
                 });
             }
         );
@@ -41,4 +43,10 @@ export default function httpsRequest<T>({
 
         request.end();
     });
+}
+
+export function httpsRequestJson<T>(parameters: RequestParameters): Promise<T> {
+    return httpsRequest(parameters).then(buffer =>
+        JSON.parse(buffer.toString())
+    );
 }
