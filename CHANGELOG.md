@@ -42,6 +42,8 @@ and this project adheres to
     [#60](https://github.com/azavea/green-equity-demo/pull/60)
 -   Add animated spending arc to map
     [#75](https://github.com/azavea/green-equity-demo/pull/75)
+-   Add point data fetch script
+    [#77](https://github.com/azavea/green-equity-demo/pull/77)
 
 ### Changed
 
