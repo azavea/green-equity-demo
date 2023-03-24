@@ -16,10 +16,10 @@ import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
 import AnimatedMapLegend from './AnimatedMapLegend';
-import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import { getSpendingByStateAtTime, PROGRESS_FINAL_STEP } from '../../util';
 import { MONTHLY_TIME_DURATION } from '../../constants';
+import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 
 export default function AnimatedArcsAndMap() {
     const { data, isFetching } = useGetSpendingOverTimeQuery();

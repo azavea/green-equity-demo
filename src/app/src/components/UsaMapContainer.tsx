@@ -7,9 +7,11 @@ import { MAP_CONTAINER_NEGATIVE_MARGIN } from '../constants';
 export default function UsaMapContainer({
     negativeMargin = false,
     children,
+    containerRef,
 }: {
     negativeMargin?: boolean;
     children?: ReactNode;
+    containerRef?: React.MutableRefObject<Element | undefined>;
 }) {
     const startingZoom = useMapZoom();
 
