@@ -10,6 +10,8 @@ import {
 import { AmountCategory } from './types';
 import {
     Agency,
+    MonthlySpendingOverTimeByState,
+    SpendingByGeographyAtMonth,
     SpendingByGeographyRequest,
     SpendingOverTimeByStateRequest,
 } from './types/api';
@@ -219,4 +221,37 @@ export function abbreviateNumber(amount: number): string {
         return Math.round(amount / 1e3).toLocaleString() + 'K';
     }
     return Math.round(amount).toLocaleString();
+}
+
+const START_YEAR = 2021;
+const END_DATE = new Date();
+export const PROGRESS_FINAL_STEP = (() => {
+    const final_month_step = END_DATE.getMonth();
+    const final_year_step = END_DATE.getFullYear();
+    return 12 * (final_year_step - START_YEAR) + final_month_step;
+})();
+
+export function getSpendingByStateAtTime(
+    timeValue: number,
+    spending: MonthlySpendingOverTimeByState
+): SpendingByGeographyAtMonth {
+    const isDecember = timeValue % 12 === 0;
+    const fiscalYearSelection =
+        2021 + Math.floor(isDecember ? timeValue / 13 : timeValue / 12);
+    const monthSelection = !!timeValue && isDecember ? 12 : timeValue % 12;
+    const spendingAtTimeValue = spending.map(stateSpending => {
+        const resultAtTimeValue = stateSpending.results.find(entry => {
+            return (
+                entry.time_period.fiscal_year === fiscalYearSelection &&
+                entry.time_period.month === monthSelection
+            );
+        })!;
+        return { ...stateSpending, results: resultAtTimeValue };
+    });
+    return Object.fromEntries(
+        spendingAtTimeValue.map(stateSpending => [
+            stateSpending.shape_code,
+            stateSpending.results,
+        ])
+    );
 }

@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 
 import PerCapitaMap from './components/PerCapitaMap';
-import AnimatedMap from './components/AnimatedMap';
+import AnimatedArcsAndMap from './components/AnimatedArcsAndMap';
 import DataSandbox from './components/DataSandbox';
 import SimpleModal from './components/SimpleModal';
 import BudgetTracker from './components/BudgetTracker';
@@ -35,7 +35,7 @@ function App() {
                 <Spacer />
                 <PerCapitaMap />
                 <div style={{ height: 100 }} />
-                <AnimatedMap />
+                <AnimatedArcsAndMap />
                 <div style={{ height: 36 }} />
                 <Attribution />
                 <Spacer />

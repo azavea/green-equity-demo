@@ -40,6 +40,8 @@ and this project adheres to
     [#55](https://github.com/azavea/green-equity-demo/pull/55)
 -   Integrate real spending by month data
     [#60](https://github.com/azavea/green-equity-demo/pull/60)
+-   Add animated spending arc to map
+    [#75](https://github.com/azavea/green-equity-demo/pull/75)
 
 ### Changed
 
