@@ -22,4 +22,12 @@ else
     APPLY_FIXES=none
 fi
 
-docker run --rm -e APPLY_FIXES=$APPLY_FIXES -e MEGALINTER_FILES_TO_LINT="$MEGALINTER_FILES_TO_LINT" -v "$PWD":/tmp/lint oxsecurity/megalinter-cupcake:v6
+# Do not run as root, so that "fix mode" doesn't change ownership to root ...
+# https://github.com/oxsecurity/megalinter/issues/1975#issuecomment-1375511376
+USER=$(id -g $UID)
+if [[ $(uname -s | grep "Darwin") && ($(docker info -f "{{ .Name }}") == "docker-desktop") ]]; then
+    # ... except on Docker Desktop for Mac, which takes care of permissions by itself
+    # and does not support mounting a volume as a rootless user
+    USER=0
+fi
+docker run --rm -u $USER -e APPLY_FIXES=$APPLY_FIXES -e MEGALINTER_FILES_TO_LINT="$MEGALINTER_FILES_TO_LINT" -v "$PWD":/tmp/lint oxsecurity/megalinter-cupcake:v6

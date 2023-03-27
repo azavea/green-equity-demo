@@ -18,7 +18,7 @@ import transportationSpending from './data/Transportation.spending.json';
 import allSpendingOverTime from './data/monthly.spending.json';
 
 const cachedApiQuery: typeof fetchBaseQuery = _ => {
-    return (stringOrArgs, api) => {
+    return stringOrArgs => {
         const args = isFetchArgs(stringOrArgs)
             ? stringOrArgs
             : { url: stringOrArgs };

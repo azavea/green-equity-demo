@@ -31,7 +31,6 @@ DISABLE_LINTERS:
   - TERRAFORM_TERRASCAN
   - TERRAFORM_KICS
   - REPOSITORY_GITLEAKS
-  - JAVASCRIPT_STANDARD
   - PYTHON_ISORT
   - PYTHON_MYPY
   - PYTHON_BANDIT
@@ -40,6 +39,13 @@ DISABLE_LINTERS:
   - PYTHON_FLAKE8
   - PYTHON_BLACK
 JAVASCRIPT_DEFAULT_STYLE: prettier
+JAVASCRIPT_ES_FILTER_REGEX_EXCLUDE: src/django/web/templates/web/environment.js
+JAVASCRIPT_ES_RULES_PATH: src/app/
+JAVASCRIPT_ES_FILE_EXTENSIONS:
+  - .js
+  - .jsx
+  - .ts
+  - .tsx
 JAVASCRIPT_PRETTIER_DISABLE_ERRORS: false
 JAVASCRIPT_PRETTIER_FILE_EXTENSIONS:
   - .js
@@ -51,19 +57,3 @@ JAVASCRIPT_PRETTIER_RULES_PATH: src/app/
 TYPESCRIPT_PRETTIER_RULES_PATH: src/app/
 UPDATED_SOURCES_REPORTER: false
 SHOW_ELAPSED_TIME: true
-
-# Formatting has one annoying bug which apparently varies between Mac and Linux.
-# https://github.com/oxsecurity/megalinter/issues/1975
-# This works around it to set permissions equal to whatever .gitignore is set to.
-
-PRE_COMMANDS:
-  - command: |-
-      echo $(ls -lah .gitignore | sed 's/\s\+/ /g' | cut -d ' ' -f3,4 | sed 's/ /\:/') > perms.txt
-      cat perms.txt
-    cwd: "workspace"
-
-POST_COMMANDS:
-  - command: |-
-      find . -user root -group root -exec chown $(cat perms.txt) {} \;
-      rm perms.txt
-    cwd: "workspace"
