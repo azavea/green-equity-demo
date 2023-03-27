@@ -29,7 +29,9 @@ async function fetchData() {
             'src/data/lastUpdated.json',
             todayJson,
             { flag: 'w+' },
-            err => {}
+            _err => {
+                // do nothing.
+            }
         );
     }
 }

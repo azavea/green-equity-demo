@@ -95,19 +95,19 @@ function getPathAnimationValues({
 function getBezierOffsetLatLng(end: L.LatLngTuple): L.LatLngTuple {
     // Modified Bezier curve function from https://gist.github.com/ryancatalani/6091e50bf756088bf9bf5de2017b32e6
     const start: L.LatLngTuple = DC_CENTER;
-    var offsetX = end[1] - start[1],
-        offsetY = end[0] - start[0];
+    const offsetX = end[1] - start[1];
+    const offsetY = end[0] - start[0];
 
-    var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
-        theta = Math.atan2(offsetY, offsetX);
+    const r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
+    const theta = Math.atan2(offsetY, offsetX);
 
-    var thetaOffset = 3.14 / 10;
+    const thetaOffset = 3.14 / 10;
 
-    var r2 = r / 2 / Math.cos(thetaOffset),
-        theta2 = theta + thetaOffset;
+    const r2 = r / 2 / Math.cos(thetaOffset);
+    const theta2 = theta + thetaOffset;
 
-    var midpointX = r2 * Math.cos(theta2) + start[1],
-        midpointY = r2 * Math.sin(theta2) + start[0];
+    const midpointX = r2 * Math.cos(theta2) + start[1];
+    const midpointY = r2 * Math.sin(theta2) + start[0];
 
     return [midpointY, midpointX];
 }

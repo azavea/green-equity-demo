@@ -93,11 +93,7 @@ function cleanDataDump(
     // Make String types into Number
     const aggregatedOverMonths: MonthlySpendingOverTime = [];
     dataDump.results.reduce(
-        (
-            sum,
-            { aggregated_amount, time_period: { fiscal_year, month } },
-            i
-        ) => {
+        (sum, { aggregated_amount, time_period: { fiscal_year, month } }) => {
             const aggregated = sum + aggregated_amount;
             aggregatedOverMonths.push({
                 aggregated_amount: aggregated,

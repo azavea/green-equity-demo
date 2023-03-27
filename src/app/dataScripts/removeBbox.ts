@@ -6,7 +6,7 @@ import statesHighRes from '../src/data/states.highres.geo.json';
 import { dataDir } from './nodeConstants';
 
 function removeBbox(thing: any): any {
-    for (var prop in thing) {
+    for (const prop in thing) {
         if (prop === 'bbox') {
             delete thing['bbox'];
         }
