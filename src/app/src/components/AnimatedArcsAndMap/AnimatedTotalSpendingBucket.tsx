@@ -36,7 +36,7 @@ export default function AnimatedTotalSpendingBucket({
             const totalAwardsAtTime: number = Object.values(
                 spendingAtTimeByState
             ).reduce((sum, stateResults) => {
-                sum += stateResults && stateResults.aggregated_amount;
+                sum += stateResults && stateResults.per_capita;
                 return sum;
             }, 0);
             totalAwardsAtTime && setTotalSpendingAtTime(totalAwardsAtTime);

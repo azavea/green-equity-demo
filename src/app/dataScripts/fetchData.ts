@@ -12,13 +12,14 @@ async function fetchData() {
         await mkdir(dataDir);
     }
 
-    // fetchSpendingOverTimeData relies on json product of fetchStatesData
-    await fetchStatesData();
-
+    // fetchSpendingOverTimeData relies on json products
+    // of fetchStatesData and fetchPerCapitaSpendingData
     const [perCapitaResult] = await Promise.allSettled([
+        fetchStatesData(),
         fetchPerCapitaSpendingData(),
-        fetchSpendingOverTimeData(),
     ]);
+
+    await fetchSpendingOverTimeData();
 
     if (perCapitaResult.status === 'fulfilled') {
         const today = new Date();

@@ -40,7 +40,7 @@ export default function AnimatedMap({
                                         StateProperties
                                     >
                                 ).properties.STUSPS
-                            ]?.aggregated_amount
+                            ]?.per_capita
                         ),
                     });
             });
@@ -70,7 +70,7 @@ export default function AnimatedMap({
             layer.on('add', createArcPath);
             const defaultFillColor = getColor(
                 spendingAtTimeByState[feature.properties.STUSPS.toString()]
-                    ?.aggregated_amount
+                    ?.per_capita
             );
             layer &&
                 layer.setStyle({
