@@ -66,7 +66,7 @@ function getPathAnimationValues({
 }) {
     const totalTime = totalTimeSteps * MONTHLY_TIME_DURATION;
     const firstAward = spendingForState.results.find(
-        data => data.aggregated_amount > 0
+        data => data.per_capita > 0
     );
     if (!firstAward) {
         return {
