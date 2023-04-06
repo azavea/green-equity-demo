@@ -9,13 +9,14 @@ import {
     Progress,
     Tag,
     TagLabel,
+    VStack,
 } from '@chakra-ui/react';
 
 import UsaMapContainer from '../UsaMapContainer';
+import PerCapitaMapLegend from '../PerCapitaMap/PerCapitaMapLegend';
 import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
-import AnimatedMapLegend from './AnimatedMapLegend';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import { getSpendingByStateAtTime, PROGRESS_FINAL_STEP } from '../../util';
 import { MONTHLY_TIME_DURATION } from '../../constants';
@@ -73,9 +74,8 @@ export default function AnimatedArcsAndMap() {
             </Heading>
             <Spacer></Spacer>
             {data && spendingAtTimeByState && !isFetching ? (
-                <>
-                    <AnimatedMapLegend />
-                    <UsaMapContainer>
+                <VStack width='100%' justifyContent='center'>
+                    <UsaMapContainer negativeMargin>
                         <AnimatedTotalSpendingBucket
                             spendingAtTimeByState={spendingAtTimeByState}
                         />
@@ -84,6 +84,7 @@ export default function AnimatedArcsAndMap() {
                             spendingAtTimeByState={spendingAtTimeByState}
                         />
                     </UsaMapContainer>
+                    <PerCapitaMapLegend />
                     <Box width='100%' textAlign={'center'}>
                         <IconButton
                             aria-label='Play time progress animation'
@@ -118,7 +119,7 @@ export default function AnimatedArcsAndMap() {
                             </TagLabel>
                         </Tag>
                     </Box>
-                </>
+                </VStack>
             ) : (
                 <Center p={4}>
                     <CircularProgress isIndeterminate />

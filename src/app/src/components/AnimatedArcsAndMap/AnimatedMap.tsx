@@ -8,8 +8,8 @@ import StatesLayer from '../StatesLayer';
 
 import { SpendingByGeographyAtMonth } from '../../types/api';
 import { StateFeature } from '../../types/states';
+import { getAmountCategory } from '../../util';
 
-import { TOTAL_BIL_AMOUNT } from '../../constants';
 import useCreateArcPath from './useCreateArcPath';
 
 export default function AnimatedMap({
@@ -87,10 +87,5 @@ export default function AnimatedMap({
 }
 
 function getColor(amount: number | undefined): string {
-    const fractionOfTotalAwards = amount ? amount / TOTAL_BIL_AMOUNT : 0;
-    return fractionOfTotalAwards > 0.1
-        ? '#465EB5'
-        : fractionOfTotalAwards > 0.05
-        ? '#94A4DF'
-        : 'white';
+    return getAmountCategory(amount ?? -1).color;
 }
