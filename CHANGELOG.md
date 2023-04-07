@@ -65,6 +65,8 @@ and this project adheres to
     [#71](https://github.com/azavea/green-equity-demo/pull/71)
 -   Update budget tracker style
     [#89](https://github.com/azavea/green-equity-demo/pull/89)
+-   Change animated map to use per-capita data
+    [#96](https://github.com/azavea/green-equity-demo/pull/96)
 
 ### Fixed
 
