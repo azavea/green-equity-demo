@@ -224,21 +224,24 @@ export function abbreviateNumber(amount: number): string {
 }
 
 const START_YEAR = 2021;
+const FISCAL_YEAR_MONTH_OFFSET = 3; // FY 2024 begins 10/1/23
 const END_DATE = new Date();
 export const PROGRESS_FINAL_STEP = (() => {
-    const final_month_step = END_DATE.getMonth();
-    const final_year_step = END_DATE.getFullYear();
-    return 12 * (final_year_step - START_YEAR) + final_month_step;
+    let finalFiscalMonth = END_DATE.getMonth() + FISCAL_YEAR_MONTH_OFFSET;
+    let finalFiscalYear = END_DATE.getFullYear();
+    if (finalFiscalMonth > 11) {
+        finalFiscalMonth = finalFiscalMonth % 12;
+        finalFiscalYear += 1;
+    }
+    return 12 * (finalFiscalYear - START_YEAR) + finalFiscalMonth;
 })();
 
 export function getSpendingByStateAtTime(
     timeValue: number,
     spending: MonthlySpendingOverTimeByState
 ): SpendingByGeographyAtMonth {
-    const isDecember = timeValue % 12 === 0;
-    const fiscalYearSelection =
-        2021 + Math.floor(isDecember ? timeValue / 13 : timeValue / 12);
-    const monthSelection = !!timeValue && isDecember ? 12 : timeValue % 12;
+    const fiscalYearSelection = START_YEAR + Math.floor(timeValue / 12);
+    const monthSelection = (timeValue % 12) + 1; // 1-indexed
     const spendingAtTimeValue = spending.map(stateSpending => {
         const resultAtTimeValue = stateSpending.results.find(entry => {
             return (
