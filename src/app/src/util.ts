@@ -194,11 +194,13 @@ export function getCategoryForAgencies(agencies: Agency[]): Category {
     throw new Error(`Category not found for this agency list ${agencies}`);
 }
 
-export function getAmountCategory(amount: number): AmountCategory {
+export function getAmountCategory(
+    amount: number,
+    categories: AmountCategory[] = AMOUNT_CATEGORIES
+): AmountCategory {
     const category =
-        AMOUNT_CATEGORIES.find(
-            amountCategory => amount >= amountCategory.min
-        ) ?? AMOUNT_CATEGORIES[AMOUNT_CATEGORIES.length - 1];
+        categories.find(amountCategory => amount >= amountCategory.min) ??
+        categories[categories.length - 1];
 
     if (!category) {
         throw Error(`Could not find amount category for amount: ${amount}`);

@@ -10,6 +10,13 @@ export const AMOUNT_CATEGORIES: AmountCategory[] = [
     { min: 0, color: theme.colors.green[100] },
 ];
 
+export const QUARTILE_CATEGORIES: AmountCategory[] = [
+    { min: 0.75, color: theme.colors.green[900] },
+    { min: 0.5, color: theme.colors.green[600] },
+    { min: 0.25, color: theme.colors.green[300] },
+    { min: 0, color: theme.colors.green[100] },
+];
+
 export const STATE_STYLE_BASE = Object.freeze({
     color: 'black',
     weight: 0.62,

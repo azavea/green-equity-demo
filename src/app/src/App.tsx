@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 
 import PerCapitaMap from './components/PerCapitaMap';
+import { EquityMap } from './components/EquityMap';
 import AnimatedArcsAndMap from './components/AnimatedArcsAndMap';
 import DataSandbox from './components/DataSandbox';
 import SimpleModal from './components/SimpleModal';
@@ -45,7 +46,9 @@ function App() {
                 <TopMapTabSelector value={topMap} onChange={setTopMap} />
                 {topMap === TopMap.PER_CAPITA ? (
                     <PerCapitaMap />
-                ) : topMap === TopMap.EQUITY ? null : null}
+                ) : topMap === TopMap.EQUITY ? (
+                    <EquityMap />
+                ) : null}
                 <div style={{ height: 100 }} />
                 <AnimatedArcsAndMap />
                 <div style={{ height: 36 }} />
