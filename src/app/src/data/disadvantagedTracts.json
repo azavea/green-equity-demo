@@ -1,0 +1,338 @@
+[
+    {
+        "State": "Alabama",
+        "NotDisadvantaged": "2647237.0",
+        "Disadvantaged": "2229013.0",
+        "Total": "4876250.0"
+    },
+    {
+        "State": "Alaska",
+        "NotDisadvantaged": "598054.0",
+        "Disadvantaged": "130764.0",
+        "Total": "728818.0"
+    },
+    {
+        "State": "American Samoa",
+        "NotDisadvantaged": "17.0",
+        "Disadvantaged": "55502.0",
+        "Total": "55519.0"
+    },
+    {
+        "State": "Arizona",
+        "NotDisadvantaged": "4529277.0",
+        "Disadvantaged": "2488146.0",
+        "Total": "7017423.0"
+    },
+    {
+        "State": "Arkansas",
+        "NotDisadvantaged": "1358917.0",
+        "Disadvantaged": "1640453.0",
+        "Total": "2999370.0"
+    },
+    {
+        "State": "California",
+        "NotDisadvantaged": "24395849.0",
+        "Disadvantaged": "14882581.0",
+        "Total": "39278430.0"
+    },
+    {
+        "State": "Colorado",
+        "NotDisadvantaged": "4549428.0",
+        "Disadvantaged": "1060921.0",
+        "Total": "5610349.0"
+    },
+    {
+        "State": "Connecticut",
+        "NotDisadvantaged": "2868717.0",
+        "Disadvantaged": "706357.0",
+        "Total": "3575074.0"
+    },
+    {
+        "State": "Delaware",
+        "NotDisadvantaged": "831700.0",
+        "Disadvantaged": "125548.0",
+        "Total": "957248.0"
+    },
+    {
+        "State": "District of Columbia",
+        "NotDisadvantaged": "462890.0",
+        "Disadvantaged": "229793.0",
+        "Total": "692683.0"
+    },
+    {
+        "State": "Florida",
+        "NotDisadvantaged": "12609645.0",
+        "Disadvantaged": "8291991.0",
+        "Total": "20901636.0"
+    },
+    {
+        "State": "Georgia",
+        "NotDisadvantaged": "6838391.0",
+        "Disadvantaged": "3565456.0",
+        "Total": "10403847.0"
+    },
+    {
+        "State": "Guam",
+        "NotDisadvantaged": "144202.0",
+        "Disadvantaged": "15156.0",
+        "Total": "159358.0"
+    },
+    {
+        "State": "Hawaii",
+        "NotDisadvantaged": "1212526.0",
+        "Disadvantaged": "209568.0",
+        "Total": "1422094.0"
+    },
+    {
+        "State": "Idaho",
+        "NotDisadvantaged": "1157929.0",
+        "Disadvantaged": "559821.0",
+        "Total": "1717750.0"
+    },
+    {
+        "State": "Illinois",
+        "NotDisadvantaged": "9084121.0",
+        "Disadvantaged": "3686510.0",
+        "Total": "12770631.0"
+    },
+    {
+        "State": "Indiana",
+        "NotDisadvantaged": "4748610.0",
+        "Disadvantaged": "1917093.0",
+        "Total": "6665703.0"
+    },
+    {
+        "State": "Iowa",
+        "NotDisadvantaged": "2601987.0",
+        "Disadvantaged": "537521.0",
+        "Total": "3139508.0"
+    },
+    {
+        "State": "Kansas",
+        "NotDisadvantaged": "2172569.0",
+        "Disadvantaged": "738083.0",
+        "Total": "2910652.0"
+    },
+    {
+        "State": "Kentucky",
+        "NotDisadvantaged": "2462975.0",
+        "Disadvantaged": "1986077.0",
+        "Total": "4449052.0"
+    },
+    {
+        "State": "Louisiana",
+        "NotDisadvantaged": "2380507.0",
+        "Disadvantaged": "2283855.0",
+        "Total": "4664362.0"
+    },
+    {
+        "State": "Maine",
+        "NotDisadvantaged": "953963.0",
+        "Disadvantaged": "381529.0",
+        "Total": "1335492.0"
+    },
+    {
+        "State": "Maryland",
+        "NotDisadvantaged": "5088706.0",
+        "Disadvantaged": "930142.0",
+        "Total": "6018848.0"
+    },
+    {
+        "State": "Massachusetts",
+        "NotDisadvantaged": "5459598.0",
+        "Disadvantaged": "1390955.0",
+        "Total": "6850553.0"
+    },
+    {
+        "State": "Michigan",
+        "NotDisadvantaged": "6951041.0",
+        "Disadvantaged": "3014224.0",
+        "Total": "9965265.0"
+    },
+    {
+        "State": "Minnesota",
+        "NotDisadvantaged": "4846721.0",
+        "Disadvantaged": "716657.0",
+        "Total": "5563378.0"
+    },
+    {
+        "State": "Mississippi",
+        "NotDisadvantaged": "1213887.0",
+        "Disadvantaged": "1770531.0",
+        "Total": "2984418.0"
+    },
+    {
+        "State": "Missouri",
+        "NotDisadvantaged": "4029401.0",
+        "Disadvantaged": "2075509.0",
+        "Total": "6104910.0"
+    },
+    {
+        "State": "Montana",
+        "NotDisadvantaged": "727594.0",
+        "Disadvantaged": "323055.0",
+        "Total": "1050649.0"
+    },
+    {
+        "State": "Nebraska",
+        "NotDisadvantaged": "1487546.0",
+        "Disadvantaged": "427025.0",
+        "Total": "1914571.0"
+    },
+    {
+        "State": "Nevada",
+        "NotDisadvantaged": "1940950.0",
+        "Disadvantaged": "1031432.0",
+        "Total": "2972382.0"
+    },
+    {
+        "State": "New Hampshire",
+        "NotDisadvantaged": "1257653.0",
+        "Disadvantaged": "90471.0",
+        "Total": "1348124.0"
+    },
+    {
+        "State": "New Jersey",
+        "NotDisadvantaged": "6671554.0",
+        "Disadvantaged": "2206949.0",
+        "Total": "8878503.0"
+    },
+    {
+        "State": "New Mexico",
+        "NotDisadvantaged": "1007100.0",
+        "Disadvantaged": "1085354.0",
+        "Total": "2092454.0"
+    },
+    {
+        "State": "New York",
+        "NotDisadvantaged": "12710588.0",
+        "Disadvantaged": "6805010.0",
+        "Total": "19515598.0"
+    },
+    {
+        "State": "North Carolina",
+        "NotDisadvantaged": "6465696.0",
+        "Disadvantaged": "3799180.0",
+        "Total": "10264876.0"
+    },
+    {
+        "State": "North Dakota",
+        "NotDisadvantaged": "691437.0",
+        "Disadvantaged": "65280.0",
+        "Total": "756717.0"
+    },
+    {
+        "State": "Northern Mariana Islands",
+        "NotDisadvantaged": "2117.0",
+        "Disadvantaged": "51766.0",
+        "Total": "53883.0"
+    },
+    {
+        "State": "Ohio",
+        "NotDisadvantaged": "8319674.0",
+        "Disadvantaged": "3335723.0",
+        "Total": "11655397.0"
+    },
+    {
+        "State": "Oklahoma",
+        "NotDisadvantaged": "1103596.0",
+        "Disadvantaged": "2829274.0",
+        "Total": "3932870.0"
+    },
+    {
+        "State": "Oregon",
+        "NotDisadvantaged": "2998793.0",
+        "Disadvantaged": "1131010.0",
+        "Total": "4129803.0"
+    },
+    {
+        "State": "Pennsylvania",
+        "NotDisadvantaged": "9730810.0",
+        "Disadvantaged": "3060720.0",
+        "Total": "12791530.0"
+    },
+    {
+        "State": "Puerto Rico",
+        "NotDisadvantaged": "258424.0",
+        "Disadvantaged": "3060023.0",
+        "Total": "3318447.0"
+    },
+    {
+        "State": "Rhode Island",
+        "NotDisadvantaged": "791968.0",
+        "Disadvantaged": "265263.0",
+        "Total": "1057231.0"
+    },
+    {
+        "State": "South Carolina",
+        "NotDisadvantaged": "3014450.0",
+        "Disadvantaged": "2006356.0",
+        "Total": "5020806.0"
+    },
+    {
+        "State": "South Dakota",
+        "NotDisadvantaged": "622342.0",
+        "Disadvantaged": "233961.0",
+        "Total": "856303.0"
+    },
+    {
+        "State": "Tennessee",
+        "NotDisadvantaged": "3989061.0",
+        "Disadvantaged": "2720295.0",
+        "Total": "6709356.0"
+    },
+    {
+        "State": "Texas",
+        "NotDisadvantaged": "16989087.0",
+        "Disadvantaged": "11271769.0",
+        "Total": "28260856.0"
+    },
+    {
+        "State": "Utah",
+        "NotDisadvantaged": "2663195.0",
+        "Disadvantaged": "433653.0",
+        "Total": "3096848.0"
+    },
+    {
+        "State": "Vermont",
+        "NotDisadvantaged": "536506.0",
+        "Disadvantaged": "87807.0",
+        "Total": "624313.0"
+    },
+    {
+        "State": "Virgin Islands",
+        "NotDisadvantaged": "81881.0",
+        "Disadvantaged": "24524.0",
+        "Total": "106405.0"
+    },
+    {
+        "State": "Virginia",
+        "NotDisadvantaged": "6697759.0",
+        "Disadvantaged": "1750255.0",
+        "Total": "8448014.0"
+    },
+    {
+        "State": "Washington",
+        "NotDisadvantaged": "5974573.0",
+        "Disadvantaged": "1429534.0",
+        "Total": "7404107.0"
+    },
+    {
+        "State": "West Virginia",
+        "NotDisadvantaged": "793621.0",
+        "Disadvantaged": "1023684.0",
+        "Total": "1817305.0"
+    },
+    {
+        "State": "Wisconsin",
+        "NotDisadvantaged": "4850468.0",
+        "Disadvantaged": "940248.0",
+        "Total": "5790716.0"
+    },
+    {
+        "State": "Wyoming",
+        "NotDisadvantaged": "500735.0",
+        "Disadvantaged": "80289.0",
+        "Total": "581024.0"
+    }
+]
