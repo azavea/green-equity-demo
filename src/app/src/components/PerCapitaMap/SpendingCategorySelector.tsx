@@ -2,6 +2,7 @@ import { Box, HStack, Select } from '@chakra-ui/react';
 
 import useIsMobileMode from '../../useIsMobileMode';
 import { Category } from '../../enums';
+import theme from '../../theme';
 
 export default function SpendingCategorySelector({
     value,
@@ -26,18 +27,16 @@ export default function SpendingCategorySelector({
         return (
             <Box
                 style={{
-                    border: '1px solid #465EB5',
+                    border: `1px solid ${theme.colors.green[300]}`,
                     borderLeftWidth: !isFirst ? 0.5 : 1,
                     borderRightWidth: !isLast ? 0.5 : 1,
                     margin: 0,
                     padding: 10,
                     fontSize: 18,
-                    background: isSelected
-                        ? 'rgba(32, 81, 255, 0.21)'
-                        : undefined,
+                    background: isSelected ? theme.colors.green[50] : undefined,
                     cursor: 'pointer',
                 }}
-                _hover={{ background: 'rgba(32, 81, 255, 0.21)' }}
+                _hover={{ background: theme.colors.green[50] }}
                 onClick={() => onChange(category)}
             >
                 {category}

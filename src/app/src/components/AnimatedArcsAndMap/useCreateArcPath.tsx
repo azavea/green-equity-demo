@@ -38,7 +38,7 @@ export default function useCreateArcPath(
             arcPathsReference.current[state] = new L.Curve(
                 ['M', DC_CENTER, 'Q', midpoint, polygonCenterTuple],
                 {
-                    color: '#2051FF',
+                    color: '#85bb65', // the actual shade of US legal tender :-O
                     weight: 1,
                     pane: 'arcPathsPane',
                     animate: {

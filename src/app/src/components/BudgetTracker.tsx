@@ -10,6 +10,7 @@ import {
 
 import { useGetSpendingByGeographyQuery } from '../api';
 import { getDefaultSpendingByGeographyRequest } from '../util';
+import theme from '../theme';
 import lastUpdated from '../data/lastUpdated.json';
 import useIsMobileMode from '../useIsMobileMode';
 
@@ -31,7 +32,7 @@ export default function BudgetTracker() {
 
     return (
         <Box
-            background='#F6F8FF'
+            background={theme.colors.green[50]}
             width='100%'
             pt={5}
             pb={5}
@@ -80,7 +81,7 @@ function MoneyLeft({ spending }: { spending: number }) {
 }
 
 const progressWidth = '90%';
-const progressColor = '#465EB5';
+const progressColor = theme.colors.green[900];
 const spendingDenominator = 550_000_000_000 / 100;
 function BudgetTrackerProgressBar({ spending }: { spending: number }) {
     const isMobileMode = useIsMobileMode();
