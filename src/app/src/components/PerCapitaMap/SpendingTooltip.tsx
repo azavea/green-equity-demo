@@ -15,6 +15,7 @@ import {
 import { createPortal } from 'react-dom';
 
 import { Category, isCategory } from '../../enums';
+import theme from '../../theme';
 import { abbreviateNumber } from '../../util';
 import { StateSpending } from '../../types/api';
 
@@ -144,7 +145,7 @@ const variants = {
             header: {
                 ...props.theme.components.Card.variants.elevated.header,
                 height: '44px',
-                backgroundColor: '#465EB5',
+                backgroundColor: theme.colors.tooltip[500],
                 color: 'white',
                 fontWeight: 'semibold',
                 paddingLeft: '15px',
