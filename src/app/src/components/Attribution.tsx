@@ -62,6 +62,14 @@ export default function Attribution() {
                             category={category}
                         />
                     ))}
+                <Text fontSize={12} pt={1}>
+                    The proportions of state populations living in disadvantaged
+                    communities were taken from the{' '}
+                    <Link href='https://screeningtool.geoplatform.gov/en/downloads#3/33.47/-97.5'>
+                        Climate and Economic Justice Screening Tool
+                    </Link>
+                    , which is based on 2010 Census data.
+                </Text>
             </details>
             <Text fontSize={12} pt={4}>
                 The maps on this page were created with{' '}

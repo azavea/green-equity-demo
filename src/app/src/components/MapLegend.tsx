@@ -1,9 +1,38 @@
 import { Box, Text, HStack, VStack } from '@chakra-ui/react';
-import { AMOUNT_CATEGORIES } from '../../constants';
-import useIsMobileMode from '../../useIsMobileMode';
+import { AmountCategory } from '../types';
+import useIsMobileMode from '../useIsMobileMode';
 
-export default function PerCapitaMapLegend() {
+export default function MapLegend({
+    categories,
+    label,
+    monetary,
+}: {
+    categories: AmountCategory[];
+    label: string;
+    monetary: boolean;
+}) {
     const isMobileMode = useIsMobileMode();
+
+    const monetaryLabel = (
+        category: AmountCategory,
+        nextCategory: AmountCategory | undefined
+    ) => {
+        if (nextCategory) {
+            return `$${category.min.toLocaleString()}-$${(
+                nextCategory.min - 1
+            ).toLocaleString()}`;
+        }
+        return `$${category.min.toLocaleString()}+`;
+    };
+
+    const percentLabel = (
+        category: AmountCategory,
+        _nextCategory: AmountCategory | undefined
+    ) => {
+        return `${category.min * 100}%`;
+    };
+
+    const getLabel = monetary ? monetaryLabel : percentLabel;
 
     return (
         <VStack
@@ -14,18 +43,13 @@ export default function PerCapitaMapLegend() {
             minWidth={isMobileMode ? '100%' : '520px'}
         >
             <Text alignSelf='flex-start' fontSize={24}>
-                Dollars per capita
+                {label}
             </Text>
             <HStack width='100%' spacing={0.5}>
-                {[...AMOUNT_CATEGORIES]
+                {[...categories]
                     .reverse()
                     .map((category, index, categories) => {
                         const nextCategory = categories[index + 1];
-                        const label = nextCategory
-                            ? `$${category.min.toLocaleString()}-$${(
-                                  nextCategory.min - 1
-                              ).toLocaleString()}`
-                            : `$${category.min.toLocaleString()}+`;
 
                         return (
                             <VStack flex={1} key={category.min}>
@@ -38,7 +62,7 @@ export default function PerCapitaMapLegend() {
                                     fontSize={isMobileMode ? 12 : 14}
                                     alignSelf='flex-start'
                                 >
-                                    {label}
+                                    {getLabel(category, nextCategory)}
                                 </Text>
                             </VStack>
                         );

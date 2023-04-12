@@ -13,13 +13,13 @@ import {
 } from '@chakra-ui/react';
 
 import UsaMapContainer from '../UsaMapContainer';
-import PerCapitaMapLegend from '../PerCapitaMap/PerCapitaMapLegend';
+import MapLegend from '../MapLegend';
 import TimeControlIcon from './TimeControlIcon';
 
 import AnimatedMap from './AnimatedMap';
 import { useGetSpendingOverTimeQuery } from '../../api';
 import { getSpendingByStateAtTime, PROGRESS_FINAL_STEP } from '../../util';
-import { MONTHLY_TIME_DURATION } from '../../constants';
+import { AMOUNT_CATEGORIES, MONTHLY_TIME_DURATION } from '../../constants';
 import AnimatedTotalSpendingBucket from './AnimatedTotalSpendingBucket';
 
 export default function AnimatedArcsAndMap() {
@@ -84,7 +84,11 @@ export default function AnimatedArcsAndMap() {
                             spendingAtTimeByState={spendingAtTimeByState}
                         />
                     </UsaMapContainer>
-                    <PerCapitaMapLegend />
+                    <MapLegend
+                        categories={AMOUNT_CATEGORIES}
+                        label='Dollars per capita'
+                        monetary
+                    />
                     <Box width='100%' textAlign={'center'}>
                         <IconButton
                             aria-label='Play time progress animation'

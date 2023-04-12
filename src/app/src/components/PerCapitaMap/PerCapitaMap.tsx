@@ -7,7 +7,7 @@ import UsaMapContainer from '../UsaMapContainer';
 import StatesLayer from '../StatesLayer';
 import SpendingTooltip from './SpendingTooltip';
 import SpendingCategorySelector from './SpendingCategorySelector';
-import PerCapitaMapLegend from './PerCapitaMapLegend';
+import MapLegend from '../MapLegend';
 
 import { Category, isCategory } from '../../enums';
 import useSpendingByCategoryByState from './useSpendingByCategoryByState';
@@ -16,7 +16,7 @@ import {
     StatesLayer as StatesLayerType,
 } from '../../types/states';
 import { getAmountCategory } from '../../util';
-import { STATE_STYLE_BASE } from '../../constants';
+import { AMOUNT_CATEGORIES, STATE_STYLE_BASE } from '../../constants';
 import { StateSpending } from '../../types/api';
 
 export default function PerCapitaMap() {
@@ -41,7 +41,11 @@ export default function PerCapitaMap() {
                     </Center>
                 )}
             </UsaMapContainer>
-            <PerCapitaMapLegend />
+            <MapLegend
+                categories={AMOUNT_CATEGORIES}
+                label='Dollars per capita'
+                monetary
+            />
         </VStack>
     );
 }
