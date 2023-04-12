@@ -6,17 +6,19 @@ import {
     CardBody,
     CardHeader,
     Heading,
+    HStack,
     Stack,
     StackDivider,
     StyleFunctionProps,
     Text,
-    Progress,
 } from '@chakra-ui/react';
 import { createPortal } from 'react-dom';
 
 import { Category, isCategory } from '../../enums';
 import { abbreviateNumber } from '../../util';
 import { StateSpending } from '../../types/api';
+
+const FULL_BAR_WIDTH = 194;
 
 export default function SpendingTooltip({
     state,
@@ -115,11 +117,20 @@ function SpendingBars({
 }
 
 function SpendingBar({ cat, percent }: { cat: Category; percent: number }) {
+    const thisWidth = Math.round((percent / 100) * FULL_BAR_WIDTH);
+
     return (
         <>
-            <Text>{cat.toString()}:</Text>
-            <Text>{percent}%</Text>
-            <Progress mb={2} colorScheme='tooltip' size='lg' value={percent} />
+            <Text mb={1}>{cat.toString()}:</Text>
+            <HStack spacing={2} mb={2}>
+                <Box
+                    bg='#465EB5'
+                    height={4}
+                    width={`${thisWidth}px`}
+                    aria-label={`${percent}%`}
+                />
+                <Text>{percent}%</Text>
+            </HStack>
         </>
     );
 }
@@ -137,7 +148,7 @@ const variants = {
             container: {
                 ...props.theme.components.Card.variants.elevated.container,
                 overflow: 'clip', // https://github.com/twbs/bootstrap/issues/37010
-                minWidth: '194px',
+                minWidth: `${FULL_BAR_WIDTH}px`,
                 padding: '0',
                 border: '0',
             },
