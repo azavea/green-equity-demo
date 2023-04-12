@@ -46,6 +46,8 @@ and this project adheres to
     [#77](https://github.com/azavea/green-equity-demo/pull/77)
 -   Lazy load high-res state boundaries
     [#82](https://github.com/azavea/green-equity-demo/pull/82)
+-   Add disadvantaged communities choropleth map
+    [#100](https://github.com/azavea/green-equity-demo/pull/100)
 
 ### Changed
 
