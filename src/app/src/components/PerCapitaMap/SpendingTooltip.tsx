@@ -15,6 +15,7 @@ import {
 import { createPortal } from 'react-dom';
 
 import { Category, isCategory } from '../../enums';
+import theme from '../../theme';
 import { abbreviateNumber } from '../../util';
 import { StateSpending } from '../../types/api';
 
@@ -124,7 +125,7 @@ function SpendingBar({ cat, percent }: { cat: Category; percent: number }) {
             <Text mb={1}>{cat.toString()}:</Text>
             <HStack spacing={2} mb={2}>
                 <Box
-                    bg='#465EB5'
+                    bg={theme.colors.tooltip[500]}
                     height={4}
                     width={`${thisWidth}px`}
                     aria-label={`${percent}%`}
@@ -155,7 +156,7 @@ const variants = {
             header: {
                 ...props.theme.components.Card.variants.elevated.header,
                 height: '44px',
-                backgroundColor: '#465EB5',
+                backgroundColor: theme.colors.tooltip[500],
                 color: 'white',
                 fontWeight: 'semibold',
                 paddingLeft: '15px',

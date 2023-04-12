@@ -36,10 +36,17 @@ const theme = extendTheme({
     },
     colors: {
         tooltip: {
-            500: '#465EB5',
+            500: '#45B565',
         },
         progress: {
             500: '#000000',
+        },
+        green: {
+            50: '#F1F8F3',
+            100: '#DEECE2',
+            300: '#ADCDB7',
+            600: '#3DA45A',
+            900: '#235F34',
         },
     },
     breakpoints: {

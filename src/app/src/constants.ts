@@ -1,12 +1,13 @@
 import { AmountCategory } from './types';
+import theme from './theme';
 
 export const spendingApiUrl = 'https://api.usaspending.gov/api/v2';
 
 export const AMOUNT_CATEGORIES: AmountCategory[] = [
-    { min: 3001, color: '#263E95' },
-    { min: 2001, color: '#3E5DCE' },
-    { min: 1001, color: '#7E93DE' },
-    { min: 0, color: '#BFC9EF' },
+    { min: 3001, color: theme.colors.green[900] },
+    { min: 2001, color: theme.colors.green[600] },
+    { min: 1001, color: theme.colors.green[300] },
+    { min: 0, color: theme.colors.green[100] },
 ];
 
 export const STATE_STYLE_BASE = Object.freeze({
