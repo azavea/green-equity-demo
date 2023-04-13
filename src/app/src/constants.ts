@@ -18,10 +18,10 @@ export const QUARTILE_CATEGORIES: AmountCategory[] = [
 ];
 
 export const STATE_STYLE_BASE = Object.freeze({
-    color: 'black',
+    color: 'white',
     weight: 0.62,
     fill: true,
-    fillColor: 'white',
+    fillColor: 'lightgray',
     fillOpacity: 1,
 });
 
