@@ -101,7 +101,8 @@ function getBezierOffsetLatLng(end: L.LatLngTuple): L.LatLngTuple {
     const r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
     const theta = Math.atan2(offsetY, offsetX);
 
-    const thetaOffset = 3.14 / 10;
+    const thetaOffsetDist = Math.PI / 10;
+    const thetaOffset = offsetX < 0 ? thetaOffsetDist * -1 : thetaOffsetDist;
 
     const r2 = r / 2 / Math.cos(thetaOffset);
     const theta2 = theta + thetaOffset;
