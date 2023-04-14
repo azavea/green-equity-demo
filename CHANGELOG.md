@@ -73,7 +73,8 @@ and this project adheres to
     [#96](https://github.com/azavea/green-equity-demo/pull/96)
 -   Place category spending percentages directly next to bars
     [#103](https://github.com/azavea/green-equity-demo/pull/103)
--   [#110](https://github.com/azavea/green-equity-demo/pull/110)
+-   Recolor state borders [#110](https://github.com/azavea/green-equity-demo/pull/110)
+-   Make money travel curves go 'up' [#112](https://github.com/azavea/green-equity-demo/pull/112)
 
 ### Fixed
 
