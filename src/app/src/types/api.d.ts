@@ -66,6 +66,7 @@ export type SpendingOverTimeByStateRequest = {
 
 export type MonthlySpendingOverTime = {
     per_capita: number;
+    total?: number;
     time_period: {
         fiscal_year: number;
         month: number;
@@ -92,6 +93,7 @@ export type MonthlySpendingOverTimeByState = {
 export type SpendingByGeographyAtMonth = {
     [k: string]: {
         per_capita: number;
+        total?: number;
         time_period: {
             fiscal_year: number;
             month: number;

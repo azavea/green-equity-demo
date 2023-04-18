@@ -112,15 +112,17 @@ function cleanDataDump(
     const perCapitaSpendingOverMonths: MonthlySpendingOverTime = [];
     dataDump.results.reduce(
         (sum, { aggregated_amount, time_period: { fiscal_year, month } }) => {
-            const aggregatedPerCapita = sum + aggregated_amount / population;
+            const aggregatedTotal = sum + aggregated_amount;
+            const aggregatedPerCapita = aggregatedTotal / population;
             perCapitaSpendingOverMonths.push({
                 per_capita: aggregatedPerCapita,
+                total: aggregatedTotal,
                 time_period: {
                     fiscal_year: parseInt(fiscal_year),
                     month: parseInt(month),
                 },
             });
-            return aggregatedPerCapita;
+            return aggregatedTotal;
         },
         0
     );
