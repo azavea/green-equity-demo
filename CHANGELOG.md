@@ -86,5 +86,6 @@ and this project adheres to
 -   Reposition animated spending bucket over DC
     [#85](https://github.com/azavea/green-equity-demo/pull/85)
 -   Optimize arc animation [#97](https://github.com/azavea/green-equity-demo/pull/97)
+-   Fix spending over time data for animated map [#114](https://github.com/azavea/green-equity-demo/pull/114)
 
 ### Removed
